@@ -1,0 +1,359 @@
+/* =====================================================================
+   FAQ — a printed list of questions beside a sticky header.
+   ===================================================================== */
+
+.layout {
+  --q-size: clamp(1.1875rem, 1.06rem + 0.5vw, 1.4375rem);
+  --q-lh: 1.3;
+  --idx-w: 2.75rem;
+  --icon: 38px;
+  --col-gap: 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "head"
+    "list"
+    "aside";
+  row-gap: clamp(2.75rem, 2rem + 2.5vw, 4rem);
+}
+
+/* Narrow: the side column dissolves so the note can follow the questions. */
+.side {
+  display: contents;
+}
+
+.head {
+  grid-area: head;
+}
+
+.asideWrap {
+  grid-area: aside;
+}
+
+/* ---------- Questions ---------- */
+
+.list {
+  grid-area: list;
+  list-style: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.item {
+  border-top: 1px solid var(--line);
+}
+
+.row {
+  position: relative;
+}
+
+.q {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+}
+
+.trigger {
+  --bleed: clamp(4px, 1.4vw, 20px);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: var(--idx-w) minmax(0, 1fr) var(--icon);
+  column-gap: var(--col-gap);
+  align-items: start;
+  width: 100%;
+  min-height: 44px;
+  padding-block: clamp(1.375rem, 1.1rem + 0.9vw, 2rem);
+  text-align: left;
+  color: var(--fg);
+}
+
+/* Candlelight from the left: the row warms on hover. */
+.trigger::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 calc(-1 * var(--bleed));
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--sand) 55%, transparent) 0%,
+    color-mix(in srgb, var(--sand) 18%, transparent) 55%,
+    transparent 92%
+  );
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out);
+}
+
+.trigger:focus-visible {
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+
+.idx {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.0625rem;
+  line-height: calc(var(--q-size) * var(--q-lh));
+  color: var(--accent-soft);
+  transition: color var(--dur) var(--ease-out);
+}
+
+.qText {
+  font-family: var(--font-serif);
+  font-size: var(--q-size);
+  line-height: var(--q-lh);
+  letter-spacing: -0.006em;
+  text-wrap: pretty;
+  transition: transform 400ms var(--ease-out);
+}
+
+/* Plus that turns into a minus: the upright bar lies down. */
+.icon {
+  position: relative;
+  justify-self: end;
+  width: var(--icon);
+  height: var(--icon);
+  margin-top: calc((var(--q-size) * var(--q-lh) - var(--icon)) / 2);
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--fg);
+  transition:
+    background-color 400ms var(--ease-out),
+    border-color 400ms var(--ease-out),
+    color 400ms var(--ease-out);
+}
+
+.bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 1.5px;
+  margin: -0.75px 0 0 -6px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: transform 400ms var(--ease-out);
+}
+
+.barV {
+  transform: rotate(90deg);
+}
+
+.row[data-open="true"] .icon {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+
+.row[data-open="true"] .barV {
+  transform: rotate(180deg);
+}
+
+.row[data-open="true"] .idx {
+  color: var(--accent);
+}
+
+@media (hover: hover) {
+  .trigger:hover::before {
+    opacity: 1;
+  }
+
+  .trigger:hover .qText {
+    transform: translateX(4px);
+  }
+
+  .trigger:hover .idx {
+    color: var(--accent);
+  }
+
+  .trigger:hover .icon {
+    border-color: var(--fg);
+  }
+}
+
+.panel {
+  overflow: hidden;
+}
+
+.answer {
+  padding: 0 calc(var(--icon) + var(--col-gap)) clamp(1.5rem, 1.2rem + 1vw, 2.25rem)
+    calc(var(--idx-w) + var(--col-gap));
+}
+
+.answer p {
+  max-width: 38em;
+  font-size: var(--fs-body);
+  line-height: 1.68;
+  color: var(--fg-2);
+}
+
+/* ---------- Still curious? An arched note ---------- */
+
+.aside {
+  --arch-h: 128px;
+  --inset: 7px;
+  position: relative;
+  max-width: 360px;
+  padding: 60px clamp(22px, 2.2vw, 30px) 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius:
+    50% 50% var(--r-lg) var(--r-lg) /
+    var(--arch-h) var(--arch-h) var(--r-lg) var(--r-lg);
+  text-align: center;
+}
+
+/* Inner rule, concentric with the arch, like a printed card. */
+.aside::before {
+  content: "";
+  position: absolute;
+  inset: var(--inset);
+  border: 1px solid var(--brass-light);
+  border-radius:
+    50% 50% calc(var(--r-lg) - var(--inset)) calc(var(--r-lg) - var(--inset)) /
+    calc(var(--arch-h) - var(--inset)) calc(var(--arch-h) - var(--inset))
+    calc(var(--r-lg) - var(--inset)) calc(var(--r-lg) - var(--inset));
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.asideStar {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  margin-left: -5px;
+}
+
+.asideTitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.625rem, 1.45rem + 0.6vw, 1.875rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.asideLinks {
+  position: relative;
+  list-style: none;
+  margin-top: 18px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+.asideLinks li + li {
+  border-top: 1px solid var(--line);
+}
+
+.asideLink {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 56px;
+  padding-inline: 2px;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--fg);
+  transition: color var(--dur) var(--ease-out);
+}
+
+.asideIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--fg-2);
+  transition:
+    background-color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out);
+}
+
+.asideLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.asideArrow {
+  flex-shrink: 0;
+  color: var(--fg-3);
+  transition:
+    transform var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out);
+}
+
+.asideLink:focus-visible {
+  outline-offset: 0;
+}
+
+@media (hover: hover) {
+  .asideLink:hover {
+    color: var(--accent);
+  }
+
+  .asideLink:hover .asideIcon {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+
+  .asideLink:hover .asideArrow {
+    transform: translate(2px, -2px);
+    color: var(--accent);
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 559.98px) {
+  .layout {
+    --idx-w: 1.75rem;
+    --icon: 34px;
+    --col-gap: 10px;
+  }
+
+  .answer {
+    padding-right: 0;
+  }
+
+  .aside {
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: 560px) and (max-width: 1023.98px) {
+  .layout {
+    --idx-w: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas: "side list";
+    column-gap: clamp(56px, 7vw, 128px);
+  }
+
+  .side {
+    grid-area: side;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.75rem, 2rem + 2vw, 4rem);
+    align-self: start;
+  }
+
+  .head,
+  .asideWrap {
+    grid-area: auto;
+  }
+}
+
+/* Sticky only where the whole side column fits under the navbar. */
+@media (min-width: 1024px) and (min-height: 740px) {
+  .side {
+    position: sticky;
+    top: calc(var(--nav-h) + 48px);
+  }
+}

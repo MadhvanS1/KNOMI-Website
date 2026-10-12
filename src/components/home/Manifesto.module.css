@@ -1,0 +1,315 @@
+/* ---------------------------------------------------------------------------
+   Manifesto
+   A plumb line hangs from the ribbon into a centred serif statement,
+   followed by a three-part table of contents for the chapters.
+   --------------------------------------------------------------------------- */
+
+.section {
+  overflow: clip;
+}
+
+/* Hairline dropping from the top edge of the section toward the eyebrow. */
+.thread {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: block;
+  width: 1px;
+  height: calc(var(--space-section) * 0.6);
+  margin-left: -0.5px;
+  background: linear-gradient(to bottom, transparent, var(--line-strong) 35%, var(--line-strong));
+  transform-origin: top center;
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1040px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* Symmetric eyebrow: a second hairline after the label. */
+.eyebrow::after {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+/* ---------- The statement ---------- */
+
+.statement {
+  position: relative;
+  margin-top: clamp(28px, 3vw, 44px);
+  font-size: clamp(2rem, 1.2rem + 2.7vw, 3.75rem);
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  color: var(--fg);
+}
+
+.word {
+  /* Inline (not inline-block) so the browser keeps natural wrapping and balancing. */
+  display: inline;
+}
+
+/* ---------- Chapters index ---------- */
+
+.chaptersNav {
+  width: 100%;
+  margin-top: clamp(64px, 8vw, 120px);
+}
+
+.chapters {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: clamp(20px, 3.2vw, 56px);
+  text-align: left;
+}
+
+.item {
+  display: flex;
+}
+
+.chapter {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(24px, 1fr) auto;
+  grid-template-areas:
+    "num leader arrow"
+    "title title title"
+    "line line line";
+  align-items: center;
+  align-content: start;
+  width: 100%;
+  padding-top: 26px;
+  padding-bottom: 6px;
+  border-radius: 0;
+}
+
+/* Resting hairline, then an ink line that draws across on hover/focus. */
+.chapter::before,
+.chapter::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+
+.chapter::before {
+  background: var(--line-strong);
+}
+
+.chapter::after {
+  background: var(--fg);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 700ms var(--ease-out);
+}
+
+/* Numeral seal: brass ring that fills with ink from the centre. */
+.numeral {
+  grid-area: num;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--accent-soft);
+  border-radius: 50%;
+  color: var(--accent-soft);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition:
+    color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out);
+}
+
+.numeral::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--fg);
+  transform: scale(0);
+  transition: transform 420ms var(--ease-out);
+}
+
+.numeralText {
+  /* Optical centring for the italic numerals. */
+  transform: translate(-0.04em, 0.02em);
+  font-feature-settings: "lnum" 1;
+}
+
+.leader {
+  grid-area: leader;
+  margin-inline: 16px;
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+.arrow {
+  grid-area: arrow;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
+  color: var(--fg-3);
+  transition: color var(--dur) var(--ease-out);
+}
+
+.arrowOut,
+.arrowIn {
+  position: absolute;
+  inset: 0;
+  transition: transform 420ms var(--ease-out);
+}
+
+.arrowIn {
+  transform: translateX(-130%);
+}
+
+.title {
+  grid-area: title;
+  margin-top: clamp(22px, 2.4vw, 34px);
+  font-size: var(--fs-h3);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  transition: color var(--dur) var(--ease-out);
+}
+
+.line {
+  grid-area: line;
+  margin-top: 10px;
+  max-width: 28ch;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+
+/* ---------- Hover & focus ---------- */
+
+.chapter:focus-visible {
+  outline-offset: 8px;
+}
+
+.chapter:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.chapter:focus-visible .numeral {
+  color: var(--bg);
+  border-color: var(--fg);
+}
+
+.chapter:focus-visible .numeral::before {
+  transform: scale(1);
+}
+
+.chapter:focus-visible .arrowOut {
+  transform: translateX(130%);
+}
+
+.chapter:focus-visible .arrowIn {
+  transform: translateX(0);
+}
+
+@media (hover: hover) {
+  .chapter:hover::after {
+    transform: scaleX(1);
+  }
+
+  .chapter:hover .numeral {
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+
+  .chapter:hover .numeral::before {
+    transform: scale(1);
+  }
+
+  .chapter:hover .leader {
+    opacity: 1;
+  }
+
+  .chapter:hover .arrow {
+    color: var(--fg);
+  }
+
+  .chapter:hover .arrowOut {
+    transform: translateX(130%);
+  }
+
+  .chapter:hover .arrowIn {
+    transform: translateX(0);
+  }
+
+  .chapter:hover .title {
+    color: var(--accent);
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1024px) {
+  .line {
+    max-width: 24ch;
+  }
+}
+
+/* Phones: the index becomes a printed table of contents — seal, title, arrow. */
+@media (max-width: 760px) {
+  /* Balancing stops after a few lines; on long phone paragraphs "pretty" avoids orphans instead. */
+  .statement {
+    text-wrap: pretty;
+  }
+
+  .chapters {
+    grid-template-columns: 1fr;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .chapter {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "num title arrow"
+      "num line arrow";
+    column-gap: 18px;
+    padding-block: 22px;
+  }
+
+  .numeral {
+    align-self: start;
+    width: 42px;
+    height: 42px;
+    font-size: 1.125rem;
+  }
+
+  .leader {
+    display: none;
+  }
+
+  .arrow {
+    align-self: center;
+  }
+
+  .title {
+    margin-top: 0;
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 1.875rem);
+  }
+
+  .line {
+    margin-top: 4px;
+    max-width: none;
+  }
+}

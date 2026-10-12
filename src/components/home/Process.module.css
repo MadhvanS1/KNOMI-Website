@@ -1,0 +1,284 @@
+/* =====================================================================
+   Process — four courses on one rail.
+   Wide (>= 1024px): numerals above, rail through the stops, text below.
+   Narrow: the rail runs down the left edge, steps stacked beside it.
+   ===================================================================== */
+
+.layout {
+  --num-h: 2.75rem;
+  --stop: 11px;
+  --rail-gap: 8px;
+  --cap: 13px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "head"
+    "steps"
+    "cta";
+}
+
+.head {
+  grid-area: head;
+}
+
+.cta {
+  grid-area: cta;
+  justify-self: start;
+  margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+/* ---------- Steps ---------- */
+
+.steps {
+  grid-area: steps;
+  list-style: none;
+  margin-top: clamp(3rem, 2.2rem + 3vw, 5.5rem);
+}
+
+.step {
+  position: relative;
+  min-width: 0;
+}
+
+.num {
+  display: flex;
+  align-items: center;
+  height: var(--num-h);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(2.125rem, 1.85rem + 0.9vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+  color: var(--accent-soft);
+}
+
+.rail {
+  position: relative;
+  display: block;
+}
+
+/* A hollow stop that fills with russet when the line arrives. */
+.stop {
+  position: absolute;
+  z-index: 1;
+  width: var(--stop);
+  height: var(--stop);
+  border: 1px solid var(--oat);
+  border-radius: 50%;
+}
+
+.stopFill {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent);
+  transform: scale(0);
+}
+
+.track {
+  position: absolute;
+  display: block;
+  background: var(--line-strong);
+}
+
+.seg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--accent);
+}
+
+.segH {
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+.segV {
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+}
+
+/* The line ends on a star: the first order. */
+.cap {
+  position: absolute;
+  z-index: 1;
+  width: var(--cap);
+  height: var(--cap);
+  background: var(--oat);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
+
+.capFill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  clip-path: inherit;
+  transform: scale(0);
+}
+
+.body {
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--fs-h4);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+.text {
+  margin-top: 12px;
+  font-size: var(--fs-small);
+  line-height: 1.62;
+  color: var(--fg-2);
+  max-width: 26em;
+}
+
+/* ---------- Narrow: vertical rail on the left ---------- */
+
+@media (max-width: 1023.98px) {
+  .wideOnly,
+  .segH {
+    display: none;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    grid-template-areas:
+      "rail num"
+      "rail body";
+    column-gap: clamp(14px, 3.5vw, 32px);
+  }
+
+  .num {
+    grid-area: num;
+  }
+
+  .rail {
+    grid-area: rail;
+  }
+
+  .stop {
+    left: calc(50% - var(--stop) / 2);
+    top: calc((var(--num-h) - var(--stop)) / 2);
+  }
+
+  /* Runs from just below this stop to just above the next one. */
+  .track {
+    left: calc(50% - 0.5px);
+    width: 1px;
+    top: calc((var(--num-h) + var(--stop)) / 2 + var(--rail-gap));
+    bottom: calc(var(--rail-gap) - (var(--num-h) - var(--stop)) / 2);
+  }
+
+  .last .track {
+    bottom: calc(var(--cap) + var(--rail-gap));
+  }
+
+  .cap {
+    left: calc(50% - var(--cap) / 2);
+    bottom: 0;
+  }
+
+  .body {
+    grid-area: body;
+    padding-top: 8px;
+    padding-bottom: clamp(2.5rem, 2rem + 3vw, 3.5rem);
+  }
+
+  .last .body {
+    padding-bottom: 2.25rem;
+  }
+}
+
+/* Tablet: title and text side by side, so the column reads as a designed list. */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(24px, 4vw, 48px);
+    align-items: start;
+  }
+
+  .text {
+    margin-top: 4px;
+  }
+}
+
+/* ---------- Wide: one horizontal rail across the row ---------- */
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "head cta"
+      "steps steps";
+    column-gap: 48px;
+  }
+
+  .cta {
+    align-self: end;
+    justify-self: end;
+    margin-top: 0;
+  }
+
+  .narrowOnly,
+  .segV {
+    display: none;
+  }
+
+  /* Gapless columns: every stop sits exactly at i / 4 of the row. */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .rail {
+    height: var(--stop);
+    margin-top: 20px;
+  }
+
+  .stop {
+    left: 0;
+    top: 0;
+  }
+
+  /* Runs from just after this stop to just before the next column's stop. */
+  .track {
+    top: calc(50% - 0.5px);
+    height: 1px;
+    left: calc(var(--stop) + var(--rail-gap));
+    right: var(--rail-gap);
+  }
+
+  .last .track {
+    right: calc(var(--cap) + var(--rail-gap));
+  }
+
+  .cap {
+    right: 0;
+    top: calc(50% - var(--cap) / 2);
+  }
+
+  .body {
+    padding-top: clamp(1.5rem, 1rem + 1vw, 2rem);
+    padding-right: clamp(24px, 3vw, 52px);
+  }
+
+  .last .body {
+    padding-right: 0;
+  }
+}
+
+/* ---------- Reduced motion: the finished rail, no drawing ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .seg,
+  .stopFill,
+  .capFill {
+    transform: none !important;
+  }
+}

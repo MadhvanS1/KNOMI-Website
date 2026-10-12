@@ -1,0 +1,774 @@
+/* =====================================================================
+   Hero — copy on the left, an editorial "doorway" composition on the right.
+   Every measurement in the composition is a multiple of --p (the hero
+   phone's width), so the whole still-life scales as one object.
+   ===================================================================== */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: max(100svh, 720px);
+  padding-top: calc(var(--nav-h) + clamp(20px, 3.4vh, 56px));
+  padding-bottom: clamp(44px, 6vh, 88px);
+  background-color: var(--bg);
+  overflow: clip;
+}
+
+/* A soft pool of light behind the composition, like a lamp over a table */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(48% 62% at 76% 50%, var(--paper) 0%, transparent 72%);
+  opacity: 0.85;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  align-items: center;
+  gap: clamp(32px, 3.6vw, 64px);
+}
+
+/* ---------- Copy ---------- */
+
+/* Keep the leading hairline on the first line if the eyebrow wraps */
+.eyebrow {
+  align-items: flex-start;
+}
+
+.eyebrow::before {
+  flex-shrink: 0;
+  margin-top: calc(0.8em - 0.5px);
+}
+
+.copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.title {
+  margin-top: clamp(22px, 2.4vw, 32px);
+  font-size: clamp(3rem, 0.35rem + 6.55vw, 6.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.03em;
+  text-wrap: initial;
+}
+
+.lead {
+  margin-top: clamp(24px, 2.4vw, 34px);
+  max-width: 31em;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 34px;
+  margin-top: clamp(32px, 3.2vw, 44px);
+}
+
+.primary {
+  box-shadow: 0 14px 30px -18px color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.secondary {
+  font-size: 1rem;
+}
+
+/* Generous hit area without moving the underline away from the text */
+.secondary::after {
+  content: "";
+  position: absolute;
+  inset: -13px -10px;
+}
+
+.down {
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.secondary:hover .down {
+  transform: translateY(3px);
+}
+
+.proof {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  width: 100%;
+  max-width: 36rem;
+  margin-top: clamp(36px, 4.2vw, 60px);
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: var(--fg-3);
+}
+
+.proof li {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.proofStar {
+  width: 8px;
+  height: 8px;
+}
+
+.proof li:first-child .proofStar {
+  display: none;
+}
+
+/* ---------- Composition ---------- */
+
+.stage {
+  /* Phone width: by viewport width, but never so tall the still-life leaves the fold */
+  --p: clamp(232px, min(21vw, calc((100svh - 172px) / 2.46)), 320px);
+  --spread: 0.56;
+  --sw: 0.6;
+  --ring: 1.74;
+  position: relative;
+  justify-self: center;
+  width: calc(var(--p) * 1.9);
+  height: calc(var(--p) * 2.46);
+}
+
+/* Brass orbit, concentric with the top of the arch */
+.ringWrap {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--p) * (0.72 - var(--ring) / 2));
+  width: calc(var(--p) * var(--ring));
+  aspect-ratio: 1;
+  margin-left: calc(var(--p) * var(--ring) / -2);
+  pointer-events: none;
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ring circle {
+  fill: none;
+  stroke: var(--brass);
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+}
+
+/* Sits on the orbit at roughly ten o'clock */
+.ringStar {
+  position: absolute;
+  left: calc(14.6% - 6px);
+  top: calc(14.6% - 6px);
+  width: 12px;
+  height: 12px;
+}
+
+.archWrap {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: calc(var(--p) * 1.44);
+  height: calc(var(--p) * 2.06);
+  margin-left: calc(var(--p) * -0.72);
+  transform-origin: 50% 100%;
+}
+
+.arch {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-arch);
+  overflow: hidden;
+  background:
+    radial-gradient(80% 34% at 50% 6%, color-mix(in srgb, var(--paper) 55%, transparent) 0%, transparent 100%),
+    linear-gradient(180deg, color-mix(in srgb, var(--sand) 72%, var(--linen)) 0%, var(--sand) 62%, color-mix(in srgb, var(--sand) 82%, var(--oat)) 100%);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* Inner hairline, concentric with the outer edge */
+.arch::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--p) * 0.034);
+  border: 1px solid color-mix(in srgb, var(--brass) 50%, transparent);
+  border-radius: 999px 999px 8px 8px;
+}
+
+.inscription {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.inscription text {
+  fill: var(--fg-3);
+  font-family: var(--font-sans);
+  font-size: 3.8px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+}
+
+.side {
+  position: absolute;
+  z-index: 2;
+  width: calc(var(--p) * var(--sw));
+}
+
+.sideLeft {
+  left: calc(50% - var(--p) * (var(--spread) + var(--sw) / 2));
+  bottom: calc(var(--p) * 0.1);
+}
+
+.sideRight {
+  left: calc(50% + var(--p) * (var(--spread) - var(--sw) / 2));
+  bottom: calc(var(--p) * 0.2);
+}
+
+.sideInner {
+  transform-origin: 50% 100%;
+}
+
+.phone {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 0;
+  width: var(--p);
+  margin-left: calc(var(--p) / -2);
+}
+
+/* ---------- Knomi Host bubble ---------- */
+
+.bubbleWrap {
+  --bw: clamp(204px, calc(var(--p) * 0.8), 240px);
+  position: absolute;
+  z-index: 4;
+  width: var(--bw);
+  /* Right edge overlaps the phone's left edge by about a quarter of its width
+     (clear of the menu's title); bottom sits at ~40% of the phone's height,
+     just above the illustrated host on the dish. */
+  left: calc(50% - var(--p) * 0.24 - var(--bw));
+  bottom: calc(var(--p) * 1.2);
+}
+
+.bubblePop {
+  transform-origin: 82% 100%;
+}
+
+.float {
+  animation: hostFloat 6.5s var(--ease-in-out) infinite;
+}
+
+@keyframes hostFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.bubble {
+  position: relative;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Tail, pointing down at the host drawn on the dish */
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -6.5px;
+  right: max(22px, calc(var(--p) * 0.08));
+  width: 12px;
+  height: 12px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-bottom-right-radius: 3px;
+  background-color: var(--surface);
+  transform: rotate(45deg);
+}
+
+.bubbleHead {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: var(--terracotta);
+  color: var(--paper);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.bubbleName {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.live {
+  width: 6px;
+  height: 6px;
+  margin-left: auto;
+  border-radius: 50%;
+  background-color: var(--olive);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--olive) 18%, transparent);
+}
+
+.message {
+  position: relative;
+  margin-top: 10px;
+}
+
+.typing {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  display: inline-flex;
+  gap: 4px;
+  padding: 7px 10px;
+  border-radius: var(--r-pill);
+  background-color: var(--surface-sunk);
+}
+
+.typing span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--fg-3);
+  animation: typingDot 1s var(--ease-in-out) 3;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes typingDot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  40% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+.bubbleLine {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.24;
+  letter-spacing: -0.005em;
+  color: var(--fg);
+  text-wrap: pretty;
+}
+
+.add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 6px 12px 6px 9px;
+  border-radius: var(--r-pill);
+  background-color: var(--terracotta);
+  color: var(--paper);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+/* ---------- Ornaments ---------- */
+
+.star {
+  position: absolute;
+}
+
+.starFloor {
+  left: calc(50% - var(--p) * 0.98);
+  bottom: calc(var(--p) * 0.06);
+  width: 9px;
+  height: 9px;
+}
+
+/* ---------- Scroll cue ---------- */
+
+.cueRow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(20px, 3.4vh, 36px);
+  pointer-events: none;
+}
+
+.cueInner {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.cueLine {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 44px;
+  overflow: hidden;
+  background-color: var(--line);
+}
+
+.cueLine span {
+  position: absolute;
+  inset: 0;
+  background-color: var(--fg-3);
+  transform: scaleY(0);
+  transform-origin: 50% 0%;
+  animation: cueDraw 2.6s var(--ease-in-out) infinite;
+}
+
+@keyframes cueDraw {
+  0% {
+    transform: scaleY(0);
+    transform-origin: 50% 0%;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: 50% 0%;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: 50% 100%;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: 50% 100%;
+  }
+}
+
+.cueLabel {
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--fg-3);
+}
+
+/* Loops rest while the hero is off screen */
+.paused .float,
+.paused .typing span,
+.paused .cueLine span {
+  animation-play-state: paused;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .eyebrow {
+    letter-spacing: 0.16em;
+  }
+
+  /* Lean the still-life into the right gutter so the bubble clears the copy */
+  .stage {
+    --spread: 0.5;
+    justify-self: end;
+    margin-right: calc(var(--gutter) * -0.6);
+  }
+
+  .bubbleWrap {
+    --bw: clamp(196px, calc(var(--p) * 0.84), 228px);
+  }
+}
+
+@media (max-width: 1023px) {
+  .hero {
+    justify-content: flex-start;
+    min-height: 0;
+    padding-top: calc(var(--nav-h) + clamp(36px, 7vw, 64px));
+    padding-bottom: clamp(56px, 10vw, 96px);
+  }
+
+  .hero::before {
+    background: radial-gradient(70% 38% at 50% 76%, var(--paper) 0%, transparent 72%);
+  }
+
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(56px, 10vw, 88px);
+  }
+
+  .copy {
+    max-width: 680px;
+  }
+
+  .title {
+    font-size: clamp(2.6rem, 1.05rem + 8.4vw, 6rem);
+  }
+
+  /* Never wider than the column: children are placed from its centre, so the
+     side screens may overhang symmetrically while the bubble stays on screen. */
+  .stage {
+    --p: min(60vw, 280px);
+    --spread: 0.52;
+    --sw: 0.6;
+    --ring: 1.62;
+    width: min(100%, calc(var(--p) * 1.9));
+  }
+
+  .cueRow {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .stage {
+    --spread: 0.4;
+    --sw: 0.56;
+    --ring: 1.54;
+  }
+
+  .bubbleWrap {
+    --bw: min(176px, 47vw);
+    left: max(-8px, calc(50% - var(--p) * 0.24 - var(--bw)));
+    bottom: calc(var(--p) * 1);
+  }
+
+  .bubble {
+    padding: 11px 12px 13px;
+  }
+
+  .bubbleLine {
+    font-size: 0.98rem;
+  }
+
+  .avatar {
+    width: 22px;
+    height: 22px;
+    font-size: 13px;
+  }
+
+  .bubbleName {
+    font-size: 0.625rem;
+  }
+
+  .add {
+    margin-top: 10px;
+    font-size: 0.6875rem;
+  }
+
+  .starFloor {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .ctas {
+    width: 100%;
+  }
+
+  .primary {
+    width: 100%;
+  }
+
+  .proof {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .proof li {
+    gap: 12px;
+  }
+
+  .proof li:first-child .proofStar {
+    display: inline-block;
+  }
+}
+
+/* The cue only earns its place when there is room beneath the fold line */
+@media (max-height: 820px) {
+  .cueRow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cueRow,
+  .typing {
+    display: none;
+  }
+
+  .float {
+    animation: none;
+  }
+}
+
+/* ---------- Entrance (CSS, so it plays on first paint) ----------
+   Each element sets its own delay through --d (see `at()` in Hero.tsx). */
+.inRing,
+.inPop,
+.inArch,
+.inSideLeft,
+.inSideRight,
+.inPhone,
+.inBubble,
+.inTypingOut,
+.inLine {
+  animation-fill-mode: both;
+  animation-delay: var(--d, 0s);
+  animation-timing-function: var(--ease-out);
+}
+
+.inRing {
+  animation-name: ringIn;
+  animation-duration: 1.8s;
+}
+
+@keyframes ringIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+.inPop {
+  animation-name: popIn;
+  animation-duration: 0.9s;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+
+.inArch {
+  animation-name: archIn;
+  animation-duration: 1.5s;
+}
+
+@keyframes archIn {
+  from {
+    clip-path: inset(100% 0% 0% 0%);
+  }
+  to {
+    clip-path: inset(0% 0% 0% 0%);
+  }
+}
+
+.inSideLeft {
+  animation-name: sideLeftIn;
+  animation-duration: 1.3s;
+}
+
+@keyframes sideLeftIn {
+  from {
+    opacity: 0;
+    transform: translateX(62%) rotate(0deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(-8deg);
+  }
+}
+
+.inSideRight {
+  animation-name: sideRightIn;
+  animation-duration: 1.3s;
+}
+
+@keyframes sideRightIn {
+  from {
+    opacity: 0;
+    transform: translateX(-62%) rotate(0deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(7deg);
+  }
+}
+
+.inPhone {
+  animation-name: phoneIn;
+  animation-duration: 1.2s;
+}
+
+@keyframes phoneIn {
+  from {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+}
+
+.inBubble {
+  animation-name: bubbleIn;
+  animation-duration: 0.8s;
+}
+
+@keyframes bubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+}
+
+.inTypingOut {
+  animation-name: typingOut;
+  animation-duration: 0.25s;
+}
+
+@keyframes typingOut {
+  to {
+    opacity: 0;
+  }
+}
+
+.inLine {
+  animation-name: lineIn;
+  animation-duration: 0.6s;
+}
+
+@keyframes lineIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}

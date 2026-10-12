@@ -1,0 +1,482 @@
+/* =====================================================================
+   Chapter I — Know me.
+   A scroll story: one phone standing in an arched doorway while the three
+   moments of the guest's visit (scan, browse, order) pass beside it.
+   ===================================================================== */
+
+.root {
+  /* Decorative pieces (ground line, phone shadow) may reach past the gutter.
+     `clip` (unlike `hidden`) keeps position: sticky working inside. */
+  overflow-x: clip;
+}
+
+.story {
+  --rail-gap: clamp(36px, 3.6vw, 60px);
+  margin-top: clamp(3.5rem, 2rem + 5vw, 7rem);
+}
+
+/* ---------------------------------------------------------------------
+   The arch: a lit doorway in linen, with a hairline inner arch and a
+   brass star at its crown. Shared by the desktop stage and mobile figures.
+   Parent sets --arch-h.
+   --------------------------------------------------------------------- */
+.arch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--arch-h);
+  border-radius: 999px 999px 0 0;
+  background:
+    radial-gradient(85% 55% at 50% 20%, var(--paper) 0%, transparent 72%),
+    linear-gradient(180deg, var(--linen) 0%, var(--sand) 100%);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Inner hairline arch, open at the threshold like a doorway moulding */
+.arch::before {
+  content: "";
+  position: absolute;
+  inset: 11px 11px 0;
+  z-index: 2;
+  border: 1px solid var(--line-strong);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  pointer-events: none;
+}
+
+/* Brass star at the crown */
+.arch::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  z-index: 3;
+  width: 11px;
+  height: 11px;
+  margin-left: -5.5px;
+  background: var(--brass);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
+
+/* Sepia street sketch along the base of the arch */
+.skyline {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 180%;
+  opacity: 0.6;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top, #000 50%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 50%, transparent 100%);
+}
+
+.skylineStatic {
+  transform: translateX(var(--shift, 0%));
+}
+
+.skylineImg {
+  width: 100%;
+  height: auto;
+}
+
+/* The threshold: a hairline floor the arch stands on, fading at both ends */
+.ground {
+  position: absolute;
+  top: var(--arch-h);
+  left: -8%;
+  right: -8%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--line-strong) 18%,
+    var(--line-strong) 82%,
+    transparent
+  );
+}
+
+/* ---------------------------------------------------------------------
+   Steps (mobile-first)
+   --------------------------------------------------------------------- */
+.stageCol {
+  display: none;
+}
+
+.stepsCol {
+  position: relative;
+}
+
+.rail {
+  display: none;
+}
+
+.steps {
+  position: relative;
+  list-style: none;
+  display: grid;
+  gap: clamp(5rem, 3rem + 8vw, 7.5rem);
+}
+
+.step {
+  --num-size: clamp(3rem, 2rem + 3vw, 5rem);
+  position: relative;
+}
+
+.stepBody {
+  position: relative;
+}
+
+.dot {
+  display: none;
+}
+
+.numRow {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 1.6vw, 24px);
+}
+
+.num {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--num-size);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-feature-settings: "lnum" 1;
+  color: var(--accent-soft);
+  /* Italic overhang room */
+  padding-right: 0.06em;
+}
+
+.numLine {
+  flex: 1;
+  max-width: 200px;
+  height: 1px;
+  background: var(--line-strong);
+  transform-origin: left center;
+}
+
+.title {
+  margin-top: clamp(18px, 1.8vw, 28px);
+  font-size: var(--fs-h3);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+
+.body {
+  margin-top: 14px;
+  max-width: 30em;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+/* ---------------------------------------------------------------------
+   Phone screen: status bar + screenshot, layered over PhoneFrame's image.
+   Sizes key off --pw (the phone width) set by the stage or the figure.
+   --------------------------------------------------------------------- */
+.layers {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+.scr {
+  position: absolute;
+  inset: 0;
+  background: var(--bar-bg);
+}
+
+/* Shares the camera island's box, so the clock and icons sit level with it */
+.statusBar {
+  position: absolute;
+  top: 2.2%;
+  left: 0;
+  right: 0;
+  height: 3.6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 11% 9%;
+  color: var(--bar-ink);
+  font-size: calc(var(--pw) * 0.042);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.statusIcons {
+  width: auto;
+  height: 0.78em;
+}
+
+.shot {
+  position: absolute;
+  top: 6.6%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  /* Hides the screenshots' own baked-in rounded corners */
+  border-radius: calc(var(--pw) * 0.05) calc(var(--pw) * 0.05) 0 0;
+}
+
+.shotImg {
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* ---------- Mobile figure: a phone in its own small doorway ---------- */
+.figure {
+  --pw: min(64vw, 280px);
+  --apex: calc(var(--pw) * 0.27);
+  --overhang: calc(var(--pw) * 0.12);
+  --arch-h: calc(var(--apex) + var(--pw) * 2 - var(--overhang));
+  position: relative;
+  width: min(calc(var(--pw) * 1.4), 100%);
+  margin: clamp(2.5rem, 8vw, 3.5rem) auto 0;
+  padding-top: var(--apex);
+}
+
+.figPhone {
+  position: relative;
+  z-index: 1;
+  width: var(--pw);
+  margin-inline: auto;
+}
+
+/* ---------- Tablet: steps alternate sides around their phone ---------- */
+@media (min-width: 700px) and (max-width: 959px) {
+  .step {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: clamp(2.5rem, 7vw, 4.5rem);
+  }
+
+  .step:nth-child(even) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .step:nth-child(even) .figure {
+    order: -1;
+  }
+
+  .figure {
+    --pw: clamp(180px, 27vw, 250px);
+    width: calc(var(--pw) * 1.4);
+    margin: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Desktop: sticky stage + scroll story
+   --------------------------------------------------------------------- */
+@media (min-width: 960px) {
+  .story {
+    /* Phone width follows the viewport height so the whole stage
+       (arch crown + phone + caption) always fits below the navbar. */
+    --pw: clamp(190px, calc((100vh - 176px) / 2.3), 300px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(2.5rem, 6vw, 7rem);
+  }
+
+  .stageCol {
+    display: block;
+    position: relative;
+  }
+
+  .stage {
+    --apex: calc(var(--pw) * 0.28);
+    --overhang: calc(var(--pw) * 0.12);
+    --arch-h: calc(var(--apex) + var(--pw) * 2 - var(--overhang));
+    --stage-h: calc(var(--apex) + var(--pw) * 2 + 64px);
+    position: sticky;
+    top: max(calc(var(--nav-h) + 24px), calc(50vh - var(--stage-h) / 2));
+    width: min(calc(var(--pw) * 1.46), 100%);
+    height: var(--stage-h);
+    margin-inline: auto;
+  }
+
+  .stagePhone {
+    position: absolute;
+    top: var(--apex);
+    left: 50%;
+    z-index: 1;
+    width: var(--pw);
+    transform: translateX(-50%);
+  }
+
+  .stagePhone .layer {
+    will-change: transform, opacity;
+  }
+
+  /* "01 / 03 — Scan" */
+  .caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(var(--apex) + var(--pw) * 2 + 30px);
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.6em;
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-3);
+    white-space: nowrap;
+  }
+
+  .tick {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    /* room for descenders inside the mask */
+    padding-block: 0.15em;
+    margin-block: -0.15em;
+  }
+
+  .tickInner {
+    display: inline-block;
+  }
+
+  .capNum {
+    color: var(--fg);
+  }
+
+  .capTotal {
+    letter-spacing: 0.14em;
+  }
+
+  .capDash {
+    color: var(--line-strong);
+    letter-spacing: 0;
+  }
+
+  /* Steps column with its progress rail */
+  .stepsCol {
+    padding-left: var(--rail-gap);
+  }
+
+  .rail {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    background: var(--line-strong);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 96px, #000 calc(100% - 96px), transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 96px, #000 calc(100% - 96px), transparent);
+  }
+
+  .railFill {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: var(--accent);
+    transform-origin: top center;
+  }
+
+  .steps {
+    gap: 0;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    min-height: 75vh;
+  }
+
+  .figure {
+    display: none;
+  }
+
+  /* A bead on the thread: the ring in the page colour cuts the rail. */
+  .dot {
+    display: block;
+    position: absolute;
+    top: calc(var(--num-size) * 0.47);
+    left: calc(var(--rail-gap) * -1 + 0.5px);
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--bg);
+    box-shadow: 0 0 0 6px var(--bg);
+    transform: translate(-50%, -50%);
+    transition: border-color 400ms var(--ease-out);
+  }
+
+  .dot::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: scale(0);
+    transition: transform 450ms var(--ease-spring);
+  }
+
+  .dotOn {
+    border-color: var(--accent);
+  }
+
+  .dotOn::after {
+    transform: scale(1);
+  }
+
+  /* Only the step being read is in full voice. The others step back in colour,
+     not opacity, so their text still reads at >= 4.5:1. */
+  .stepText .numRow {
+    opacity: 0.35;
+    transition: opacity 500ms var(--ease-out);
+  }
+
+  .stepText .title,
+  .stepText .body {
+    color: var(--fg-3);
+    transition: color 500ms var(--ease-out);
+  }
+
+  .isActive .stepText .numRow {
+    opacity: 1;
+  }
+
+  .isActive .stepText .title {
+    color: var(--fg);
+  }
+
+  .isActive .stepText .body {
+    color: var(--fg-2);
+  }
+
+  .numLine {
+    transform: scaleX(0.3);
+    transition: transform 900ms var(--ease-out);
+  }
+
+  .isActive .numLine {
+    transform: scaleX(1);
+  }
+}
+
+@media (min-width: 1200px) {
+  .story {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  }
+}

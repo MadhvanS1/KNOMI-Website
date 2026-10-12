@@ -1,0 +1,45 @@
+.head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+  max-width: 900px;
+}
+
+.center {
+  align-items: center;
+  text-align: center;
+  margin-inline: auto;
+}
+
+.center .lead {
+  margin-inline: auto;
+}
+
+.title {
+  max-width: 14ch;
+}
+
+.center .title {
+  max-width: 16ch;
+}
+
+.lead {
+  margin-top: 2px;
+}
+
+.numeral {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  line-height: 1;
+  color: var(--accent-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4em;
+  height: 2.4em;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px 999px 999px 999px;
+}

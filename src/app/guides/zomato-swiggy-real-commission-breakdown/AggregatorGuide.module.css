@@ -1,0 +1,682 @@
+/* KNOMI Guide: Zomato & Swiggy Commission Breakdown India */
+
+.pageContainer {
+  padding-top: 100px;
+  min-height: 80vh;
+}
+
+.heroSection {
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.breadcrumb a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-whiskey-sour);
+}
+
+.title {
+  font-size: 2.75rem;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--color-text-primary);
+  font-family: var(--font-playfair, serif);
+  font-weight: 700;
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* Answer-First AEO Snippet Box */
+.aeoBox {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-whiskey-sour);
+  border-left: 5px solid var(--color-whiskey-sour);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 40px auto 0;
+  max-width: 860px;
+  text-align: left;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.aeoLabel {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-honey-garlic);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.aeoText {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+/* Takeaway Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1040px;
+  margin: 40px auto 0;
+}
+
+.metricCard {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+
+.metricValue {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--color-whiskey-sour);
+  margin-bottom: 8px;
+  font-family: var(--font-playfair, serif);
+}
+
+.metricLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* Article Body Content */
+.articleBody {
+  max-width: 860px;
+  margin: 60px auto 0;
+  padding: 0 24px;
+}
+
+.articleBody h2 {
+  font-family: var(--font-playfair, serif);
+  font-size: 2.1rem;
+  color: var(--color-text-primary);
+  margin: 52px 0 20px;
+  line-height: 1.25;
+}
+
+.articleBody h3 {
+  font-size: 1.4rem;
+  color: var(--color-text-primary);
+  margin: 32px 0 14px;
+  line-height: 1.35;
+}
+
+.articleBody p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+}
+
+.articleBody ul, .articleBody ol {
+  margin-bottom: 24px;
+  padding-left: 24px;
+}
+
+.articleBody li {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+
+.articleBody strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* Formula Presentation Card */
+.formulaCard {
+  background: var(--color-surface-pressed);
+  border: 1px solid var(--color-border-strong);
+  border-left: 4px solid var(--color-honey-garlic);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 28px 0;
+}
+
+.formulaTitle {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-honey-garlic);
+  margin-bottom: 8px;
+}
+
+.formulaEquation {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+
+.formulaNote {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Callout Box */
+.calloutBox {
+  background: rgba(133, 97, 58, 0.08);
+  border: 1px solid rgba(133, 97, 58, 0.3);
+  border-radius: 12px;
+  padding: 28px;
+  margin: 36px 0;
+}
+
+.calloutTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-whiskey-sour);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calloutText {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Data Tables */
+.tableWrapper {
+  overflow-x: auto;
+  margin: 32px 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-card);
+}
+
+.styledTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.styledTable th {
+  background-color: var(--color-surface-pressed);
+  color: var(--color-text-primary);
+  font-weight: 700;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--color-border-strong);
+  white-space: nowrap;
+}
+
+.styledTable td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.styledTable tr:last-child td {
+  border-bottom: none;
+}
+
+.styledTable tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+.tableHighlight {
+  font-weight: 700;
+  color: var(--color-whiskey-sour) !important;
+}
+
+.tableDanger {
+  font-weight: 700;
+  color: #a8402f !important;
+}
+
+.tableSuccess {
+  font-weight: 700;
+  color: #3f7a52 !important;
+}
+
+/* Waterfall List */
+.waterfallList {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.waterfallItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: var(--color-surface-pressed);
+  font-size: 0.95rem;
+}
+
+.waterfallItemDeduct {
+  color: #a8402f;
+  font-weight: 600;
+}
+
+.waterfallItemFinal {
+  background-color: rgba(169, 71, 47, 0.12);
+  border: 1px solid var(--color-whiskey-sour);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-text-primary);
+}
+
+/* Author Box */
+.authorBox {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 48px 0;
+}
+
+.authorAvatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-whiskey-sour), var(--color-honey-garlic));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fbf8f3;
+  flex-shrink: 0;
+}
+
+.authorInfo h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 4px;
+}
+
+.authorRole {
+  font-size: 0.85rem;
+  color: var(--color-whiskey-sour);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.authorBio {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* FAQ Section */
+.faqSection {
+  margin-top: 56px;
+  border-top: 1px solid var(--color-border-default);
+  padding-top: 48px;
+}
+
+.faqItem {
+  margin-bottom: 28px;
+}
+
+.faqQuestion {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+.faqAnswer {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+}
+
+/* CTA Card */
+.ctaCard {
+  background: linear-gradient(135deg, #1c1411, #2b201a);
+  color: #fbf8f3;
+  border-radius: 16px;
+  padding: 48px 36px;
+  margin: 60px 0;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+}
+
+.ctaCard h3 {
+  font-family: var(--font-playfair, serif);
+  font-size: 2.1rem;
+  margin-bottom: 16px;
+  color: #fbf8f3;
+}
+
+.ctaCard p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #cdbba0;
+  max-width: 620px;
+  margin: 0 auto 28px;
+}
+
+.ctaButton {
+  display: inline-block;
+  background-color: var(--color-whiskey-sour);
+  color: #fbf8f3 !important;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 1.05rem;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.ctaButton:hover {
+  background-color: var(--color-honey-garlic);
+  transform: translateY(-2px);
+}
+
+/* Interactive Calculator Container */
+.calculatorSection {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 16px;
+  padding: 36px 32px;
+  margin: 48px 0;
+  box-shadow: var(--shadow-card);
+}
+
+.calcHeader {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.calcTitle {
+  font-family: var(--font-playfair, serif);
+  font-size: 1.85rem;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+
+.calcDescription {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.calcLayout {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 36px;
+}
+
+.inputsPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputLabelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inputLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.inputValue {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-whiskey-sour);
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--color-whiskey-sour);
+  cursor: pointer;
+}
+
+.rangeLimits {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.resultsPanel {
+  background-color: var(--color-surface-pressed);
+  border: 1px solid var(--color-border-default);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resultsHeader {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border-default);
+  padding-bottom: 12px;
+}
+
+.waterfallCard {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.waterfallRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.waterfallRowBold {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  padding-top: 6px;
+  border-top: 1px dashed var(--color-border-default);
+}
+
+.resultCardHighlight {
+  background-color: rgba(169, 71, 47, 0.08);
+  border: 1px solid var(--color-whiskey-sour);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resultCardWarning {
+  background-color: rgba(168, 64, 47, 0.08);
+  border: 1px solid rgba(168, 64, 47, 0.35);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resultCardSuccess {
+  background-color: rgba(63, 122, 82, 0.08);
+  border: 1px solid rgba(63, 122, 82, 0.35);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resultLabel {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.resultValue {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--color-whiskey-sour);
+  font-family: var(--font-playfair, serif);
+}
+
+.resultValueGreen {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #3f7a52;
+  font-family: var(--font-playfair, serif);
+}
+
+.resultValueWarning {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #a8402f;
+  font-family: var(--font-playfair, serif);
+}
+
+.resultNote {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
+/* Comparison Matrix Inside Simulator */
+.comparisonGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.comparisonBox {
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.comparisonBoxZomato {
+  background-color: rgba(168, 64, 47, 0.06);
+  border: 1px solid rgba(168, 64, 47, 0.25);
+}
+
+.comparisonBoxKnomi {
+  background-color: rgba(63, 122, 82, 0.06);
+  border: 1px solid rgba(63, 122, 82, 0.25);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 960px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .calcLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 2.1rem;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .authorBox {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .calculatorSection {
+    padding: 24px 18px;
+  }
+
+  .ctaCard {
+    padding: 36px 20px;
+  }
+}

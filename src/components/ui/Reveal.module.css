@@ -1,0 +1,53 @@
+.line {
+  display: block;
+}
+
+/* Each word sits in its own clipping window. The padding gives italic
+   overhangs and descenders room so they are not shaved off. */
+.mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.04em 0.08em 0.14em 0;
+  margin: -0.04em -0.08em -0.14em 0;
+}
+
+.word {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* CSS entrances for above-the-fold content (see `immediate`). */
+.enter {
+  animation: enter 0.95s var(--ease-out) both;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--y, 28px));
+  }
+}
+
+.lift {
+  animation: lift 0.95s var(--ease-out) both;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes lift {
+  from {
+    transform: translateY(var(--y, 28px));
+  }
+}
+
+.wordEnter {
+  animation: wordRise 1.05s var(--ease-out) both;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes wordRise {
+  from {
+    transform: translateY(112%);
+  }
+}

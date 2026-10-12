@@ -1,0 +1,915 @@
+/* =====================================================================
+   Pricing — a printed prix-fixe card, set as an arcade of three arches,
+   with a bill-style calculator beneath.
+   ===================================================================== */
+
+.pricing {
+  --rise: 0px;
+}
+
+/* ---------- Header + vault ---------- */
+
+.headWrap {
+  position: relative;
+}
+
+.sectionHead {
+  position: relative;
+  z-index: 1;
+}
+
+.vault {
+  display: none;
+}
+
+.vault svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.vaultInner {
+  position: relative;
+  padding-top: 8px;
+}
+
+.keystone {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  margin-left: -5px;
+}
+
+@media (min-width: 1024px) {
+  .vault {
+    display: block;
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    right: 0;
+    top: calc(-1 * clamp(56px, 4.4vw, 84px));
+    width: min(1000px, 78%);
+    margin-inline: auto;
+    color: var(--oat);
+    pointer-events: none;
+  }
+}
+
+/* ---------- Plan cards ---------- */
+
+.plans {
+  list-style: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 36px;
+  max-width: 440px;
+  margin: clamp(3.5rem, 2.6rem + 3vw, 6rem) auto 0;
+  padding-top: calc(var(--rise) + 14px);
+}
+
+.plan {
+  container-type: inline-size;
+  display: flex;
+  min-width: 0;
+}
+
+.card {
+  /* Arch height: a true semicircle on narrow cards, capped on wide ones
+     so the curve becomes a gentle basket-handle arch. */
+  --arch-h: min(50cqi, 214px);
+  --inset: 9px;
+  --pad-x: clamp(24px, 9cqi, 44px);
+  --pad-top: clamp(52px, 15cqi, 70px);
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--pad-top) var(--pad-x) var(--pad-x);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius:
+    50% 50% var(--r-lg) var(--r-lg) /
+    var(--arch-h) var(--arch-h) var(--r-lg) var(--r-lg);
+  transition:
+    transform 600ms var(--ease-out),
+    box-shadow 600ms var(--ease-out),
+    border-color 600ms var(--ease-out);
+}
+
+/* Inner rule, concentric with the arch: the double border of a printed card. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: var(--inset);
+  border: 1px solid var(--brass-light);
+  border-radius:
+    50% 50% calc(var(--r-lg) - var(--inset)) calc(var(--r-lg) - var(--inset)) /
+    calc(var(--arch-h) - var(--inset)) calc(var(--arch-h) - var(--inset))
+    calc(var(--r-lg) - var(--inset)) calc(var(--r-lg) - var(--inset));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 500ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
+  }
+
+  .card:hover::before {
+    opacity: 0.6;
+  }
+
+  .card:hover .course {
+    border-color: var(--accent-soft);
+  }
+}
+
+/* Signature: the espresso card, lamp-lit from the apex. */
+.card.featured {
+  background:
+    radial-gradient(85% 48% at 50% 0%, color-mix(in srgb, var(--brass-light) 15%, transparent), transparent 72%),
+    var(--bg);
+  border-color: transparent;
+  box-shadow: var(--shadow-lift);
+}
+
+.card.featured::before {
+  opacity: 0.42;
+}
+
+@media (hover: hover) {
+  .card.featured:hover {
+    border-color: transparent;
+  }
+
+  .card.featured:hover::before {
+    opacity: 0.7;
+  }
+}
+
+.badge {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 16px;
+  border-radius: var(--r-pill);
+  background: var(--brass-light);
+  color: var(--espresso);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--ink) 60%, transparent);
+}
+
+/* ---------- Card head ---------- */
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.course {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--accent-soft);
+  transition: border-color 500ms var(--ease-out);
+}
+
+.name {
+  margin-top: 16px;
+  font-size: var(--fs-h3);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+/* Fixed line box so a range price doesn't shift the rows below it:
+   cards keep their summaries, rules and lists on shared lines. */
+.price {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 0.9em;
+  margin-top: clamp(16px, 5cqi, 24px);
+  font-family: var(--font-serif);
+  font-size: clamp(2.75rem, 17cqi, 4.25rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  font-feature-settings: "lnum" 1;
+  white-space: nowrap;
+}
+
+.amountRange {
+  font-size: 0.84em;
+}
+
+/* The rupee sign is set small and raised, in the sans (which has the glyph
+   on every platform), the way a printed menu sets its currency. */
+.currency {
+  display: inline-block;
+  margin-right: 0.1em;
+  font-family: var(--font-sans);
+  font-size: 0.4em;
+  font-weight: 500;
+  letter-spacing: 0;
+  vertical-align: 1.02em;
+  color: var(--fg-2);
+}
+
+.dash {
+  margin-inline: 0.04em;
+  color: var(--fg-3);
+}
+
+.unit {
+  margin-top: 14px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+/* ---------- Card body ---------- */
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.summary {
+  margin: 22px auto 0;
+  max-width: 30ch;
+  text-align: center;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 26px 0 24px;
+}
+
+.rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.includes,
+.excludes ul {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.includes li,
+.excludes li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: start;
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: var(--fg-2);
+}
+
+.checkIcon,
+.minusIcon {
+  margin-top: 0.15em;
+}
+
+.checkIcon {
+  color: var(--accent);
+}
+
+/* "Everything in …" reads like a course heading on a set menu. */
+.includes li.inherits {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1875rem;
+  line-height: 1.2;
+  color: var(--fg);
+}
+
+.includes li.inherits .checkIcon {
+  margin-top: 0.12em;
+}
+
+.excludes {
+  margin-top: 26px;
+}
+
+.excludesLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.excludesLabel::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.excludes li {
+  color: var(--fg-3);
+}
+
+.minusIcon {
+  color: var(--fg-3);
+}
+
+.cta {
+  margin-top: auto;
+  padding-top: 32px;
+}
+
+.cta :global(.btn) {
+  width: 100%;
+}
+
+/* ---------- Tablet: each plan becomes a menu page with an arched niche ---------- */
+
+@media (min-width: 700px) and (max-width: 1023.98px) {
+  .plans {
+    max-width: 780px;
+    gap: 28px;
+  }
+
+  .card {
+    --head-w: 236px;
+    --pad: 22px;
+    display: grid;
+    grid-template-columns: var(--head-w) minmax(0, 1fr);
+    column-gap: clamp(28px, 4vw, 44px);
+    padding: var(--pad);
+    border-radius: var(--r-lg);
+  }
+
+  .card::before {
+    border-radius: calc(var(--r-lg) - var(--inset));
+  }
+
+  .head {
+    justify-content: center;
+    padding: 46px 18px 34px;
+    background: var(--surface-sunk);
+    border-radius: calc(var(--head-w) / 2) calc(var(--head-w) / 2) var(--r-md) var(--r-md);
+  }
+
+  .price {
+    font-size: 3.25rem;
+  }
+
+  .body {
+    padding: 20px 14px 4px 0;
+  }
+
+  .summary {
+    margin: 0;
+    max-width: 36ch;
+    text-align: left;
+    font-size: var(--fs-body);
+  }
+
+  .divider {
+    margin: 22px 0 22px;
+  }
+
+  .divider .rule:first-child {
+    display: none;
+  }
+
+  .cta {
+    padding-top: 28px;
+  }
+
+  .cta :global(.btn) {
+    width: auto;
+  }
+
+  .badge {
+    left: calc(var(--pad) + var(--head-w) / 2);
+  }
+}
+
+/* ---------- Desktop: the arcade ---------- */
+
+@media (min-width: 1024px) {
+  .pricing {
+    --rise: clamp(24px, 2.4vw, 40px);
+  }
+
+  .plans {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 1.8vw, 28px);
+    max-width: none;
+  }
+
+  /* The centre arch stands taller, like the main door of an arcade.
+     Bottoms stay aligned so the three CTAs sit on one line. */
+  .planFeatured {
+    margin-top: calc(-1 * var(--rise));
+  }
+
+  .card.featured {
+    padding-top: calc(var(--pad-top) + var(--rise));
+  }
+
+  /* Summaries reserve the same number of lines so the rules and lists
+     below them line up across the three cards. */
+  .summary {
+    min-height: 4.5em;
+  }
+}
+
+@media (min-width: 1280px) {
+  .summary {
+    min-height: 3em;
+  }
+}
+
+/* ---------- Calculator ---------- */
+
+.calc {
+  --calc-pad: clamp(22px, 0.9rem + 2.6vw, 56px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(32px, 4vw, 64px);
+  align-items: center;
+  margin-top: clamp(3.5rem, 2.4rem + 3.4vw, 6.5rem);
+  padding: var(--calc-pad);
+  border-radius: var(--r-lg);
+  background: var(--bg-alt);
+}
+
+.calcInput {
+  min-width: 0;
+}
+
+.calcTitle {
+  font-size: var(--fs-h3);
+  line-height: 1.1;
+  max-width: 17ch;
+}
+
+.count {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: clamp(18px, 2.4vw, 32px);
+  color: var(--fg);
+}
+
+.countNum {
+  font-family: var(--font-serif);
+  font-size: clamp(4.5rem, 3.2rem + 4vw, 7.25rem);
+  line-height: 0.82;
+  letter-spacing: -0.035em;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.countWord {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--fs-h3);
+  line-height: 1;
+  color: var(--accent);
+}
+
+/* Range: hairline track, russet fill, ink thumb with a paper ring. */
+.rangeWrap {
+  --thumb: 28px;
+  --track: 3px;
+  position: relative;
+  margin-top: clamp(18px, 2vw, 28px);
+  padding-bottom: 34px;
+}
+
+.range {
+  --fill: calc(var(--thumb) / 2 + (100% - var(--thumb)) * var(--frac));
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+.range:focus-visible {
+  outline: none;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: var(--track);
+  border-radius: var(--track);
+  background: linear-gradient(
+    to right,
+    var(--accent) 0,
+    var(--accent) var(--fill),
+    var(--line-control) var(--fill),
+    var(--line-control) 100%
+  );
+}
+
+.range::-moz-range-track {
+  height: var(--track);
+  border-radius: var(--track);
+  background: var(--line-control);
+}
+
+.range::-moz-range-progress {
+  height: var(--track);
+  border-radius: var(--track);
+  background: var(--accent);
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc((var(--track) - var(--thumb)) / 2);
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow:
+    0 0 0 1px var(--line-strong),
+    0 8px 18px -6px color-mix(in srgb, var(--ink) 45%, transparent);
+  transition:
+    transform var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out);
+}
+
+.range::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--thumb);
+  height: var(--thumb);
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow:
+    0 0 0 1px var(--line-strong),
+    0 8px 18px -6px color-mix(in srgb, var(--ink) 45%, transparent);
+  transition:
+    transform var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .range:hover::-webkit-slider-thumb {
+    transform: scale(1.06);
+  }
+
+  .range:hover::-moz-range-thumb {
+    transform: scale(1.06);
+  }
+}
+
+.range:active::-webkit-slider-thumb {
+  transform: scale(1.14);
+  cursor: grabbing;
+}
+
+.range:active::-moz-range-thumb {
+  transform: scale(1.14);
+  cursor: grabbing;
+}
+
+.range:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 2px var(--bg-alt),
+    0 0 0 4px var(--focus);
+}
+
+.range:focus-visible::-moz-range-thumb {
+  box-shadow:
+    0 0 0 2px var(--bg-alt),
+    0 0 0 4px var(--focus);
+}
+
+/* A ruler under the track, aligned to the thumb's travel. */
+.ruler {
+  position: absolute;
+  top: 40px;
+  left: calc(var(--thumb) / 2);
+  right: calc(var(--thumb) / 2);
+  height: 6px;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to right,
+      var(--line-strong) 0,
+      var(--line-strong) 1px,
+      transparent 1px,
+      transparent calc(100% / var(--ticks))
+    ),
+    linear-gradient(var(--line-strong), var(--line-strong)) right / 1px 100% no-repeat;
+}
+
+.scale {
+  position: absolute;
+  left: calc(var(--thumb) / 2);
+  right: calc(var(--thumb) / 2);
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-micro);
+  line-height: 1;
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.scale span {
+  transform: translateX(-50%);
+}
+
+.scale span:last-child {
+  transform: translateX(50%);
+}
+
+/* Plan picker: a segmented control with a sliding ink pill. */
+.pick {
+  margin-top: clamp(24px, 3vw, 36px);
+}
+
+.pickLabel {
+  margin-bottom: 12px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.segmented {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--bg);
+}
+
+.segThumb {
+  position: absolute;
+  z-index: -1;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / var(--n));
+  border-radius: var(--r-pill);
+  background: var(--fg);
+  box-shadow: var(--shadow-soft);
+  transform: translateX(calc(var(--i) * 100%));
+  transition: transform 560ms var(--ease-out);
+}
+
+.segBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 56px;
+  padding: 6px 8px;
+  border-radius: var(--r-pill);
+  color: var(--fg-2);
+  text-align: center;
+  transition: color var(--dur) var(--ease-out);
+}
+
+.segBtn:focus-visible {
+  border-radius: var(--r-pill);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .segBtn[aria-checked="false"]:hover {
+    color: var(--fg);
+  }
+}
+
+.segBtn[aria-checked="true"] {
+  color: var(--bg);
+}
+
+.segName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.005em;
+}
+
+.segPrice {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: color var(--dur) var(--ease-out);
+}
+
+.segBtn[aria-checked="true"] .segPrice {
+  color: color-mix(in srgb, var(--bg) 72%, transparent);
+}
+
+/* ---------- The bill ---------- */
+
+.check {
+  --check-pad: clamp(24px, 1rem + 1.6vw, 40px);
+  position: relative;
+  container-type: inline-size;
+  min-width: 0;
+  padding: var(--check-pad);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.checkHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 1.75rem;
+}
+
+.checkLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.checkPlan {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.375rem;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  row-gap: 4px;
+  margin-top: 18px;
+  font-family: var(--font-serif);
+  font-size: min(5rem, 18cqi);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  font-feature-settings: "lnum" 1;
+}
+
+.totalRange {
+  font-size: min(3.5rem, 10.5cqi);
+}
+
+.totalFig {
+  white-space: nowrap;
+}
+
+.totalDash {
+  margin-inline: 0.12em;
+  color: var(--fg-3);
+}
+
+.perMonth {
+  margin-left: 0.6rem;
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
+/* Perforation with ticket notches, edge to edge. */
+.perf {
+  position: relative;
+  height: 0;
+  margin: 28px calc(-1 * var(--check-pad)) 24px;
+  border-top: 1.5px dashed var(--line-strong);
+}
+
+.perf::before,
+.perf::after {
+  content: "";
+  position: absolute;
+  top: -11px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-alt);
+}
+
+.perf::before {
+  left: -10px;
+}
+
+.perf::after {
+  right: -10px;
+}
+
+.breakdown {
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--fg-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.checkCta {
+  width: 100%;
+  margin-top: 24px;
+}
+
+/* On a wide stacked bill (tablet), the button keeps its natural width. */
+@container (min-width: 520px) {
+  .checkCta {
+    width: auto;
+  }
+}
+
+@media (min-width: 900px) {
+  .calc {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  }
+}
+
+/* ---------- Footnote ---------- */
+
+.footnote {
+  max-width: 78ch;
+  margin: 28px auto 0;
+  text-align: center;
+  font-size: var(--fs-micro);
+  line-height: 1.55;
+  color: var(--fg-3);
+}
+
+.footOrnament {
+  margin-right: 10px;
+  vertical-align: 0.05em;
+}
+
+/* ---------- Small phones ---------- */
+
+@media (max-width: 420px) {
+  .segName {
+    font-size: 0.875rem;
+  }
+
+  .segPrice {
+    font-size: 0.6875rem;
+  }
+
+  .segBtn {
+    padding-inline: 4px;
+  }
+}

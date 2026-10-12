@@ -1,0 +1,416 @@
+/* ========================================================
+   KNOMI Guide: Self-Ordering ROI Calculator Styles
+   Theme: Warm Luxury (#f4eee5 base, #fbf8f3 cards, #1c1411 text)
+   ======================================================== */
+
+.pageContainer {
+  padding-top: 100px;
+  min-height: 80vh;
+}
+
+.heroSection {
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.breadcrumb a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-default);
+}
+
+.breadcrumb a:hover {
+  color: var(--color-whiskey-sour);
+}
+
+.title {
+  font-size: 2.75rem;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+/* Answer-First AEO Snippet Box */
+.aeoBox {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-whiskey-sour);
+  border-left: 4px solid var(--color-whiskey-sour);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 40px auto 0;
+  max-width: 860px;
+  text-align: left;
+  box-shadow: var(--shadow-card);
+}
+
+.aeoLabel {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-whiskey-sour);
+  margin-bottom: 8px;
+}
+
+.aeoText {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+/* Calculator Section */
+.calcContainer {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius);
+  padding: 40px;
+  margin: 48px auto;
+  max-width: 1040px;
+  box-shadow: var(--shadow-card);
+}
+
+.calcGrid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: stretch;
+}
+
+.controlsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.calcHeading {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+.calcSub {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inputLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.inputValueBadge {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-whiskey-sour);
+  background-color: rgba(133, 97, 58, 0.12);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(133, 97, 58, 0.25);
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-surface-pressed);
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-whiskey-sour);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform var(--duration-fast) var(--ease-default);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.sliderHints {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* Results Column */
+.resultsCol {
+  background-color: var(--color-surface-hover);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.resultsHeader {
+  border-bottom: 1px solid var(--color-border-default);
+  padding-bottom: 16px;
+}
+
+.resultsTitle {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.resultsSub {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.mainSavingsBlock {
+  text-align: center;
+  padding: 20px 16px;
+  background: var(--color-surface-card);
+  border: 1px solid rgba(60, 141, 90, 0.3);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+}
+
+.mainSavingsLabel {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--color-success);
+  margin-bottom: 6px;
+}
+
+.mainSavingsValue {
+  font-family: var(--font-heading);
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.mainSavingsSubtext {
+  font-size: 0.825rem;
+  color: var(--color-text-secondary);
+}
+
+.metricsList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.metricRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--color-border-default);
+}
+
+.metricName {
+  color: var(--color-text-secondary);
+}
+
+.metricValue {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.metricHighlight {
+  color: var(--color-success);
+  font-weight: 700;
+}
+
+.calcCtaBtn {
+  width: 100%;
+  text-align: center;
+}
+
+/* Math Breakdown Section */
+.mathSection {
+  margin: 60px 0;
+}
+
+.mathGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 36px;
+}
+
+.mathCard {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mathCardTitle {
+  font-size: 1.2rem;
+  color: var(--color-text-primary);
+}
+
+.mathCardDesc {
+  font-size: 0.925rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* FAQ Section */
+.faqSection {
+  padding: 60px 0;
+}
+
+.faqGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 860px;
+  margin: 36px auto 0;
+}
+
+.faqItem {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+}
+
+.faqQuestion {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+.faqAnswer {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+/* CTA Card */
+.ctaBox {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius);
+  padding: 48px 32px;
+  text-align: center;
+  max-width: 800px;
+  margin: 60px auto 40px;
+  box-shadow: var(--shadow-card);
+}
+
+.ctaHeading {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.ctaSub {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .calcGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .mathGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .calcContainer {
+    padding: 24px 16px;
+  }
+
+  .ctaBox {
+    padding: 32px 20px;
+  }
+}

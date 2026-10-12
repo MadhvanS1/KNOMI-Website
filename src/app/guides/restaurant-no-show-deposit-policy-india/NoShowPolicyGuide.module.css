@@ -1,0 +1,496 @@
+/* KNOMI Guide: Restaurant No-Shows in India - Should You Charge Booking Deposits? */
+
+.pageContainer {
+  padding-top: 100px;
+  min-height: 80vh;
+}
+
+.heroSection {
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.breadcrumb a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-whiskey-sour);
+}
+
+.title {
+  font-size: 2.75rem;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--color-text-primary);
+  font-family: var(--font-playfair, serif);
+  font-weight: 700;
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* Quick Answer Box */
+.quickAnswerBox {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-strong);
+  border-left: 4px solid var(--color-whiskey-sour);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 40px auto;
+  max-width: 840px;
+}
+
+.quickAnswerBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--color-whiskey-sour);
+  margin-bottom: 8px;
+}
+
+.quickAnswerText {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+/* Main Content Layout */
+.contentContainer {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+.contentBody h2 {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin: 48px 0 20px;
+  color: var(--color-text-primary);
+  font-family: var(--font-playfair, serif);
+}
+
+.contentBody h3 {
+  font-size: 1.4rem;
+  line-height: 1.4;
+  margin: 32px 0 16px;
+  color: var(--color-text-primary);
+}
+
+.contentBody p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+}
+
+.contentBody ul, .contentBody ol {
+  margin: 0 0 24px 20px;
+  color: var(--color-text-secondary);
+}
+
+.contentBody li {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.contentBody strong {
+  color: var(--color-text-primary);
+}
+
+.contentBody p a,
+.contentBody li a {
+  color: var(--color-whiskey-sour);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.contentBody p a:hover,
+.contentBody li a:hover {
+  color: var(--color-honey-garlic);
+}
+
+/* Callout Box */
+.calloutBox {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 32px 0;
+}
+
+.calloutTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+
+/* Comparison Table */
+.tableWrapper {
+  overflow-x: auto;
+  margin: 32px 0;
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+}
+
+.comparisonTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 650px;
+}
+
+.comparisonTable th {
+  background: var(--color-surface-card);
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 2px solid var(--color-border-strong);
+}
+
+.comparisonTable td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+  vertical-align: top;
+}
+
+.comparisonTable tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Strategy Cards */
+.strategyGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin: 32px 0;
+}
+
+.strategyCard {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.strategyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.strategyNumber {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-whiskey-sour);
+}
+
+.strategyTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* Interactive Calculator Container */
+.calculatorSection {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  padding: 36px 32px;
+  margin: 50px 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.calcHeader {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.calcTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+
+.calcSubtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+.tabButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.tabBtn {
+  background: var(--color-surface-pressed);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tabBtn:hover {
+  border-color: var(--color-whiskey-sour);
+  color: var(--color-text-primary);
+}
+
+.activeTabBtn {
+  background: var(--color-whiskey-sour);
+  border-color: var(--color-whiskey-sour);
+  color: #fbf8f3 !important;
+  text-decoration: none !important;
+}
+
+.calcGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.inputLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  display: flex;
+  justify-content: space-between;
+}
+
+.inputVal {
+  color: var(--color-whiskey-sour);
+  font-weight: 700;
+}
+
+.rangeSlider {
+  width: 100%;
+  accent-color: var(--color-whiskey-sour);
+}
+
+.resultBox {
+  background: var(--color-surface-pressed);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.resultTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-default);
+  padding-bottom: 10px;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.925rem;
+}
+
+.statLabel {
+  color: var(--color-text-secondary);
+}
+
+.statValue {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.statHighlight {
+  color: var(--color-whiskey-sour);
+  font-size: 1.1rem;
+}
+
+.statBenefit {
+  color: #3f7a52;
+}
+
+.statRisk {
+  color: #a8402f;
+}
+
+/* Policy Card Comparison Grid */
+.policyComparisonGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.policyCard {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.policyCardHighlighted {
+  border-color: var(--color-whiskey-sour);
+  background: rgba(165, 127, 76, 0.06);
+}
+
+.policyTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.policyStat {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* FAQ Section */
+.faqSection {
+  margin: 60px 0;
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--color-border-default);
+  padding: 20px 0;
+}
+
+.faqQuestion {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faqAnswer {
+  margin-top: 12px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+}
+
+/* CTA Banner */
+.ctaBanner {
+  background: linear-gradient(135deg, rgba(165, 127, 76, 0.15) 0%, rgba(28, 20, 17, 0.9) 100%);
+  border: 1px solid var(--color-whiskey-sour);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  margin: 60px 0;
+}
+
+.ctaTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-family: var(--font-playfair, serif);
+  margin-bottom: 12px;
+}
+
+.ctaText {
+  font-size: 1.05rem;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto 24px;
+}
+
+.ctaButton {
+  display: inline-block;
+  background: var(--color-whiskey-sour);
+  color: #fbf8f3 !important;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none !important;
+  padding: 14px 28px;
+  border-radius: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(133, 97, 58, 0.35);
+  color: #fbf8f3 !important;
+  text-decoration: none !important;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+  .calcGrid {
+    grid-template-columns: 1fr;
+  }
+  .policyComparisonGrid {
+    grid-template-columns: 1fr;
+  }
+  .calculatorSection {
+    padding: 24px 16px;
+  }
+}

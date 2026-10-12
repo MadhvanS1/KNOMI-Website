@@ -1,0 +1,579 @@
+/* KNOMI Guide: Restaurant Break Even Point & Calculator India */
+
+.pageContainer {
+  padding-top: 100px;
+  min-height: 80vh;
+}
+
+.heroSection {
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.breadcrumb a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-whiskey-sour);
+}
+
+.title {
+  font-size: 2.75rem;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--color-text-primary);
+  font-family: var(--font-playfair, serif);
+  font-weight: 700;
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* Answer-First AEO Snippet Box */
+.aeoBox {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-whiskey-sour);
+  border-left: 5px solid var(--color-whiskey-sour);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 40px auto 0;
+  max-width: 860px;
+  text-align: left;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.aeoLabel {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-honey-garlic);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.aeoText {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+/* Takeaway Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1040px;
+  margin: 40px auto 0;
+}
+
+.metricCard {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+
+.metricValue {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--color-whiskey-sour);
+  margin-bottom: 8px;
+  font-family: var(--font-playfair, serif);
+}
+
+.metricLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* Article Body Content */
+.articleBody {
+  max-width: 860px;
+  margin: 60px auto 0;
+  padding: 0 24px;
+}
+
+.articleBody h2 {
+  font-family: var(--font-playfair, serif);
+  font-size: 2.1rem;
+  color: var(--color-text-primary);
+  margin: 52px 0 20px;
+  line-height: 1.25;
+}
+
+.articleBody h3 {
+  font-size: 1.4rem;
+  color: var(--color-text-primary);
+  margin: 32px 0 14px;
+  line-height: 1.35;
+}
+
+.articleBody p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+}
+
+.articleBody ul, .articleBody ol {
+  margin-bottom: 24px;
+  padding-left: 24px;
+}
+
+.articleBody li {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+
+.articleBody strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* Formula Presentation Card */
+.formulaCard {
+  background: var(--color-surface-pressed);
+  border: 1px solid var(--color-border-strong);
+  border-left: 4px solid var(--color-honey-garlic);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 28px 0;
+}
+
+.formulaTitle {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-honey-garlic);
+  margin-bottom: 8px;
+}
+
+.formulaEquation {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+
+.formulaNote {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Callout Box */
+.calloutBox {
+  background: rgba(133, 97, 58, 0.08);
+  border: 1px solid rgba(133, 97, 58, 0.3);
+  border-radius: 12px;
+  padding: 28px;
+  margin: 36px 0;
+}
+
+.calloutTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-whiskey-sour);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calloutText {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin-bottom: 0;
+}
+
+/* Financial Tables */
+.tableContainer {
+  margin: 36px 0;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-card);
+}
+
+.benchmarkTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+  background-color: var(--color-surface-card);
+}
+
+.benchmarkTable th {
+  background-color: var(--color-surface-pressed);
+  color: var(--color-text-primary);
+  padding: 16px 20px;
+  font-weight: 700;
+  border-bottom: 2px solid var(--color-border-default);
+}
+
+.benchmarkTable td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+}
+
+.benchmarkTable tr:last-child td {
+  border-bottom: none;
+}
+
+.benchmarkTable tr:hover td {
+  background-color: rgba(133, 97, 58, 0.04);
+}
+
+.highlightRow td {
+  background-color: rgba(133, 97, 58, 0.08) !important;
+  color: var(--color-text-primary) !important;
+  font-weight: 700;
+}
+
+/* Calculator Section */
+.calcContainer {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius);
+  padding: 40px;
+  margin: 48px auto;
+  max-width: 1040px;
+  box-shadow: var(--shadow-card);
+}
+
+.calcGrid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: stretch;
+}
+
+.controlsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.calcHeading {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+.calcSub {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inputLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.inputValueBadge {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-whiskey-sour);
+  background-color: rgba(133, 97, 58, 0.12);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(133, 97, 58, 0.25);
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-surface-pressed);
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-whiskey-sour);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border: 2px solid #fbf8f3;
+  transition: transform var(--duration-fast) var(--ease-default);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.sliderHints {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* Results Column */
+.resultsCol {
+  background-color: var(--color-surface-pressed);
+  border-radius: var(--radius-sm);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--color-border-default);
+}
+
+.resultsHeader {
+  border-bottom: 1px solid var(--color-border-default);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.resultsTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.resultsSubtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.resultsMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metricRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--color-border-default);
+}
+
+.metricName {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+}
+
+.metricVal {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.highlightMetric {
+  background-color: var(--color-surface-card);
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-whiskey-sour);
+  margin-top: 8px;
+}
+
+.highlightMetric .metricName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-whiskey-sour);
+}
+
+.highlightMetric .metricVal {
+  font-size: 1.6rem;
+  color: var(--color-whiskey-sour);
+}
+
+.gainMetric {
+  background-color: rgba(47, 94, 62, 0.08);
+  border: 1px solid rgba(47, 94, 62, 0.25);
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+}
+
+.gainMetric .metricName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2f5e3e;
+}
+
+.gainMetric .metricVal {
+  font-size: 1.6rem;
+  color: #2f5e3e;
+}
+
+.calcCta {
+  margin-top: 20px;
+}
+
+/* FAQ Section */
+.faqSection {
+  background-color: var(--color-surface-card);
+  border-top: 1px solid var(--color-border-default);
+  padding: 80px 0;
+  margin-top: 80px;
+}
+
+.faqContainer {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.faqHeading {
+  font-family: var(--font-playfair, serif);
+  font-size: 2.2rem;
+  text-align: center;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.faqSubtitle {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 48px;
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--color-border-default);
+  padding: 24px 0;
+}
+
+.faqQuestion {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.faqAnswer {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin-bottom: 0;
+}
+
+/* CTA Section */
+.ctaSection {
+  text-align: center;
+  padding: 80px 0;
+  background-color: var(--color-surface-pressed);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.ctaContainer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.ctaTitle {
+  font-family: var(--font-playfair, serif);
+  font-size: 2.2rem;
+  color: var(--color-text-primary);
+  margin-bottom: 16px;
+}
+
+.ctaDesc {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .calcGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .postMeta {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .calcContainer {
+    padding: 24px 16px;
+  }
+}

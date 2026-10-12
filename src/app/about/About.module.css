@@ -1,0 +1,861 @@
+/* =====================================================================
+   About KNOMI
+   The page is built like a sequence of rooms: a doorway that opens onto
+   the city, a letter, a printed list of house rules, two arched niches
+   for the founders, and a dark doorway to step through at the end.
+   ===================================================================== */
+
+.page {
+  position: relative;
+}
+
+/* =====================================================================
+   I. Hero
+   ===================================================================== */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  padding-top: calc(var(--nav-h) + clamp(64px, 10vw, 140px));
+  background-color: var(--bg);
+  overflow: clip;
+}
+
+/* A soft pool of lamplight behind the headline. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(46% 38% at 22% 18%, var(--paper) 0%, transparent 72%);
+  opacity: 0.9;
+}
+
+.heroTitle {
+  margin-top: clamp(22px, 2.4vw, 34px);
+  font-size: clamp(3.15rem, 0.6rem + 7vw, 8.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.heroMeta {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  column-gap: clamp(32px, 5vw, 96px);
+  align-items: end;
+  margin-top: clamp(40px, 5vw, 76px);
+  padding-top: clamp(24px, 2.4vw, 34px);
+  border-top: 1px solid var(--line);
+}
+
+.heroLeadWrap {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.heroLead {
+  max-width: 33em;
+  color: var(--fg-2);
+}
+
+.heroAside {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  padding-bottom: 4px;
+}
+
+.place {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.heroLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 30px;
+}
+
+.heroLink {
+  font-size: 1rem;
+}
+
+/* Generous hit area without moving the underline away from the text. */
+.heroLink::after {
+  content: "";
+  position: absolute;
+  inset: -13px -10px;
+}
+
+.heroLinkQuiet {
+  color: var(--fg-2);
+}
+
+.heroLinkIcon,
+.heroLinkIconDown {
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.heroLink:hover .heroLinkIcon {
+  transform: translateX(4px);
+}
+
+.heroLink:hover .heroLinkIconDown {
+  transform: translateY(3px);
+}
+
+/* ---------- The arch ---------- */
+
+.plate {
+  --arch-radius: 50% 50% 0 0 / 44% 44% 0 0;
+  position: relative;
+  margin-top: clamp(56px, 7vw, 112px);
+  aspect-ratio: 2.3 / 1;
+}
+
+.arch {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--arch-radius);
+  /* Sand at the crown for definition against the page; pure linen at the
+     floor so the arch runs seamlessly into the section below. */
+  background:
+    radial-gradient(38% 34% at 50% 62%, color-mix(in srgb, var(--paper) 78%, transparent) 0%, transparent 100%),
+    linear-gradient(180deg, color-mix(in srgb, var(--sand) 58%, var(--linen)) 0%, var(--linen) 62%);
+}
+
+/* Outer edge: a hairline that fades out before it reaches the floor. */
+.arch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border: 1px solid var(--line-strong);
+  border-bottom: 0;
+  border-radius: inherit;
+  mask-image: linear-gradient(to bottom, black 30%, transparent 78%);
+}
+
+/* Inner brass rule, like the second line of a carved door frame. */
+.archRule {
+  position: absolute;
+  inset: clamp(10px, 1.3vw, 18px) clamp(10px, 1.3vw, 18px) 0;
+  z-index: 0;
+  border: 1px solid color-mix(in srgb, var(--brass) 48%, transparent);
+  border-bottom: 0;
+  border-radius: var(--arch-radius);
+  mask-image: linear-gradient(to bottom, black 24%, transparent 70%);
+}
+
+.archStar {
+  position: absolute;
+  top: clamp(30px, 3.6vw, 54px);
+  left: 50%;
+  z-index: 2;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+}
+
+.skyline {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 1;
+  width: min(84%, 900px);
+  translate: -50% 0;
+  transform-origin: 50% 100%;
+}
+
+.skylineImg {
+  width: 100%;
+  height: auto;
+  transform-origin: 50% 100%;
+}
+
+/* =====================================================================
+   II. Why we built it
+   ===================================================================== */
+
+.whyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  column-gap: clamp(40px, 6vw, 120px);
+  align-items: start;
+}
+
+.whyHead {
+  position: sticky;
+  top: calc(var(--nav-h) + 56px);
+}
+
+.letter {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2vw, 28px);
+  max-width: 40rem;
+  /* Start the letter on the headline, not on the eyebrow. */
+  padding-top: clamp(0px, 3.4vw, 46px);
+}
+
+.opening {
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  color: var(--fg);
+}
+
+/* A drop cap, as on the first page of a menu. */
+.opening::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 -0.02em;
+  font-family: var(--font-serif);
+  font-size: 4.15em;
+  line-height: 0.78;
+  color: var(--accent);
+}
+
+.body {
+  font-size: clamp(1rem, 0.94rem + 0.22vw, 1.125rem);
+  line-height: 1.72;
+  color: var(--fg-2);
+  max-width: 36em;
+}
+
+.pull {
+  margin-block: clamp(10px, 1.6vw, 22px);
+  padding-left: clamp(20px, 2.4vw, 32px);
+  border-left: 1px solid var(--accent-soft);
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 1.12rem + 1.55vw, 2.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+  color: var(--fg);
+  text-wrap: balance;
+}
+
+.pull em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.signoff {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin-top: clamp(8px, 1.4vw, 20px);
+}
+
+.signoff::before {
+  content: "";
+  align-self: center;
+  width: 40px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.signName {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.5rem, 1.3rem + 0.6vw, 1.875rem);
+  line-height: 1;
+  color: var(--fg);
+}
+
+.signRole {
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+/* =====================================================================
+   III. What we believe
+   ===================================================================== */
+
+.rules {
+  list-style: none;
+  margin-top: clamp(48px, 6vw, 96px);
+}
+
+.rule {
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(64px, 7vw, 104px) minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-areas: "num title body";
+  column-gap: clamp(24px, 4vw, 72px);
+  align-items: baseline;
+  padding-block: clamp(34px, 4.4vw, 60px);
+  border-top: 1px solid var(--line-strong);
+  view-timeline: --about-rule block;
+}
+
+.rule:last-child {
+  border-bottom: 1px solid var(--line-strong);
+}
+
+/* An ink rule that draws across as the row arrives (scroll-driven where supported). */
+.rule::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  display: none;
+  height: 1px;
+  background: color-mix(in srgb, var(--fg) 62%, transparent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* Roman numeral in an arched niche. */
+.ruleNum {
+  grid-area: num;
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(48px, 5vw, 72px);
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--accent-soft);
+  border-radius: 999px 999px var(--r-xs) var(--r-xs);
+  overflow: hidden;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.25rem, 0.95rem + 0.85vw, 1.875rem);
+  line-height: 1;
+  color: var(--accent-soft);
+  transition:
+    color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out);
+}
+
+.ruleNum::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--fg);
+  transform: translateY(101%);
+  transition: transform 520ms var(--ease-out);
+}
+
+.ruleNumText {
+  padding-top: 0.32em;
+  font-feature-settings: "lnum" 1;
+}
+
+.ruleTitle {
+  grid-area: title;
+  font-size: clamp(2rem, 1.15rem + 3.1vw, 4.25rem);
+  line-height: 1;
+  letter-spacing: -0.022em;
+  transition: transform 520ms var(--ease-out);
+}
+
+.ruleBody {
+  grid-area: body;
+  max-width: 28rem;
+  font-size: clamp(1rem, 0.94rem + 0.22vw, 1.125rem);
+  line-height: 1.68;
+  color: var(--fg-2);
+}
+
+@media (hover: hover) {
+  .rule:hover .ruleNum {
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+
+  .rule:hover .ruleNum::before {
+    transform: translateY(0);
+  }
+
+  .rule:hover .ruleTitle {
+    transform: translateX(8px);
+  }
+}
+
+/* =====================================================================
+   IV. The founders
+   ===================================================================== */
+
+.founders {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 32px);
+  margin-top: clamp(48px, 6vw, 88px);
+}
+
+.founder {
+  display: grid;
+  grid-template-columns: clamp(132px, 13vw, 196px) minmax(0, 1fr);
+  column-gap: clamp(22px, 2.8vw, 40px);
+  align-items: end;
+  padding: clamp(20px, 2.4vw, 32px);
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  transition:
+    box-shadow var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out);
+}
+
+.niche {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 999px 999px var(--r-sm) var(--r-sm);
+  background:
+    radial-gradient(70% 46% at 50% 26%, color-mix(in srgb, var(--paper) 72%, transparent) 0%, transparent 100%),
+    linear-gradient(180deg, var(--linen) 0%, var(--sand) 100%);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.nicheRule {
+  position: absolute;
+  inset: 8px;
+  z-index: -1;
+  border: 1px solid color-mix(in srgb, var(--brass) 46%, transparent);
+  border-radius: 999px 999px 6px 6px;
+  transition: border-color var(--dur) var(--ease-out);
+}
+
+.nicheStar {
+  position: absolute;
+  top: 17%;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  transition: transform 600ms var(--ease-out);
+}
+
+.monogram {
+  padding-top: 0.42em;
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 2.1rem + 3vw, 5.4rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--fg);
+  transition: transform 600ms var(--ease-out);
+}
+
+.monogram em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.founderText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-bottom: 4px;
+}
+
+.founderName {
+  font-size: var(--fs-h3);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.founderRole {
+  margin-top: 12px;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.founderLine {
+  align-self: stretch;
+  margin-top: clamp(18px, 2vw, 26px);
+  padding-top: clamp(16px, 1.6vw, 20px);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+@media (hover: hover) {
+  .founder:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .founder:hover .monogram {
+    transform: translateY(-5px);
+  }
+
+  .founder:hover .nicheStar {
+    transform: rotate(45deg) scale(1.15);
+  }
+
+  .founder:hover .nicheRule {
+    border-color: color-mix(in srgb, var(--brass) 80%, transparent);
+  }
+}
+
+/* =====================================================================
+   V. Closing band
+   ===================================================================== */
+
+.closing {
+  padding-block: clamp(28px, 4vw, 56px) clamp(64px, 8vw, 128px);
+}
+
+.band {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding: clamp(104px, 12.5vw, 188px) clamp(24px, 6vw, 96px) clamp(64px, 8vw, 120px);
+  border-radius: var(--r-xl);
+  text-align: center;
+  /* Warm light rising from the threshold. */
+  background:
+    radial-gradient(56% 64% at 50% 100%, color-mix(in srgb, var(--brass) 18%, transparent) 0%, transparent 72%),
+    var(--bg);
+  view-timeline: --about-band block;
+}
+
+/* A doorway drawn in brass hairline, standing on the floor of the band. */
+.door {
+  position: absolute;
+  top: clamp(36px, 5vw, 72px);
+  bottom: 0;
+  left: 50%;
+  z-index: -1;
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+.doorSvg {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: 100%;
+  overflow: visible;
+}
+
+.doorOuter,
+.doorInner {
+  stroke: var(--accent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.doorOuter {
+  stroke-opacity: 0.34;
+}
+
+.doorInner {
+  stroke-opacity: 0.16;
+}
+
+.doorText {
+  fill: var(--accent);
+  fill-opacity: 0.78;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+}
+
+.bandTitle {
+  font-size: clamp(2.6rem, 1.35rem + 4.1vw, 5.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+}
+
+.bandLead {
+  max-width: 27em;
+  margin-top: clamp(24px, 2.6vw, 36px);
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+.bandCta {
+  margin-top: clamp(30px, 3.2vw, 44px);
+}
+
+/* =====================================================================
+   Motion (CSS only: the page is a server component)
+   Reduced motion: every rule below is skipped and the final state shows.
+   ===================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The doorway rises from the floor, then the sketch settles into it. */
+  .arch {
+    animation: archRise 1.5s var(--ease-out) 0.5s both;
+  }
+
+  .skylineImg {
+    animation: sketchIn 1.6s var(--ease-out) 0.9s both;
+  }
+
+  .archStar {
+    animation: starIn 0.9s var(--ease-out) 1.6s both;
+  }
+}
+
+@keyframes archRise {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes sketchIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(1.035);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes starIn {
+  from {
+    opacity: 0;
+    transform: scale(0.3) rotate(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Parallax: the sketch rises a touch faster than the frame, so it reads as nearer. */
+    .skyline {
+      animation: skylineDrift linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 100vh;
+    }
+
+    .rule::after {
+      display: block;
+      animation: ruleDraw linear both;
+      animation-timeline: --about-rule;
+      animation-range: entry 30% cover 42%;
+    }
+
+    .doorOuter,
+    .doorInner {
+      stroke-dasharray: 1;
+      animation: doorTrace linear both;
+      animation-timeline: --about-band;
+      animation-range: entry 10% cover 46%;
+    }
+
+    .doorText {
+      animation: doorTextIn linear both;
+      animation-timeline: --about-band;
+      animation-range: cover 30% cover 46%;
+    }
+  }
+}
+
+@keyframes skylineDrift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-4%);
+  }
+}
+
+@keyframes ruleDraw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes doorTrace {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes doorTextIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* =====================================================================
+   Responsive
+   ===================================================================== */
+
+@media (max-width: 1100px) {
+  .plate {
+    aspect-ratio: 2 / 1;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Hero: lead first, then the place and links, stacked. */
+  .heroMeta {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 28px;
+  }
+
+  .heroLeadWrap,
+  .heroAside {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .plate {
+    aspect-ratio: 1.6 / 1;
+  }
+
+  .skyline {
+    width: 104%;
+  }
+
+  /* Why: the headline sits above the letter. */
+  .whyGrid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(36px, 6vw, 56px);
+  }
+
+  .whyHead {
+    position: static;
+  }
+
+  .letter {
+    padding-top: 0;
+    max-width: 40rem;
+  }
+
+  /* Rules: numeral beside the title, body beneath it. */
+  .rule {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "num title"
+      ". body";
+    column-gap: clamp(18px, 3vw, 28px);
+    row-gap: 16px;
+  }
+
+  .ruleBody {
+    max-width: 34rem;
+  }
+
+  .founders {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .founder {
+    grid-template-columns: clamp(132px, 22vw, 176px) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  /* The arch becomes a true Roman arch over the café corner of the sketch. */
+  .plate {
+    --arch-radius: 50% 50% 0 0 / 42% 42% 0 0;
+    aspect-ratio: 5 / 6;
+  }
+
+  .skyline {
+    width: 160%;
+    translate: -64% 0;
+  }
+
+  .archStar {
+    top: 26px;
+  }
+
+  .opening::first-letter {
+    font-size: 3.6em;
+  }
+
+  /* Founders: a compact placard — niche beside the name, the line beneath. */
+  .founder {
+    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto;
+    grid-template-areas:
+      "niche name"
+      "niche role"
+      "line line";
+    column-gap: 20px;
+    align-items: stretch;
+  }
+
+  .founderText {
+    display: contents;
+  }
+
+  .niche {
+    grid-area: niche;
+  }
+
+  .nicheRule {
+    inset: 6px;
+  }
+
+  .monogram {
+    font-size: 2.6rem;
+  }
+
+  .founderName {
+    grid-area: name;
+    align-self: end;
+  }
+
+  .founderRole {
+    grid-area: role;
+    align-self: start;
+    margin-top: 8px;
+    letter-spacing: 0.14em;
+  }
+
+  .founderLine {
+    grid-area: line;
+    margin-top: 20px;
+  }
+
+  .band {
+    border-radius: var(--r-lg);
+  }
+}

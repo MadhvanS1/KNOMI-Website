@@ -1,0 +1,216 @@
+.pageWrapper {
+  min-height: 100vh;
+  background-color: var(--color-warm-ivory);
+  color: var(--color-espresso);
+  padding-top: 100px;
+  padding-bottom: 80px;
+}
+
+.hero {
+  padding: 48px 0 40px;
+  text-align: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background-color: rgba(169, 71, 47, 0.08);
+  border: 1px solid rgba(169, 71, 47, 0.2);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-terracotta);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--color-burnt-coffee);
+  line-height: 1.2;
+  max-width: 860px;
+  margin: 0 auto 16px;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  max-width: 680px;
+  margin: 0 auto 36px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  margin-top: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: #fbf8f3;
+  border: 1px solid rgba(28, 20, 17, 0.08);
+  border-radius: 16px;
+  padding: 32px;
+  text-decoration: none;
+  transition: transform var(--duration-normal) var(--ease-default),
+              box-shadow var(--duration-normal) var(--ease-default),
+              border-color var(--duration-normal) var(--ease-default);
+  box-shadow: 0 4px 16px rgba(28, 20, 17, 0.04);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(28, 20, 17, 0.08);
+  border-color: rgba(169, 71, 47, 0.35);
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.categoryTag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-terracotta);
+  background-color: rgba(169, 71, 47, 0.08);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.readTime {
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+  font-weight: 500;
+}
+
+.cardTitle {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-burnt-coffee);
+  line-height: 1.35;
+  margin-bottom: 12px;
+  transition: color var(--duration-normal) var(--ease-default);
+}
+
+.card:hover .cardTitle {
+  color: var(--color-terracotta);
+}
+
+.cardSnippet {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid rgba(28, 20, 17, 0.06);
+}
+
+.authorMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.authorName {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-burnt-coffee);
+}
+
+.authorRole {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+}
+
+.actionLink {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-terracotta);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap var(--duration-normal) var(--ease-default);
+}
+
+.card:hover .actionLink {
+  gap: 8px;
+}
+
+.ctaSection {
+  margin-top: 64px;
+  background: linear-gradient(135deg, var(--color-burnt-coffee) 0%, #1c1411 100%);
+  color: var(--color-champagne);
+  border-radius: 20px;
+  padding: 48px;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  color: var(--color-warm-ivory);
+  margin-bottom: 12px;
+}
+
+.ctaSubtitle {
+  font-size: 1.05rem;
+  color: rgba(234, 206, 170, 0.8);
+  max-width: 600px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-terracotta);
+  color: #fbf8f3;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--duration-normal) var(--ease-default),
+              transform var(--duration-normal) var(--ease-default);
+}
+
+.ctaBtn:hover {
+  background-color: #a9472f;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 840px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    padding: 24px;
+  }
+
+  .ctaSection {
+    padding: 32px 20px;
+  }
+}

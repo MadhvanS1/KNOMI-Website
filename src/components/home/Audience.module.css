@@ -1,0 +1,335 @@
+/* ---------------------------------------------------------------------------
+   Audience
+   Sticky header + arcade drawing on the left, editorial rows on the right,
+   and a café sketch closing the chapter.
+   --------------------------------------------------------------------------- */
+
+section.section {
+  overflow: clip; /* clip, not hidden: keeps position: sticky working */
+  padding-bottom: calc(var(--space-section) * 0.55);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  column-gap: clamp(48px, 7vw, 128px);
+}
+
+.headCol {
+  min-width: 0;
+}
+
+.sticky {
+  position: sticky;
+  top: calc(var(--nav-h) + 44px);
+}
+
+.listCol {
+  min-width: 0;
+}
+
+/* ---------- Arcade: one doorway per kind of room ---------- */
+
+.arcade {
+  width: clamp(150px, 12.5vw, 184px);
+  margin-top: clamp(32px, 4vw, 56px);
+}
+
+.arcadeSvg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.archFloor,
+.archLine,
+.archLit {
+  fill: none;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.archFloor,
+.archLine {
+  stroke: var(--line-strong);
+}
+
+.archFill {
+  fill: var(--surface);
+  opacity: 0;
+  transition: opacity 520ms var(--ease-out);
+}
+
+.archLit {
+  stroke: var(--accent);
+  opacity: 0;
+  transition: opacity 420ms var(--ease-out);
+}
+
+.archStar {
+  fill: var(--accent-soft);
+  opacity: 0;
+  transform: scale(0.3) rotate(-45deg);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 380ms var(--ease-out),
+    transform 560ms var(--ease-out);
+}
+
+.archFill[data-on="true"],
+.archLit[data-on="true"] {
+  opacity: 1;
+}
+
+.archStar[data-on="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.caption {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 28px;
+  margin-top: 18px;
+  white-space: nowrap;
+}
+
+.captionRest {
+  display: inline-flex;
+}
+
+.captionText {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--fg-2);
+}
+
+.captionIndex {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.0625rem;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* ---------- Rows ---------- */
+
+.list {
+  list-style: none;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.item {
+  display: block;
+}
+
+.row {
+  --t: clamp(1.6rem, 1.2rem + 1.4vw, 2.5rem);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: clamp(40px, 5vw, 76px) minmax(0, 1fr) 24px;
+  column-gap: clamp(12px, 1.6vw, 24px);
+  align-items: baseline;
+  padding-block: clamp(30px, 3.4vw, 48px);
+  border-top: 1px solid var(--line-strong);
+}
+
+/* A sheet of paper that slides under the row on hover. */
+.row::before {
+  content: "";
+  position: absolute;
+  inset: 0 calc(-1 * clamp(14px, 1.8vw, 28px));
+  z-index: -1;
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  opacity: 0;
+  transform: scaleX(0.92);
+  transform-origin: left center;
+  transition:
+    opacity 480ms var(--ease-out),
+    transform 720ms var(--ease-out);
+}
+
+.index {
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur) var(--ease-out);
+}
+
+.copy {
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--t);
+  line-height: 1.05;
+  letter-spacing: -0.018em;
+  transition: transform 420ms var(--ease-out);
+}
+
+.body {
+  max-width: 40ch;
+  margin-top: 12px;
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--fg-2);
+}
+
+.mark {
+  align-self: start;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 12px;
+  margin-top: calc(var(--t) * 0.52 - 6px);
+}
+
+.markStar {
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(0.4) rotate(-45deg);
+  transition:
+    opacity 360ms var(--ease-out),
+    transform 520ms var(--ease-out);
+}
+
+/* Active: the row currently being read, or hovered. */
+.row[data-active="true"] .index {
+  color: var(--accent);
+}
+
+.row[data-active="true"] .markStar {
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: hover) {
+  .row:hover::before {
+    opacity: 1;
+    transform: none;
+  }
+
+  .row:hover .title {
+    transform: translateX(8px);
+  }
+}
+
+/* ---------- Closing vignette ---------- */
+
+.vignette {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: clamp(88px, 10vw, 156px);
+}
+
+.drift {
+  width: min(100%, 1100px);
+  opacity: 0.75;
+  mix-blend-mode: multiply;
+}
+
+.sketchReveal {
+  width: 100%;
+}
+
+.sketch {
+  width: 100%;
+  height: auto;
+  /* Soften the cut edges so the scene dissolves into the page. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.endmark {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: clamp(28px, 3vw, 44px);
+}
+
+.endLine {
+  width: clamp(40px, 6vw, 72px);
+  height: 1px;
+  background: var(--line-strong);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1100px) {
+  .body {
+    max-width: 34ch;
+  }
+}
+
+/* Short laptop screens: let the header scroll with the page rather than
+   pin a column taller than the viewport. */
+@media (max-height: 760px) {
+  .sticky {
+    position: static;
+  }
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sticky {
+    position: static;
+  }
+
+  .arcade {
+    display: none;
+  }
+
+  .listCol {
+    margin-top: clamp(44px, 9vw, 72px);
+  }
+
+  .body {
+    max-width: 44ch;
+  }
+}
+
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: 34px minmax(0, 1fr) 14px;
+    column-gap: 12px;
+    padding-block: 26px;
+  }
+
+  .mark {
+    width: 14px;
+  }
+
+  .markStar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .vignette {
+    margin-top: 72px;
+  }
+
+  .drift {
+    /* Let the sketch run edge to edge on phones; the scene reads better larger. */
+    width: calc(100% + var(--gutter) * 2);
+  }
+}
