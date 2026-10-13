@@ -503,8 +503,9 @@ export default function GstZomatoSwiggyGuidePage() {
               <br /><br />
               Dine-in sales stay direct. KNOMI works alongside the POS you already use, so your GST billing stays where it
               is, and we charge 0% commission: one flat price per table, per month. Menu (₹149) is the illustrated menu
-              on its own; Signature (₹250, our recommended plan) adds guest ordering, the kitchen display and integration
-              with your existing POS; Ecosystem (₹500–600) adds Knomi Sense menu intelligence.
+              on its own; Signature (₹250, our recommended plan) adds Knomi Host, Knomi Pulse, guest ordering, Knomi Dash
+              (live orders and the kitchen display), integration with your existing POS and the essentials of Knomi Sense;
+              Ecosystem (₹500) adds Knomi&apos;s own POS, the full Knomi Sense and Knomi Compass insights.
               See <Link href="/#pricing">plans and pricing</Link>.
             </p>
           </div>
@@ -536,8 +537,8 @@ export default function GstZomatoSwiggyGuidePage() {
             <h3>Keep Your Dining Room Commission-Free</h3>
             <p>
               Aggregators are built for doorstep delivery, not your dining room tables. For the guests already seated,
-              KNOMI gives you an illustrated QR menu with Knomi Host inside it, orders straight to your kitchen display,
-              and 0% commission.
+              KNOMI helps you grow every table: Knomi Host suggests the right pairing inside an illustrated menu, orders
+              go straight to your kitchen display, and you pay 0% commission.
             </p>
             <Link href={bookHref} className={styles.ctaButton}>
               Book a walkthrough

@@ -13,7 +13,7 @@ import { OG_IMAGE } from "@/content/site";
 /* =====================================================================
    About KNOMI
    I.   A doorway: the headline, then an arch that opens onto the city.
-   II.  A short letter from the founders on why the menu should remember.
+   II.  A short letter from the founders on why hospitality should remember.
    III. House rules: three principles, set like a printed menu.
    IV.  The founders, as monograms in arched niches.
    V.   A dark doorway band: the tagline over the door, and the walkthrough.
@@ -22,10 +22,10 @@ import { OG_IMAGE } from "@/content/site";
 // copy: about hero
 const HERO_COPY = {
   eyebrow: "About KNOMI",
-  titleLead: "We're building the menu that",
+  titleLead: "We're building hospitality that",
   titleAccent: "remembers you.",
   lead:
-    "KNOMI is guest experience infrastructure for restaurants — an illustrated, intelligent menu with a warm host inside it. We're a small team in Bengaluru, and we sit alongside the tools restaurants already use.",
+    "KNOMI is guest experience infrastructure that helps restaurants grow. Knomi Sense remembers every guest, Knomi Host suggests the right dish at every table, and it all sits alongside the tools you already use. We're a small team in Bengaluru.",
   foundersLink: "Meet the founders",
   skylineAlt: "Hand-drawn sepia sketch of a city skyline and a café table set for two under an umbrella",
 };
@@ -39,11 +39,11 @@ const WHY_COPY = {
     "Great restaurants are remembered for how they made you feel — the table that was ready, the server who knew your order, the dessert you hadn't planned on and were glad you had.",
   menu:
     "The menu is the one thing every guest reads. Yet most digital menus are a PDF of the price list: they look like software, and they forget the guest the moment the phone goes back in a pocket.",
-  pullLead: "We want the menu to behave like",
+  pullLead: "We want every table to have",
   pullAccent: "your best server",
-  pullTail: "— to know what's good, remember what you like, and suggest what's next.",
+  pullTail: "— someone who knows what's good, remembers what you like, and suggests what's next.",
   pos:
-    "And we want it to sit quietly alongside the POS you already use, not replace it. Nothing to rip out, no new habits for your team — just a warmer first conversation at every table.",
+    "And we want it to sit quietly alongside the POS you already use, not replace it. Nothing to rip out, no new habits for your team — just a warmer conversation at every table, and a bigger bill at the end of it.",
   signature: "Yash & Madhvan",
   signatureRole: "Co-founders, KNOMI",
 };
@@ -91,7 +91,7 @@ const FOUNDERS = [
     initials: ["Y", "G"],
     name: "Yash Garg",
     role: "Co-founder, product & engineering",
-    line: "Builds the menu, the host and everything behind them.",
+    line: "Builds Knomi Sense and everything it powers, from the menu to the host.",
   },
   {
     initials: ["M", "S"],
@@ -102,17 +102,17 @@ const FOUNDERS = [
 ];
 
 export const metadata: Metadata = {
-  title: "About KNOMI | The team behind the menu that knows your guests",
+  title: "About KNOMI | Guest experience infrastructure for restaurants",
   description:
-    "KNOMI is guest experience infrastructure for restaurants: an illustrated, intelligent QR menu with a warm host inside it. Built by a small team in Bengaluru to sit alongside the POS you already use.",
+    "KNOMI helps restaurants grow, upsell and look after every guest. Knomi Sense remembers every guest and Knomi Host suggests the right dish at every table. Built by a small team in Bengaluru to sit alongside the POS you already use.",
   alternates: {
     canonical: "/about",
   },
   openGraph: {
     images: [OG_IMAGE],
-    title: "About KNOMI | The team behind the menu that knows your guests",
+    title: "About KNOMI | Guest experience infrastructure for restaurants",
     description:
-      "An illustrated, intelligent menu with a warm host inside it. Built in Bengaluru, alongside the tools restaurants already use.",
+      "Every guest known, every table grown. Built in Bengaluru, alongside the tools restaurants already use.",
     url: "https://www.knomi.in/about",
     siteName: "KNOMI",
     type: "website",
@@ -157,7 +157,7 @@ const aboutJsonLd = {
       "https://www.linkedin.com/company/ra-knomi/",
       "https://www.wikidata.org/wiki/Q141277639",
     ],
-    description: "Guest experience infrastructure for restaurants, built in Bengaluru.",
+    description: "Guest experience infrastructure that helps restaurants grow, upsell and look after every guest. Built in Bengaluru.",
     founder: [
       {
         "@type": "Person",

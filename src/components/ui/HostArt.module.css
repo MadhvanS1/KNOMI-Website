@@ -1,0 +1,78 @@
+/* Knomi Host's cut-out. No background, border or radius: he is never framed. */
+.host {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  max-width: 100%;
+  background: none;
+  container-type: inline-size;
+  /* He breathes from where he rests, so his hands stay on the edge. */
+  transform-origin: 50% 100%;
+}
+
+.art {
+  object-fit: contain;
+  object-position: 50% 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.host[data-align="center"] .art {
+  object-position: 50% 50%;
+}
+
+/* A slow breath after he appears: a 2–3px rise of the shoulders, a few times, then still.
+   A parent can hold it back until he has settled with --host-breath-delay. */
+.idle {
+  animation: hostBreath 3.4s cubic-bezier(0.45, 0, 0.55, 1) var(--host-breath-delay, 1.2s) 4;
+}
+
+@keyframes hostBreath {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(0.996, 1.018);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .idle {
+    animation: none;
+  }
+}
+
+/* Last-resort stand-in for a pose with no artwork. Every pose has art today. */
+.medallion {
+  position: absolute;
+  inset: 8%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--paper) 80%, transparent), transparent 60%),
+    linear-gradient(160deg, var(--terracotta), var(--russet-deep));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 18px 40px -20px rgba(28, 20, 17, 0.55);
+  color: var(--bone);
+}
+
+.hat {
+  position: absolute;
+  top: 14%;
+  width: 46%;
+  fill: color-mix(in srgb, var(--paper) 92%, transparent);
+  stroke: color-mix(in srgb, var(--russet-deep) 40%, transparent);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.k {
+  margin-top: 26%;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 30cqi;
+  line-height: 1;
+}

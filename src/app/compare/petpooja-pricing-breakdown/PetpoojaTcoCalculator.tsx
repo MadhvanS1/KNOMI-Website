@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import styles from "./PetpoojaPricing.module.css";
-import { pricing } from "@/content/site";
+import { GOAL, pricing } from "@/content/site";
 
 interface AddonOption {
   id: string;
@@ -389,7 +389,7 @@ export default function PetpoojaTcoCalculator() {
             <div>
               <div className={styles.tcoTitle}>Co-Existence Software Cost per Year (estimate)</div>
               <p className={styles.tcoSub}>
-                Petpooja reported base renewal plus KNOMI Signature, before GST. Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+                Petpooja reported base renewal plus KNOMI Signature, before GST. {GOAL}
               </p>
             </div>
             <div className={styles.tcoNum}>

@@ -64,6 +64,7 @@ html {
 
   /* ---------- Type ---------- */
   --font-serif: var(--font-rupee-serif), var(--font-instrument-serif), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-hand: var(--font-instrument-hand), "Bradley Hand", "Segoe Print", cursive; /* Knomi Host's voice */
   --font-sans: var(--font-rupee-sans), var(--font-instrument-sans), ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --fs-display: clamp(3.4rem, 1.4rem + 7.4vw, 9.25rem);
@@ -81,7 +82,7 @@ html {
   --wrap: 1320px;
   --wrap-narrow: 880px;
   --gutter: clamp(20px, 4vw, 48px);
-  --space-section: clamp(6rem, 3.5rem + 8vw, 11rem);
+  --space-section: clamp(4.5rem, 2.8rem + 4.6vw, 7.5rem);
   --nav-h: 76px;
 
   /* ---------- Shape ---------- */

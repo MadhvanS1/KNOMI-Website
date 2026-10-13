@@ -113,10 +113,12 @@ export default function TermsPage() {
               <h2 className={styles.sectionHeading}>2. Service Description and License Grant</h2>
               <p className={styles.paragraph}>
                 KNOMI delivers a specialized Software-as-a-Service (SaaS) platform tailored for hospitality venues.
-                Depending on your plan, the service comprises an illustrated QR digital menu themed to your restaurant,
-                Knomi Host in-menu recommendations, a Google review prompt, contactless dine-in ordering, Kitchen Display
-                System (KDS) real-time dispatch, a live orders dashboard, integration with your existing POS, and, on the
-                Ecosystem plan, behavioral menu intelligence (Knomi Sense).
+                Depending on your plan, the service comprises Knomi Canvas (an illustrated QR digital menu themed to your
+                restaurant), Knomi Host in-menu recommendations, contactless dine-in ordering, Knomi Pulse end-of-meal guest
+                check-ins with manager alerts, Knomi Dash (a live orders dashboard and Kitchen Display System (KDS) real-time
+                dispatch), integration with your existing POS, and Knomi Sense, the guest experience infrastructure behind
+                them (its essentials on the Signature plan; on the Ecosystem plan, the full Knomi Sense, Knomi Compass
+                behavioral menu insights and Knomi&apos;s own POS).
               </p>
               <p className={styles.paragraph}>
                 Subject to timely payment of applicable subscription dues and compliance with this Agreement, KNOMI grants

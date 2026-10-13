@@ -5,12 +5,12 @@ import Footer from '@/components/Footer';
 import HyderabadVolumeThroughputAuditor from './HyderabadVolumeThroughputAuditor';
 import ExperienceKnomiBox from '@/components/ExperienceKnomiBox';
 import styles from './HyderabadSolutions.module.css';
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'AI Restaurant Ordering System Hyderabad (2026) | KNOMI',
   description:
-    'QR self-ordering for Hyderabad biryani houses, restobars and cafés. Let every table order at once during the Sunday rush in Madhapur and Jubilee Hills, with tickets split by kitchen station and 0% commission.',
+    'QR self-ordering and upselling for Hyderabad biryani houses, restobars and cafés. Let every table order at once during the Sunday rush in Madhapur and Jubilee Hills, with tickets split by kitchen station and 0% commission.',
   alternates: {
     canonical: '/solutions/hyderabad-restaurant-self-ordering',
   },
@@ -355,7 +355,7 @@ export default function HyderabadRestaurantSelfOrderingPage() {
                   <td>Free</td>
                   <td>Typically device cost plus a software fee</td>
                   <td>Varies: subscription and/or per-order fees</td>
-                  <td>Signature, with self-ordering: Rs 250 per table / month (Menu only: Rs 149; Ecosystem: Rs 500–600); 0% commission</td>
+                  <td>Signature, with self-ordering: Rs 250 per table / month (Menu only: Rs 149; Ecosystem: Rs 500); 0% commission</td>
                 </tr>
               </tbody>
             </table>
@@ -370,7 +370,7 @@ export default function HyderabadRestaurantSelfOrderingPage() {
             <li><strong>Revenue on the Floor:</strong> 2,100 seatings x Rs 2,100 = Rs 44,10,000 a month.</li>
             <li><strong>At KNOMI&apos;s Target:</strong> a lift of around 25% in the average order would be Rs 525 more per table check (say, Apollo Fish with the biryani or Qubani ka Meetha to finish), or roughly Rs 11 Lakhs a month. That is a target to measure against, not a guarantee.</li>
             <li><strong>What It Would Cost:</strong> Signature at Rs 250 per table is Rs 13,750 a month for 55 tables, with 0% commission.</li>
-            <li><strong>How We Would Check It:</strong> Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.</li>
+            <li><strong>How We Would Check It:</strong> {GOAL}</li>
           </ul>
 
           {/* FAQ Section */}

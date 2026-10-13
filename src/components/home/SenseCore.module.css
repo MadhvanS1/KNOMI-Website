@@ -1,0 +1,972 @@
+/* =====================================================================
+   Knomi Sense — the centrepiece.
+   An espresso panel framed like a menu card, with a brass instrument at its
+   heart: a glowing core and one ring per module. On desktop the instrument
+   holds still while the five modules are read, one per stretch of scroll.
+   ===================================================================== */
+
+.section {
+  margin-inline: clamp(8px, 1.4vw, 20px);
+}
+
+.panel {
+  position: relative;
+  isolation: isolate;
+  /* clip (not hidden) keeps position: sticky working inside */
+  overflow: clip;
+  border-radius: var(--r-lg);
+  padding-block: var(--space-section);
+  background:
+    radial-gradient(55% 40% at 92% 0%, color-mix(in srgb, var(--brass) 7%, transparent), transparent 70%),
+    radial-gradient(70% 55% at 30% 60%, color-mix(in srgb, var(--russet) 10%, transparent), transparent 72%),
+    linear-gradient(176deg, var(--bg) 30%, color-mix(in srgb, var(--bg-alt) 70%, var(--bg)) 100%);
+}
+
+/* A hairline frame inset from the edge, like the border of a menu card. */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: clamp(8px, 1vw, 14px);
+  z-index: -1;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--r-lg) - clamp(8px, 1vw, 14px));
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------
+   Layout (mobile first): head, instrument, modules
+   --------------------------------------------------------------------- */
+.story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "head"
+    "stage"
+    "list";
+  row-gap: clamp(1.75rem, 1rem + 3vw, 3rem);
+}
+
+.headArea {
+  grid-area: head;
+}
+
+.stageArea {
+  grid-area: stage;
+  min-width: 0;
+}
+
+.listArea {
+  grid-area: list;
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------------------
+   The instrument
+   --------------------------------------------------------------------- */
+.stage {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Soft warm light behind the instrument */
+.glow {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 44%;
+  width: min(940px, 150%);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--terracotta) 17%, transparent) 0%,
+    color-mix(in srgb, var(--brass) 7%, transparent) 42%,
+    color-mix(in srgb, var(--brass) 2%, transparent) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Square box; may reach a little past the gutter on phones (the panel clips). */
+.instrument {
+  position: relative;
+  flex: none;
+  width: min(calc(100% + 2 * var(--gutter) - 16px), 520px);
+  aspect-ratio: 1;
+}
+
+.fallback,
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.fallback {
+  transition: opacity 1.2s var(--ease-out);
+}
+
+.canvas {
+  display: block;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out);
+}
+
+.isReady .canvas {
+  opacity: 1;
+}
+
+.isReady .fallback {
+  opacity: 0;
+}
+
+/* ---------- Static instrument (SVG) ---------- */
+.fb {
+  overflow: visible;
+}
+
+.fbFrame {
+  fill: none;
+  stroke: var(--brass);
+  opacity: 0.7;
+}
+
+.fbHair {
+  opacity: 0.55;
+}
+
+.fbFill {
+  fill: var(--brass);
+  stroke: none;
+}
+
+.fbRing ellipse {
+  fill: none;
+  stroke: var(--brass);
+  stroke-width: 0.9;
+  opacity: 0.5;
+  transition:
+    stroke 0.8s var(--ease-out),
+    stroke-width 0.8s var(--ease-out),
+    opacity 0.8s var(--ease-out);
+}
+
+.fbBead {
+  fill: var(--brass);
+  transition: fill 0.8s var(--ease-out);
+}
+
+.fbRing.fbOn ellipse {
+  stroke: var(--brass-light);
+  stroke-width: 1.6;
+  opacity: 1;
+}
+
+.fbRing.fbOn .fbBead {
+  fill: var(--brass-light);
+}
+
+.fbFilament {
+  stroke: var(--brass-light);
+  stroke-width: 0.35;
+  opacity: 0.22;
+  transition: opacity 0.8s var(--ease-out);
+}
+
+.fbFilament.fbOn {
+  opacity: 0.75;
+}
+
+.fbGimbal {
+  fill: none;
+  stroke: var(--brass);
+  stroke-width: 0.35;
+  opacity: 0.6;
+}
+
+/* ---------- The name tag that follows the focused ring's bead ---------- */
+.beadLabel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.panel:not(.isReady) .beadLabel {
+  display: none;
+}
+
+.beadDot {
+  position: absolute;
+  left: -3.5px;
+  top: -3.5px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brass-light);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brass-light) 22%, transparent);
+}
+
+.beadStem {
+  position: absolute;
+  left: -0.5px;
+  bottom: 8px;
+  width: 1px;
+  height: 15px;
+  background: linear-gradient(to top, var(--brass-light), color-mix(in srgb, var(--brass-light) 20%, transparent));
+}
+
+.beadTag {
+  position: absolute;
+  left: 0;
+  bottom: 23px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 13px 7px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--espresso) 88%, transparent);
+  box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.7);
+  color: var(--fg);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  white-space: nowrap;
+  transform: translateX(calc(-50% + var(--shift, 0px)));
+}
+
+.beadNum {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.08em;
+  color: var(--accent);
+}
+
+.beadLabel[data-flip="true"] .beadTag {
+  bottom: auto;
+  top: 23px;
+}
+
+.beadLabel[data-flip="true"] .beadStem {
+  bottom: auto;
+  top: 8px;
+  background: linear-gradient(to bottom, var(--brass-light), color-mix(in srgb, var(--brass-light) 20%, transparent));
+}
+
+/* ---------- The plaque under the instrument ---------- */
+.plaque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: -0.25rem;
+  text-align: center;
+}
+
+.plaqueName {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+.plaqueName :global(.ornament) {
+  width: 8px;
+  height: 8px;
+}
+
+.plaqueLine {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.3rem, 1.15rem + 0.5vw, 1.65rem);
+  line-height: 1.15;
+  color: var(--fg);
+}
+
+/* Pause for the instrument's idle motion (WCAG 2.2.2) */
+/* Sits in the instrument's bottom-right corner, clear of the round dial. */
+.pause {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--espresso) 70%, transparent);
+  color: var(--fg-2);
+  transition:
+    color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out),
+    transform var(--dur) var(--ease-out);
+}
+
+.pause:hover {
+  color: var(--fg);
+  border-color: var(--line-control);
+}
+
+.pause:active {
+  transform: scale(0.94);
+}
+
+.pause[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--brass-light) 50%, transparent);
+}
+
+.pause:focus-visible {
+  border-radius: 50%;
+}
+
+/* ---------------------------------------------------------------------
+   Modules (mobile & tablet): a row of cards to swipe or tap
+   --------------------------------------------------------------------- */
+.listBox {
+  position: relative;
+}
+
+.rail,
+.indicator,
+.marker,
+.detailStack {
+  display: none;
+}
+
+.scroller {
+  margin-inline: calc(-1 * var(--gutter));
+  padding-inline: var(--gutter);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.modules {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  padding-block: 2px 6px;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex: 0 0 min(80vw, 330px);
+  scroll-snap-align: center;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1.15rem 1.25rem 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--walnut) 55%, transparent);
+  transition:
+    border-color 0.8s var(--ease-out),
+    background-color 0.8s var(--ease-out),
+    box-shadow 0.8s var(--ease-out);
+}
+
+.card.on {
+  border-color: color-mix(in srgb, var(--brass-light) 55%, transparent);
+  background-color: color-mix(in srgb, var(--walnut) 90%, transparent);
+  box-shadow: 0 24px 50px -30px rgba(0, 0, 0, 0.8), inset 0 1px 0 color-mix(in srgb, var(--brass-light) 18%, transparent);
+}
+
+.card:has(.itemBtn:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Rows rise in, one after another, the first time the list is seen. */
+.itemHead {
+  font-family: var(--font-sans);
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 1s var(--ease-out);
+  transition-delay: calc(var(--n, 0) * 80ms + 100ms);
+}
+
+.shown .itemHead {
+  opacity: 1;
+  transform: none;
+}
+
+.itemBtn {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "num role"
+    "name name";
+  align-items: baseline;
+  row-gap: 0.55rem;
+  width: 100%;
+  text-align: left;
+  color: var(--fg);
+}
+
+/* The whole card is the button's target on touch screens. */
+.itemBtn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.itemBtn:focus-visible {
+  outline: none;
+}
+
+.num {
+  grid-area: num;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--accent-soft);
+}
+
+.on .num {
+  color: var(--accent);
+}
+
+.name {
+  grid-area: name;
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.leader {
+  display: none;
+}
+
+.role {
+  grid-area: role;
+  justify-self: end;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--fg-3);
+}
+
+.on .role {
+  color: var(--fg-2);
+}
+
+.detail {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  column-gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.detailHost {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.body {
+  grid-column: 1;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+.see {
+  position: relative;
+  z-index: 1;
+  grid-column: 1;
+  justify-self: start;
+  align-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.9rem;
+  padding-bottom: 2px;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--fg);
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition:
+    background-size var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out);
+}
+
+.see:hover {
+  color: var(--accent);
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+.seeArrow {
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.see:hover .seeArrow {
+  transform: translateX(3px);
+}
+
+/* Cards: the text runs full width; Host peeks over the ledge beside the link. */
+.detailHost .body {
+  grid-column: 1 / -1;
+}
+
+/* The ledge he rests his hands on: a hairline under the description, like the rules between the rows. */
+.detailHost::after {
+  content: "";
+  grid-column: 1 / -1;
+  grid-row: 3;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+/* His box is his cut-out's own shape; it stands on the ledge, and nothing of him shows below it. */
+.hostPerch {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  width: 86px;
+  margin: 0.5rem 4px -3px 0;
+  line-height: 0;
+  clip-path: inset(-60% -60% 3px -60%);
+  pointer-events: none;
+}
+
+/* He rises over the ledge when his module comes into focus. */
+.hostArt {
+  display: block;
+  transform: translateY(30%);
+  transition: transform 1.2s var(--ease-out) 0.25s;
+}
+
+.on .hostArt,
+.detailOn .hostArt {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hostArt {
+    transform: none;
+  }
+}
+
+/* Position dashes under the row */
+.ticks {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1.1rem;
+}
+
+.tick {
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--line-strong);
+  transition:
+    background-color 0.6s var(--ease-out),
+    transform 0.8s var(--ease-out);
+}
+
+.tickOn {
+  background: var(--accent);
+  transform: scaleX(1.75);
+}
+
+.noteWrap {
+  margin-top: 1.5rem;
+}
+
+.planNote {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.7;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.planNote :global(.ornament) {
+  width: 8px;
+  height: 8px;
+  transform: translateY(-1px);
+}
+
+/* ---------- Tablet ---------- */
+@media (min-width: 640px) {
+  .item {
+    flex-basis: 320px;
+  }
+
+  .panel {
+    border-radius: var(--r-xl);
+  }
+
+  .panel::before {
+    border-radius: calc(var(--r-xl) - clamp(8px, 1vw, 14px));
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Desktop: the instrument holds still beside a pinned list, and the page's
+   scroll moves the focus from module to module.
+   --------------------------------------------------------------------- */
+@media (min-width: 1024px) {
+  .story {
+    --pin-h: 31rem;
+    --row-h: 3.55rem;
+    --rail-pad: 2.1rem;
+    --pin-gap: max(1.5rem, (100svh - var(--nav-h) - var(--pin-h)) / 2);
+    --pin-top: calc(var(--nav-h) + var(--pin-gap));
+    --pin-tail: max(0px, 100svh - var(--pin-top) - var(--pin-h));
+    --travel: calc(var(--count, 5) * 36svh);
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "stage head"
+      "stage list";
+    column-gap: clamp(3rem, 5vw, 6.5rem);
+    row-gap: clamp(1.5rem, 3vh, 2.5rem);
+  }
+
+  .stage {
+    position: sticky;
+    top: var(--nav-h);
+    height: calc(100svh - var(--nav-h));
+    justify-content: center;
+    container-type: size;
+  }
+
+  .glow {
+    top: calc(50% - 2.5rem);
+  }
+
+  .instrument {
+    width: min(100cqw, 100cqh - 6.75rem);
+  }
+
+  .pause {
+    right: 0;
+    bottom: 0;
+  }
+
+  /* Pinned list. The tail keeps it pinned exactly as long as the instrument. */
+  .listArea {
+    padding-bottom: var(--pin-tail);
+  }
+
+  .track {
+    position: relative;
+    height: calc(var(--pin-h) + var(--travel));
+  }
+
+  .marker {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: var(--travel);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .pin {
+    position: sticky;
+    top: var(--pin-top);
+    min-height: var(--pin-h);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .listBox {
+    padding-left: var(--rail-pad);
+  }
+
+  /* Progress thread beside the rows */
+  .rail {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: calc(var(--count, 5) * var(--row-h));
+    background: var(--line-strong);
+  }
+
+  .railFill {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: var(--accent-soft);
+    transform: scaleY(0);
+    transform-origin: top center;
+  }
+
+  /* Warm band + a bead on the thread, gliding to the row in focus */
+  .indicator {
+    display: block;
+    position: absolute;
+    left: var(--rail-pad);
+    right: 0;
+    top: 0;
+    height: var(--row-h);
+    border-radius: var(--r-sm);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--brass) 16%, transparent),
+      color-mix(in srgb, var(--brass) 4%, transparent) 70%,
+      transparent
+    );
+    transform: translateY(calc(var(--i, 0) * var(--row-h)));
+    transition: transform 0.95s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .indicator::before {
+    content: "";
+    position: absolute;
+    left: calc(-1 * var(--rail-pad));
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    margin: -4.5px 0 0 -4px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow:
+      0 0 0 4px var(--bg),
+      0 0 16px color-mix(in srgb, var(--brass-light) 55%, transparent);
+  }
+
+  .scroller {
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .modules {
+    display: block;
+    width: auto;
+    padding: 0;
+  }
+
+  .item {
+    display: block;
+  }
+
+  .card {
+    position: static;
+    display: block;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .card.on {
+    background: none;
+    box-shadow: none;
+  }
+
+  .card:has(.itemBtn:focus-visible) {
+    outline: none;
+  }
+
+  .itemBtn {
+    display: flex;
+    align-items: center;
+    height: var(--row-h);
+    padding-inline: 0.9rem;
+    border-top: 1px solid var(--line);
+    color: var(--fg-3);
+    transition: color 0.7s var(--ease-out);
+  }
+
+  .item:last-child .itemBtn {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .itemBtn::after {
+    display: none;
+  }
+
+  .itemBtn:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+    border-radius: var(--r-sm);
+  }
+
+  .itemBtn:hover {
+    color: var(--fg-2);
+  }
+
+  .on .itemBtn {
+    color: var(--fg);
+  }
+
+  .num {
+    flex: none;
+    width: 2.5rem;
+    font-size: 1.05rem;
+    color: var(--accent-soft);
+    opacity: 0.7;
+    transition: opacity 0.7s var(--ease-out), color 0.7s var(--ease-out);
+  }
+
+  .on .num {
+    opacity: 1;
+  }
+
+  .name {
+    font-size: clamp(1.4rem, 0.95rem + 0.75vw, 1.8rem);
+    line-height: 1;
+    transform-origin: left center;
+    transition: transform 0.9s var(--ease-out);
+  }
+
+  .on .name {
+    transform: translateX(4px);
+  }
+
+  .leader {
+    display: block;
+    margin-inline: 16px;
+    opacity: 0.45;
+    transition: opacity 0.7s var(--ease-out);
+  }
+
+  .on .leader {
+    opacity: 0.85;
+  }
+
+  .role {
+    color: inherit;
+    transition: color 0.7s var(--ease-out);
+  }
+
+  .on .role {
+    color: var(--fg-2);
+  }
+
+  .cardDetail {
+    display: none;
+  }
+
+  .detailStack {
+    display: grid;
+  }
+
+  .detailStack > .detail {
+    grid-area: 1 / 1;
+    margin: 0;
+    padding: 1.35rem 0.9rem 0;
+    grid-template-rows: auto 1fr;
+    align-content: start;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition:
+      opacity 0.45s var(--ease-out),
+      transform 0.9s var(--ease-out);
+  }
+
+  .detailStack > .detailOn {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition-delay: 0.2s, 0.2s;
+  }
+
+  .body {
+    max-width: 33em;
+    font-size: var(--fs-body);
+  }
+
+  .see {
+    align-self: start;
+  }
+
+  .detailHost .body {
+    grid-column: 1;
+  }
+
+  .detailHost::after {
+    margin-top: 0.9rem;
+  }
+
+  .hostPerch {
+    grid-row: 1 / span 2;
+    width: 104px;
+    margin: 0 6px -3px 0;
+  }
+
+  .ticks {
+    display: none;
+  }
+
+  .noteWrap {
+    margin-top: 1.4rem;
+    padding-left: var(--rail-pad);
+  }
+
+  .planNote {
+    max-width: 34em;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 760px) {
+  .story {
+    --pin-h: 29rem;
+    --row-h: 3.2rem;
+  }
+}

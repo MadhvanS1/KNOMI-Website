@@ -286,18 +286,19 @@ function Vault({ reduce }: { reduce: boolean }) {
     <div ref={ref} className={styles.vault} aria-hidden="true">
       <motion.div
         className={styles.vaultInner}
-        initial={reduce ? false : { clipPath: ARCH_CLOSED }}
+        // Same first render with or without reduced motion (hydration-safe); reduced just skips the tween.
+        initial={{ clipPath: ARCH_CLOSED }}
         animate={{ clipPath: open ? ARCH_OPEN : ARCH_CLOSED }}
-        transition={{ duration: 1.5, ease: EASE_OUT }}
+        transition={reduce ? { duration: 0 } : { duration: 1.5, ease: EASE_OUT }}
       >
         <span className={styles.vaultLine} />
         <span className={`${styles.vaultLine} ${styles.vaultLineInner}`} />
       </motion.div>
       <motion.span
         className={`ornament ${styles.keystone}`}
-        initial={reduce ? false : { opacity: 0, scale: 0.4 }}
+        initial={{ opacity: 0, scale: 0.4 }}
         animate={open ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.4 }}
-        transition={{ duration: 0.7, delay: reduce ? 0 : 0.2, ease: EASE_OUT }}
+        transition={reduce ? { duration: 0 } : { duration: 0.7, delay: 0.2, ease: EASE_OUT }}
       />
     </div>
   );

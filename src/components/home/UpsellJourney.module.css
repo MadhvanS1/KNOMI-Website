@@ -1,0 +1,1464 @@
+/* =====================================================================
+   Chapter III — Grow with me. The upsell, told as one guest's meal.
+   Desktop: the guest's menu card and the running order ticket stay put
+   while the five moments of the meal pass beside them. Below desktop:
+   five compact moment cards, then the finished bill.
+   ===================================================================== */
+
+.root {
+  /* Host's bubbles: warm paper with a fine russet outline */
+  --edge: color-mix(in srgb, var(--russet) 50%, transparent);
+  --bubble-line: var(--edge);
+  /* Decorative pieces (Host leaning out of the card, the seal) may reach past
+     the gutter. `clip` (unlike `hidden`) keeps position: sticky working. */
+  overflow-x: clip;
+}
+
+.story {
+  --rail-gap: clamp(32px, 3vw, 52px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(32px, 5vw, 52px);
+  margin-top: clamp(2.5rem, 1.6rem + 3vw, 4.25rem);
+}
+
+.listCol {
+  position: relative;
+  min-width: 0;
+}
+
+.stageCol {
+  min-width: 0;
+}
+
+/* =====================================================================
+   The moments (mobile-first: compact cards)
+   ===================================================================== */
+
+.rail {
+  display: none;
+}
+
+.moments {
+  position: relative;
+  list-style: none;
+  display: grid;
+  gap: 18px;
+}
+
+.moment {
+  position: relative;
+}
+
+.dot {
+  display: none;
+}
+
+/* Each moment is a menu card with Host standing on its top edge, the way he rests on
+   the dish and the order panel in the KNOMI menu. The card plate is drawn by ::before
+   (and its printed inner border by ::after) behind rows 2-3 only, so row 1 (Host and
+   his bubble) sits above the card. The heading stays first in reading order. */
+.momentInner {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Everything shares the one column (the plate overlaps the head and text rows). */
+.momentInner > *,
+.momentInner::before,
+.momentInner::after {
+  grid-column: 1;
+}
+
+.momentInner::before,
+.momentInner::after {
+  content: "";
+  grid-row: 2 / span 2;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.momentInner::before {
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Printed inner border, as on a menu card */
+.momentInner::after {
+  margin: 7px;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--r-lg) - 7px);
+}
+
+.momentHead {
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px 0;
+}
+
+.momentNum {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-feature-settings: "lnum" 1;
+  color: var(--accent-soft);
+  padding-right: 0.06em;
+}
+
+.momentRule {
+  flex: 0 0 28px;
+  height: 1px;
+  background: var(--line-strong);
+  transform-origin: left center;
+}
+
+.momentLabel {
+  font-family: var(--font-sans);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ---------- Host on the card's edge, and his speech bubble ---------- */
+
+.say {
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  column-gap: 6px;
+  /* Host stands clear of the card's rounded corner, on its straight top edge */
+  padding: 0 4px 0 18px;
+}
+
+/* His art box is his own shape, so its floor is his flat edge: it stands on the card. */
+.sayHost {
+  display: block;
+  align-self: end;
+  width: 104px;
+  /* The cut-out's transparent margin, plus a hair, so his arms rest on the card's edge */
+  margin-bottom: -6px;
+  position: relative;
+  z-index: 1;
+}
+
+.sayHost[data-pose="point"] {
+  width: 92px;
+  margin-bottom: -7px;
+}
+
+.sayHost[data-pose="pay"] {
+  width: 122px;
+}
+
+.sayHost[data-pose="sit"] {
+  width: 98px;
+}
+
+.hostArt {
+  display: block;
+}
+
+.bubble {
+  position: relative;
+  align-self: end;
+  /* Beside his face, clear of the card's edge */
+  margin-bottom: 30px;
+  padding: 10px 14px 12px 15px;
+  background: var(--paper);
+  border: 1px solid var(--edge);
+  border-radius: 20px 24px 22px 16px / 17px 22px 25px 20px;
+  box-shadow: 0 16px 30px -22px rgba(28, 20, 17, 0.45);
+}
+
+/* The tail leaves the bubble's lower-left and points back at him. */
+.bubbleTail {
+  position: absolute;
+  left: -15px;
+  bottom: 10px;
+  width: 22px;
+  height: 18px;
+  overflow: visible;
+  transform: rotate(32deg);
+  transform-origin: 100% 50%;
+}
+
+.tailFill {
+  fill: var(--tail-fill, var(--paper));
+}
+
+.tailStroke {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Host's voice: hand-lettered, as in the menu's bubbles */
+.line {
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: 1.32rem;
+  line-height: 1.06;
+  letter-spacing: 0.003em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, var(--chip) 38%, transparent);
+  background: color-mix(in srgb, var(--chip) 15%, var(--paper));
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.chip[data-tone="terracotta"] {
+  --chip: var(--terracotta);
+}
+
+.chip[data-tone="olive"] {
+  --chip: var(--olive);
+}
+
+.chip[data-tone="brass"] {
+  --chip: var(--brass);
+}
+
+.momentText {
+  grid-row: 3;
+  min-width: 0;
+  padding: 0 20px 20px;
+}
+
+.body {
+  margin-top: 14px;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+/* The dish Host added, as a line on the ticket */
+.added {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-strong);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.added :global(.leader) {
+  margin-inline: 4px;
+}
+
+.addedIcon {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.addedPrice {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* =====================================================================
+   The stage. Below desktop it is the finished bill under the moments:
+   the ticket, its seal, and the goal.
+   ===================================================================== */
+
+.stage {
+  position: relative;
+}
+
+.scene {
+  position: relative;
+}
+
+.cardWrap {
+  display: none;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.caption {
+  display: none;
+}
+
+/* ---------- The order ticket ---------- */
+
+.ticketWrap {
+  position: relative;
+  width: min(100%, 330px);
+  filter: drop-shadow(0 22px 26px rgba(28, 20, 17, 0.14)) drop-shadow(0 2px 3px rgba(28, 20, 17, 0.08));
+  will-change: transform;
+}
+
+.ticket {
+  /* Always printed on paper, whatever theme the section sits in. */
+  --fg: var(--ink);
+  --fg-2: var(--cocoa);
+  --fg-3: var(--taupe);
+  --line: rgba(28, 20, 17, 0.1);
+  --line-strong: rgba(28, 20, 17, 0.2);
+  --zz: 7px;
+
+  position: relative;
+  padding: 30px 24px 32px;
+  background: var(--paper);
+  color: var(--fg);
+  transform: rotate(1.4deg);
+  /* Torn, zig-zag top and bottom edges */
+  -webkit-mask:
+    conic-gradient(from 135deg at top, transparent, black 1deg 89deg, transparent 90deg) top / calc(var(--zz) * 2) 51% repeat-x,
+    conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) bottom / calc(var(--zz) * 2) 51% repeat-x;
+  mask:
+    conic-gradient(from 135deg at top, transparent, black 1deg 89deg, transparent 90deg) top / calc(var(--zz) * 2) 51% repeat-x,
+    conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) bottom / calc(var(--zz) * 2) 51% repeat-x;
+}
+
+.tHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-3);
+}
+
+.tHeadDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.tRule {
+  margin-top: 12px;
+  border-top: 1px dashed var(--line-strong);
+}
+
+.tLines {
+  list-style: none;
+  margin-top: 6px;
+}
+
+.tLine {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 2.75rem;
+}
+
+.tPlaceholder {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 3px;
+  margin-top: -1px;
+  background-image: radial-gradient(circle, var(--line-strong) 1px, transparent 1.3px);
+  background-size: 7px 3px;
+  background-repeat: repeat-x;
+}
+
+.tItem {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+}
+
+/* A terracotta wash sweeps under a new line, then fades. */
+.tWash {
+  position: absolute;
+  inset: -6px -8px;
+  z-index: -1;
+  border-radius: var(--r-xs);
+  background: color-mix(in srgb, var(--terracotta) 13%, transparent);
+  transform-origin: left center;
+}
+
+.tName,
+.tPrice {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.tPrice {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.tTotal {
+  display: flex;
+  align-items: baseline;
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.tTotalLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+.tTotalValue {
+  font-family: var(--font-serif);
+  font-size: 2.15rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+/* ---------- The +25% seal: stamped on the ticket's corner ---------- */
+
+.seal {
+  position: absolute;
+  z-index: 3;
+  right: clamp(-18px, calc(50vw - 200px), 0px);
+  top: -34px;
+  display: grid;
+  place-items: center;
+  width: 104px;
+  aspect-ratio: 1;
+  color: var(--ink);
+  pointer-events: none;
+}
+
+.sealSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 10px 12px rgba(28, 20, 17, 0.3));
+}
+
+.sealStopA {
+  stop-color: var(--brass-light);
+}
+
+.sealStopB {
+  stop-color: var(--brass);
+}
+
+.sealRing {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.35;
+  stroke-width: 0.8;
+}
+
+.sealDash {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.45;
+  stroke-width: 0.8;
+  stroke-dasharray: 1.6 2.6;
+}
+
+.sealText {
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+  font-weight: 600;
+  /* Fallback spacing where textLength on textPath is not honoured */
+  letter-spacing: 0.2em;
+  fill: currentColor;
+}
+
+.sealValue {
+  position: relative;
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: lining-nums;
+  color: var(--ink);
+}
+
+.sealPulse {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--brass);
+  border-radius: 50%;
+}
+
+/* ---------- The goal ---------- */
+
+.goal {
+  width: 100%;
+  max-width: 34rem;
+}
+
+.goalText {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.2rem, 1.08rem + 0.45vw, 1.4rem);
+  line-height: 1.38;
+  letter-spacing: -0.005em;
+  color: var(--fg);
+}
+
+.goalNote {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: var(--fs-micro);
+  line-height: 1.5;
+  color: var(--fg-3);
+}
+
+/* ---------- Rolling values (captions, labels) ---------- */
+
+.tick {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* room for descenders and italic overhangs inside the mask */
+  padding: 0.15em 0.08em 0.15em 0;
+  margin: -0.15em -0.08em -0.15em 0;
+}
+
+.tickInner {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* =====================================================================
+   The menu card (desktop only). Everything inside scales with --cw,
+   the card's width, so the stage keeps its proportions on any screen.
+   ===================================================================== */
+
+.card {
+  position: absolute;
+  inset: 0;
+  padding: calc(var(--cw) * 0.026);
+  border-radius: 50% 50% 11% 11% / 21% 21% 6.4% 6.4%;
+  background: linear-gradient(150deg, var(--bark) 0%, var(--espresso) 38%, var(--espresso) 64%, var(--walnut) 100%);
+  box-shadow:
+    var(--shadow-phone),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+    inset 0 1px 1px rgba(255, 255, 255, 0.14);
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 50% 50% 9% 9% / 20.4% 20.4% 5.2% 5.2%;
+  background:
+    radial-gradient(90% 34% at 50% 0%, color-mix(in srgb, var(--brass-light) 20%, transparent), transparent 72%),
+    var(--paper);
+  font-size: calc(var(--cw) / 20);
+}
+
+/* Inner hairline arch, like a doorway moulding */
+.screen::before {
+  content: "";
+  position: absolute;
+  inset: 2.4% 4% auto;
+  height: 30%;
+  z-index: 0;
+  border: 1px solid rgba(28, 20, 17, 0.1);
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0 / 62% 62% 0 0;
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent);
+  mask-image: linear-gradient(to bottom, black 40%, transparent);
+  pointer-events: none;
+}
+
+.crown {
+  position: absolute;
+  top: 4.4%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  transition: opacity 700ms var(--ease-out);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45em;
+}
+
+.crownStar {
+  width: 0.7em;
+  height: 0.7em;
+  background: var(--brass);
+}
+
+.tableLabel {
+  font-size: 0.6em;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--taupe);
+}
+
+/* While Host greets the table, his bubble sits where the table label is. */
+.cardWrap[data-pose="lean"] .crown {
+  opacity: 0;
+}
+
+/* Sepia street sketch along the foot of the card */
+.skyline {
+  position: absolute;
+  left: 0;
+  bottom: 7%;
+  z-index: 0;
+  width: 150%;
+  opacity: 0.55;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top, black 45%, transparent 100%);
+  mask-image: linear-gradient(to top, black 45%, transparent 100%);
+}
+
+.skylineImg {
+  width: 100%;
+  height: auto;
+}
+
+.plateZone {
+  position: absolute;
+  left: 15%;
+  width: 70%;
+  top: 12.6%;
+  aspect-ratio: 1;
+  z-index: 1;
+}
+
+/* Contact shadow under the plate. A gradient, not a blur. */
+.plateShadow {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(28, 20, 17, 0.26), rgba(28, 20, 17, 0.1) 70%, transparent);
+  transform: translate(3%, 6%) scale(1.02);
+}
+
+.plateSpin {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.plate {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+}
+
+.dishSvg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Category button at the foot of the card */
+.pill {
+  position: absolute;
+  left: 50%;
+  bottom: 4.4%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  height: 2.5em;
+  padding: 0 1.15em 0 1.35em;
+  border-radius: 999px;
+  background: var(--linen);
+  border: 1px solid rgba(28, 20, 17, 0.14);
+  box-shadow: 0 6px 14px -8px rgba(28, 20, 17, 0.4);
+  font-size: 0.68em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.pillChevron {
+  width: 1.1em;
+  height: 1.1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Dish label + add button (Host peeks over it, points at it) ---------- */
+
+.strip {
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  top: 54%;
+  z-index: 3;
+  padding: 0.75em 0 1.1em;
+  font-size: calc(var(--cw) / 20);
+  background: linear-gradient(to bottom, var(--paper) 74%, color-mix(in srgb, var(--paper) 0%, transparent));
+  pointer-events: none;
+}
+
+/* Double rule, as on a printed menu */
+.stripRule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-top: 1px solid rgba(28, 20, 17, 0.2);
+  border-bottom: 1px solid rgba(28, 20, 17, 0.1);
+}
+
+.dishName {
+  display: block;
+  padding-right: 3.4em;
+  font-family: var(--font-serif);
+  font-size: 1.7em;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.dishPrice {
+  display: block;
+  margin-top: 0.25em;
+  font-family: var(--font-serif);
+  font-size: 1.15em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--russet);
+}
+
+.addBtn {
+  position: absolute;
+  right: 0;
+  top: 0.95em;
+  display: grid;
+  place-items: center;
+  width: 2.7em;
+  height: 2.7em;
+  border-radius: 50%;
+  border: 1.5px solid var(--terracotta);
+  background: var(--paper);
+  color: var(--terracotta);
+  box-shadow: 0 8px 16px -10px color-mix(in srgb, var(--terracotta) 80%, transparent);
+  transition:
+    background-color 600ms var(--ease-out) 450ms,
+    color 600ms var(--ease-out) 450ms,
+    opacity 700ms var(--ease-out),
+    transform 900ms var(--ease-out);
+}
+
+.addBtn[data-added="true"] {
+  background: var(--terracotta);
+  color: var(--paper);
+}
+
+.addIcon {
+  display: grid;
+  place-items: center;
+}
+
+.addIcon svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.addPulse {
+  position: absolute;
+  inset: -1.5px;
+  border: 1.5px solid var(--terracotta);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* While Host hugs the add button (it is his button at that moment), the card's own button steps aside. */
+.strip[data-hug="true"] .addBtn {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+/* ---------- Host on the card ----------
+   Every measurement is a multiple of --cw (the card's width; the card is 1.72 cw
+   tall). His box is his cut-out's own shape, so its floor is his flat edge, and
+   each pose is placed on the real edge he rests on in that moment:
+     arrive  (lean)  arms folded on the plate's rim, leaning out of the card
+     choose  (point) hugging the dish's add button (his disc sits on the button)
+     pair    (peek)  hands on the dish title's top rule
+     dessert (sit)   hands on the category button, as he sits on it in the menu
+     goodbye (pay)   resting on the "Your bill" button, presenting the bill */
+
+.host {
+  position: absolute;
+  z-index: 4;
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
+  pointer-events: none;
+  /* His breath starts once he has settled into the moment */
+  --host-breath-delay: 1.7s;
+}
+
+.host[data-pose="lean"] {
+  left: calc(var(--cw) * 0.04);
+  top: calc(var(--cw) * -0.05);
+  width: calc(var(--cw) * 0.44);
+}
+
+.host[data-pose="point"] {
+  left: calc(var(--cw) * 0.55);
+  top: calc(var(--cw) * 0.662);
+  width: calc(var(--cw) * 0.42);
+}
+
+.host[data-pose="peek"] {
+  left: calc(var(--cw) * 0.04);
+  top: calc(var(--cw) * 0.545);
+  width: calc(var(--cw) * 0.42);
+}
+
+.host[data-pose="sit"] {
+  left: calc(var(--cw) * 0.31);
+  top: calc(var(--cw) * 1.192);
+  width: calc(var(--cw) * 0.38);
+}
+
+.host[data-pose="pay"] {
+  left: calc(var(--cw) * 0.298);
+  top: calc(var(--cw) * 1.18);
+  width: calc(var(--cw) * 0.46);
+}
+
+.host[data-pose="greet"],
+.host[data-pose="think"] {
+  left: calc(var(--cw) * 0.02);
+  top: calc(var(--cw) * -0.12);
+  width: calc(var(--cw) * 0.4);
+}
+
+/* The add button he hugs, turned to "added": a terracotta disc over the + on his button
+   (centre and size measured on the cut-out), clear of his hands. */
+.hugAdded {
+  position: absolute;
+  left: 69.7%;
+  top: 76.6%;
+  display: grid;
+  place-items: center;
+  width: 38%;
+  aspect-ratio: 1;
+  margin: -19% 0 0 -19%;
+  border-radius: 50%;
+  background: var(--terracotta);
+  color: var(--paper);
+  box-shadow: 0 6px 14px -6px color-mix(in srgb, var(--terracotta) 80%, transparent);
+}
+
+.hugAdded svg {
+  width: 42%;
+  height: 42%;
+}
+
+/* "Look here" strokes beside his head */
+.marks {
+  position: absolute;
+  top: 0;
+  right: -4%;
+  width: 22%;
+  aspect-ratio: 1;
+  color: var(--terracotta);
+}
+
+.host[data-pose="point"] .marks,
+.host[data-pose="pay"] .marks {
+  right: auto;
+  left: -8%;
+  transform: scaleX(-1);
+}
+
+.host[data-pose="point"] .marks {
+  top: 8%;
+}
+
+.marksSvg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ---------- Host's speech bubble on the card ----------
+   Warm paper, a fine russet outline, an irregular hand-cut corner, a tail that
+   points at him, and his words hand-lettered, as in the menu. */
+
+.sb {
+  position: absolute;
+  z-index: 5;
+  padding: 0.62em 0.9em 0.72em 0.95em;
+  border: 1px solid var(--edge);
+  border-radius: 1.25em 1.5em 1.4em 1.05em / 1.1em 1.4em 1.55em 1.25em;
+  background: var(--paper);
+  box-shadow:
+    0 1px 2px rgba(28, 20, 17, 0.05),
+    0 18px 32px -20px rgba(28, 20, 17, 0.5);
+  font-size: calc(var(--cw) / 20);
+  will-change: transform, opacity;
+}
+
+.sbTail {
+  position: absolute;
+  width: 1.5em;
+  height: 1.25em;
+  overflow: visible;
+}
+
+.sbLine {
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: 1.5em;
+  line-height: 1.02;
+  letter-spacing: 0.003em;
+  color: var(--ink);
+}
+
+.sbChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  margin-top: 0.55em;
+}
+
+.sbChips .chip {
+  padding: 0.28em 0.72em;
+  font-size: 0.8em;
+}
+
+/* Per pose: where the bubble sits, where its tail points, where it grows from. */
+
+/* arrive: to his right, over the top of the plate; the tail points back at his face */
+.sb[data-pose="lean"] {
+  left: calc(var(--cw) * 0.46);
+  top: calc(var(--cw) * -0.03);
+  width: calc(var(--cw) * 0.6);
+  transform-origin: 0% 55%;
+}
+
+.sb[data-pose="lean"] .sbTail,
+.sb[data-pose="peek"] .sbTail {
+  left: 1px;
+  top: 52%;
+  transform-origin: 0 0;
+  transform: rotate(90deg);
+}
+
+/* choose: up and to his left; the tail points down at him */
+.sb[data-pose="point"] {
+  left: calc(var(--cw) * 0.04);
+  bottom: calc(var(--cw) * 1.03);
+  width: calc(var(--cw) * 0.66);
+  transform-origin: 85% 100%;
+}
+
+.sb[data-pose="point"] .sbTail {
+  right: 12%;
+  top: calc(100% - 1px);
+  transform: scaleX(-1);
+}
+
+/* pair: beside his face, to the right of where he peeks over the title */
+.sb[data-pose="peek"] {
+  left: calc(var(--cw) * 0.44);
+  bottom: calc(var(--cw) * 0.9);
+  width: calc(var(--cw) * 0.56);
+  transform-origin: 0% 70%;
+}
+
+/* dessert and goodbye: above him, the tail pointing down at his face */
+.sb[data-pose="sit"],
+.sb[data-pose="pay"] {
+  left: calc(var(--cw) * 0.08);
+  bottom: calc(var(--cw) * 0.56);
+  width: calc(var(--cw) * 0.84);
+  transform-origin: 50% 100%;
+}
+
+.sb[data-pose="sit"] .sbTail,
+.sb[data-pose="pay"] .sbTail {
+  left: 44%;
+  top: calc(100% - 1px);
+}
+
+.sb[data-pose="greet"],
+.sb[data-pose="think"] {
+  left: calc(var(--cw) * 0.4);
+  top: calc(var(--cw) * 0.02);
+  width: calc(var(--cw) * 0.62);
+}
+
+/* ---------- Hand-drawn arrow: from the pairing to the add button ---------- */
+
+.arrow {
+  position: absolute;
+  z-index: 4;
+  left: 78.5%;
+  top: calc(var(--cw) * 0.832);
+  width: calc(var(--cw) * 0.09);
+  color: var(--terracotta);
+}
+
+.arrow svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* =====================================================================
+   Tablet: moments sit two by two; the last spans the row.
+   ===================================================================== */
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .moments {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 16px;
+  }
+
+  .moment:last-child {
+    grid-column: 1 / -1;
+  }
+
+  /* Two cards side by side share their three rows (Host's band, head, text) through
+     subgrid, so both cards' top edges, where Host stands, line up. */
+  .moment {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+
+  .momentInner {
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+
+  .momentHead {
+    padding: 26px 24px 0;
+  }
+
+  .momentText {
+    padding: 0 24px 24px;
+  }
+
+  .moment:last-child .say,
+  .moment:last-child .momentText {
+    max-width: 34rem;
+  }
+
+  .side {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(36px, 6vw, 64px);
+  }
+
+  .ticketWrap {
+    flex: 0 0 300px;
+  }
+
+  .goal {
+    flex: 1 1 0;
+    max-width: 24rem;
+  }
+}
+
+/* =====================================================================
+   Desktop: sticky stage + scroll story
+   ===================================================================== */
+
+@media (min-width: 1024px) {
+  .story {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    column-gap: clamp(2.5rem, 4.4vw, 5.5rem);
+    row-gap: 0;
+  }
+
+  .stageCol {
+    grid-column: 1;
+    grid-row: 1;
+    position: relative;
+    container-type: inline-size;
+  }
+
+  .listCol {
+    grid-column: 2;
+    grid-row: 1;
+    padding-left: var(--rail-gap);
+  }
+
+  /* The card's width follows the viewport height (so the whole stage fits
+     under the navbar) and the column's width. */
+  .stage {
+    --cw: clamp(212px, min(calc((100vh - var(--nav-h) - 132px) / 1.86), 46cqi), 300px);
+    --ch: calc(var(--cw) * 1.72);
+    --hd: calc(var(--cw) * 0.12);
+    position: sticky;
+    top: max(calc(var(--nav-h) + 20px), calc(50vh - (var(--hd) + var(--ch)) / 2));
+  }
+
+  .scene {
+    display: grid;
+    grid-template-columns: var(--cw) minmax(0, 1fr);
+    column-gap: calc(var(--cw) * 0.11);
+    align-items: center;
+    padding-top: var(--hd);
+  }
+
+  /* A soft lamp-light behind the card. A gradient, not a blur. */
+  .scene::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: calc(var(--cw) * -0.5);
+    top: calc(var(--cw) * -0.2);
+    width: calc(var(--cw) * 2.2);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in srgb, var(--brass) 13%, transparent) 0%,
+      color-mix(in srgb, var(--brass) 5%, transparent) 55%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  .cardWrap {
+    display: block;
+    position: relative;
+    isolation: isolate;
+    width: var(--cw);
+    height: var(--ch);
+  }
+
+  .side {
+    align-items: stretch;
+    gap: calc(var(--cw) * 0.07);
+    min-width: 0;
+  }
+
+  .caption {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6em;
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-3);
+    white-space: nowrap;
+  }
+
+  .capNum {
+    color: var(--fg);
+  }
+
+  .capTotal {
+    letter-spacing: 0.14em;
+  }
+
+  .capDash {
+    color: var(--line-strong);
+    letter-spacing: 0;
+  }
+
+  .ticketWrap {
+    width: min(100%, 300px);
+  }
+
+  .ticket {
+    padding: calc(var(--cw) * 0.085) calc(var(--cw) * 0.075) calc(var(--cw) * 0.09);
+  }
+
+  .tLine {
+    height: calc(var(--cw) * 0.14);
+  }
+
+  .tName,
+  .tPrice {
+    font-size: clamp(1rem, calc(var(--cw) * 0.06), 1.15rem);
+  }
+
+  .tTotalValue {
+    font-size: clamp(1.7rem, calc(var(--cw) * 0.11), 2.15rem);
+  }
+
+  .seal {
+    width: clamp(86px, calc(var(--cw) * 0.34), 104px);
+    right: calc(var(--cw) * -0.08);
+    top: calc(var(--cw) * -0.13);
+  }
+
+  .sealValue {
+    font-size: clamp(1.4rem, calc(var(--cw) * 0.09), 1.75rem);
+  }
+
+  /* The goal arrives with the seal, and the space for it is held from the start. */
+  .goal {
+    max-width: 30rem;
+    transition:
+      opacity 900ms var(--ease-out) 900ms,
+      transform 1100ms var(--ease-out) 900ms;
+  }
+
+  .goal[data-on="false"] {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 600ms var(--ease-out);
+  }
+
+  .goalText {
+    font-size: clamp(1.02rem, calc(var(--cw) * 0.06), 1.25rem);
+    line-height: 1.36;
+  }
+
+  .goalNote {
+    margin-top: 10px;
+  }
+
+  /* ---------- Timeline ---------- */
+
+  .rail {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    background: var(--line-strong);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 80px, black calc(100% - 80px), transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 80px, black calc(100% - 80px), transparent);
+  }
+
+  .railFill {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: var(--accent);
+    transform-origin: top center;
+  }
+
+  .moments {
+    gap: 0;
+  }
+
+  .moment {
+    display: flex;
+    align-items: center;
+    min-height: clamp(320px, 52vh, 500px);
+  }
+
+  /* Here the moments are a timeline beside the stage: no card, Host is on the stage. */
+  .momentInner {
+    width: 100%;
+  }
+
+  .momentInner::before,
+  .momentInner::after {
+    display: none;
+  }
+
+  .momentHead {
+    grid-row: 1;
+    padding: 0;
+  }
+
+  .momentText {
+    grid-row: 3;
+    padding: 0;
+  }
+
+  .momentNum {
+    font-size: 1.75rem;
+  }
+
+  /* A bead on the thread: the ring in the page colour cuts the rail. */
+  .dot {
+    display: block;
+    position: absolute;
+    top: 0.875rem;
+    left: calc(var(--rail-gap) * -1 + 0.5px);
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--bg);
+    box-shadow: 0 0 0 6px var(--bg);
+    transform: translate(-50%, -50%);
+    transition: border-color 400ms var(--ease-out);
+  }
+
+  .dot::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: scale(0);
+    transition: transform 450ms var(--ease-spring);
+  }
+
+  .isLit .dot {
+    border-color: var(--accent);
+  }
+
+  .isLit .dot::after {
+    transform: scale(1);
+  }
+
+  /* Host and his bubble live on the stage here; the timeline keeps his words. */
+  .say {
+    grid-row: 2;
+    display: block;
+    margin-top: 14px;
+    padding: 0;
+  }
+
+  .sayHost,
+  .bubbleTail,
+  .chips {
+    display: none;
+  }
+
+  .bubble {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  /* His words, in his hand, large: the line the stage's bubble is saying */
+  .line {
+    max-width: 12.5em;
+    font-size: clamp(1.85rem, 1.3rem + 1vw, 2.5rem);
+    line-height: 1.04;
+    color: var(--fg);
+  }
+
+  .body {
+    max-width: 30em;
+    margin-top: 14px;
+    font-size: var(--fs-body);
+  }
+
+  .added {
+    max-width: 290px;
+  }
+
+  /* Only the moment being read is in full voice. The others step back in
+     colour, not opacity, so their text still reads at >= 4.5:1. */
+  .momentLabel,
+  .line,
+  .body,
+  .added {
+    transition: color 600ms var(--ease-out);
+  }
+
+  .momentNum,
+  .addedIcon {
+    transition: opacity 600ms var(--ease-out);
+  }
+
+  .momentRule {
+    transition: transform 900ms var(--ease-out);
+  }
+
+  .root[data-mode="story"] .moment:not(.isActive) .momentLabel,
+  .root[data-mode="story"] .moment:not(.isActive) .line,
+  .root[data-mode="story"] .moment:not(.isActive) .body,
+  .root[data-mode="story"] .moment:not(.isActive) .added {
+    color: var(--fg-3);
+  }
+
+  .root[data-mode="story"] .moment:not(.isActive) .momentNum,
+  .root[data-mode="story"] .moment:not(.isActive) .addedIcon {
+    opacity: 0.4;
+  }
+
+  .root[data-mode="story"] .moment:not(.isActive) .momentRule {
+    transform: scaleX(0.4);
+  }
+}
+
+@media (min-width: 1200px) {
+  .story {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+}

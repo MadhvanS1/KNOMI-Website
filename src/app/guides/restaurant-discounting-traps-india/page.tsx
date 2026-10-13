@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import DiscountCalculator from "./DiscountCalculator";
 import styles from "./DiscountGuide.module.css";
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Why Flat 20% Restaurant Discounts Destroy Margins: The 42% Volume Trap (2026) | KNOMI",
@@ -458,8 +458,7 @@ export default function DiscountingGuidePage() {
             <p className={styles.calcBannerSub}>
               Waiters can hold back on upselling on quiet nights, assuming guests want to spend less.
               KNOMI gives every dish its own illustrated page, and Knomi Host suggests the pairing at
-              every table, every night. Our goal is to lift your average order by around 25%. In the
-              trial we measure it on your own tables, and you see the numbers.
+              every table, every night. {GOAL}
             </p>
             <Link href="/#book" className={styles.calcBtn}>
               Book a walkthrough

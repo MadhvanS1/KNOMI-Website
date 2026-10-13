@@ -14,7 +14,7 @@
     "head"
     "list"
     "aside";
-  row-gap: clamp(2.75rem, 2rem + 2.5vw, 4rem);
+  row-gap: clamp(2rem, 1.5rem + 1.8vw, 3rem);
 }
 
 /* Narrow: the side column dissolves so the note can follow the questions. */
@@ -62,7 +62,7 @@
   align-items: start;
   width: 100%;
   min-height: 44px;
-  padding-block: clamp(1.375rem, 1.1rem + 0.9vw, 2rem);
+  padding-block: clamp(1.125rem, 0.95rem + 0.6vw, 1.5rem);
   text-align: left;
   color: var(--fg);
 }
@@ -175,7 +175,7 @@
 }
 
 .answer {
-  padding: 0 calc(var(--icon) + var(--col-gap)) clamp(1.5rem, 1.2rem + 1vw, 2.25rem)
+  padding: 0 calc(var(--icon) + var(--col-gap)) clamp(1.25rem, 1rem + 0.8vw, 1.75rem)
     calc(var(--idx-w) + var(--col-gap));
 }
 
@@ -333,14 +333,14 @@
   .layout {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     grid-template-areas: "side list";
-    column-gap: clamp(56px, 7vw, 128px);
+    column-gap: clamp(48px, 6vw, 104px);
   }
 
   .side {
     grid-area: side;
     display: flex;
     flex-direction: column;
-    gap: clamp(2.75rem, 2rem + 2vw, 4rem);
+    gap: clamp(2rem, 1.5rem + 1.5vw, 3rem);
     align-self: start;
   }
 

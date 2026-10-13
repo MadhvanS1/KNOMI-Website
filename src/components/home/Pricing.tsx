@@ -1,12 +1,12 @@
 "use client";
 
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 import { useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
 import { ArrowRight, Check, Minus } from "@/components/ui/Icons";
 import { EASE_OUT, Reveal } from "@/components/ui/Reveal";
 import SectionHead from "@/components/ui/SectionHead";
-import { ownersChapter, pricing } from "@/content/site";
+import { ownersChapter, pricing, sense } from "@/content/site";
 import styles from "./Pricing.module.css";
 
 // copy: small interface labels that are not in site.ts (CTA labels approved in the brief).
@@ -30,6 +30,12 @@ const priceText = (p: Plan) =>
   isRange(p) ? `${inr.format(p.priceMin)}–${inr.format(p.priceMax)}` : inr.format(p.priceMin);
 
 const DEFAULT_PLAN = pricing.plans.find((p) => p.recommended) ?? pricing.plans[0];
+
+const BY_PRICE = [...pricing.plans].sort((a, b) => a.priceMin - b.priceMin);
+/** The basic plan: listed clearly, but set quieter than the plans we recommend. */
+const BASIC_ID = BY_PRICE[0].recommended ? null : BY_PRICE[0].id;
+/** The plan with the whole of Knomi Sense: its card draws the full system. */
+const FULL_ID = BY_PRICE[BY_PRICE.length - 1].id;
 
 export default function Pricing() {
   return (
@@ -65,6 +71,8 @@ export default function Pricing() {
           <Calculator />
         </Reveal>
 
+        <Founding />
+
         <Reveal y={12} amount={0.8}>
           <p className={styles.footnote}>
             <span className={`ornament ${styles.footOrnament}`} aria-hidden="true" />
@@ -92,9 +100,9 @@ function Vault() {
     <div ref={ref} className={styles.vault} aria-hidden="true">
       <motion.div
         className={styles.vaultInner}
-        initial={reduce ? false : { clipPath: VAULT_CLOSED }}
-        animate={{ clipPath: inView || reduce ? VAULT_OPEN : VAULT_CLOSED }}
-        transition={{ duration: 1.2, ease: EASE_OUT }}
+        initial={{ clipPath: VAULT_CLOSED }}
+        animate={{ clipPath: inView ? VAULT_OPEN : VAULT_CLOSED }}
+        transition={reduce ? { duration: 0 } : { duration: 1.2, ease: EASE_OUT }}
       >
         <svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMin meet" fill="none">
           <defs>
@@ -127,14 +135,13 @@ function Vault() {
 function PlanCard({ plan }: { plan: Plan }) {
   const nameId = `${useId()}-name`;
   const featured = Boolean(plan.recommended);
+  const basic = plan.id === BASIC_ID;
   const ranged = isRange(plan);
   const excludesId = `${nameId}-excludes`;
+  const tone = featured ? `theme-dark ${styles.featured}` : basic ? styles.basic : "";
 
   return (
-    <article
-      className={`${styles.card} ${featured ? `theme-dark ${styles.featured}` : ""}`}
-      aria-labelledby={nameId}
-    >
+    <article className={`${styles.card} ${tone}`} aria-labelledby={nameId}>
       {featured && plan.badge && <p className={styles.badge}>{plan.badge}</p>}
 
       <div className={styles.head}>
@@ -180,6 +187,8 @@ function PlanCard({ plan }: { plan: Plan }) {
           })}
         </ul>
 
+        {plan.id === FULL_ID && <SenseArch />}
+
         {plan.excludes.length > 0 && (
           <div className={styles.excludes}>
             <p id={excludesId} className={styles.excludesLabel}>
@@ -197,13 +206,159 @@ function PlanCard({ plan }: { plan: Plan }) {
         )}
 
         <div className={styles.cta}>
-          <a href="#book" className="btn btn--ink" aria-describedby={nameId}>
+          <a href="#book" className={`btn ${basic ? "btn--ghost" : "btn--ink"}`} aria-describedby={nameId}>
             {featured ? COPY.ctaRecommended : COPY.ctaDefault}
             <ArrowRight className="btn__arrow" />
           </a>
         </div>
       </div>
     </article>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   The whole of Knomi Sense, drawn as an arch: every module on one curve, each
+   wired to the core at its threshold. Desktop only, where it also balances the
+   Ecosystem card against Signature's longer list. Decorative: the list says it.
+   --------------------------------------------------------------------------- */
+
+const ARCH = { w: 240, h: 150, cx: 120, cy: 120, r: 94 };
+const round = (n: number) => Math.round(n * 100) / 100;
+const ARCH_NODES = sense.modules.map((m, i, all) => {
+  // Spread from 160° to 20°, so the end nodes stay clear of the threshold.
+  const deg = all.length > 1 ? 160 - (i * 140) / (all.length - 1) : 90;
+  const a = (deg * Math.PI) / 180;
+  return {
+    id: m.id,
+    label: m.name.replace(/^Knomi\s+/, ""),
+    x: round(ARCH.cx + ARCH.r * Math.cos(a)),
+    y: round(ARCH.cy - ARCH.r * Math.sin(a)),
+  };
+});
+const STAR = "M0 -7 1.6 -1.6 7 0 1.6 1.6 0 7 -1.6 1.6 -7 0 -1.6 -1.6Z";
+const ARCH_OPEN = `circle(140% at 50% ${round((ARCH.cy / ARCH.h) * 100)}%)`;
+const ARCH_SHUT = `circle(0% at 50% ${round((ARCH.cy / ARCH.h) * 100)}%)`;
+
+function SenseArch() {
+  const reduce = useReducedMotion();
+  const still = { duration: 0 };
+  const draw: Variants = {
+    hidden: { clipPath: ARCH_SHUT },
+    show: { clipPath: ARCH_OPEN, transition: reduce ? still : { duration: 1.6, ease: EASE_OUT } },
+  };
+  const label: Variants = {
+    hidden: { opacity: 0 },
+    show: (i: number) => ({
+      opacity: 1,
+      transition: reduce ? still : { duration: 0.9, ease: EASE_OUT, delay: 0.45 + i * 0.09 },
+    }),
+  };
+
+  return (
+    <motion.div
+      className={styles.arch}
+      aria-hidden="true"
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.6 }}
+    >
+      <motion.svg className={styles.archArt} viewBox={`0 0 ${ARCH.w} ${ARCH.h}`} fill="none" variants={draw}>
+        <path
+          className={styles.archRule}
+          d={`M${ARCH.cx - ARCH.r} ${ARCH.cy}A${ARCH.r} ${ARCH.r} 0 0 1 ${ARCH.cx + ARCH.r} ${ARCH.cy}`}
+        />
+        <path
+          className={styles.archInner}
+          d={`M${ARCH.cx - ARCH.r * 0.6} ${ARCH.cy}A${ARCH.r * 0.6} ${ARCH.r * 0.6} 0 0 1 ${ARCH.cx + ARCH.r * 0.6} ${ARCH.cy}`}
+        />
+        <path className={styles.archFloor} d={`M${ARCH.cx - ARCH.r - 12} ${ARCH.cy}H${ARCH.cx + ARCH.r + 12}`} />
+        {ARCH_NODES.map((n) => (
+          <line key={`ray-${n.id}`} className={styles.archRay} x1={ARCH.cx} y1={ARCH.cy} x2={n.x} y2={n.y} />
+        ))}
+        {ARCH_NODES.map((n) => (
+          <circle key={`node-${n.id}`} className={styles.archNode} cx={n.x} cy={n.y} r="4" />
+        ))}
+        <circle className={styles.archHalo} cx={ARCH.cx} cy={ARCH.cy} r="13" />
+        <path className={styles.archCore} d={STAR} transform={`translate(${ARCH.cx} ${ARCH.cy})`} />
+      </motion.svg>
+
+      {ARCH_NODES.map((n, i) => (
+        <motion.span
+          key={n.id}
+          className={styles.archLabel}
+          style={{ left: `${(n.x / ARCH.w) * 100}%`, top: `${(n.y / ARCH.h) * 100}%` }}
+          variants={label}
+          custom={i}
+        >
+          {n.label}
+        </motion.span>
+      ))}
+      <motion.span
+        className={`${styles.archLabel} ${styles.archCoreLabel}`}
+        style={{ top: `${(ARCH.cy / ARCH.h) * 100}%` }}
+        variants={label}
+        custom={ARCH_NODES.length}
+      >
+        {sense.core.name}
+      </motion.span>
+    </motion.div>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   Founding partners: a quiet note in a brass frame, a hint rather than an
+   offer. The terms are shared on the walkthrough.
+   --------------------------------------------------------------------------- */
+
+const FRAME_SHUT = "inset(0% 50% 0% 50% round 28px)";
+const FRAME_OPEN = "inset(0% 0% 0% 0% round 28px)";
+
+function Founding() {
+  const { eyebrow, title, body, cta } = pricing.founding;
+  const titleId = `${useId()}-founding`;
+  const reduce = useReducedMotion();
+  const still = { duration: 0 };
+  // The aside is observed, not the frame: a fully clipped element never counts as in view.
+  const frame: Variants = {
+    shut: { clipPath: FRAME_SHUT },
+    open: { clipPath: FRAME_OPEN, transition: reduce ? still : { duration: 1.5, ease: EASE_OUT, delay: 0.15 } },
+  };
+  const star: Variants = {
+    shut: { rotate: -90, scale: 0.4, opacity: 0 },
+    open: { rotate: 0, scale: 1, opacity: 1, transition: reduce ? still : { duration: 1.2, ease: EASE_OUT, delay: 0.5 } },
+  };
+
+  return (
+    <Reveal y={24} amount={0.4} className={styles.foundingWrap}>
+      <motion.aside
+        className={styles.founding}
+        aria-labelledby={titleId}
+        initial="shut"
+        whileInView="open"
+        viewport={{ once: true, amount: 0.5 }}
+      >
+        <motion.span className={styles.frame} aria-hidden="true" variants={frame} />
+
+        <span className={styles.seal} aria-hidden="true">
+          <motion.span className={`ornament ${styles.sealStar}`} variants={star} />
+        </span>
+
+        <div className={styles.foundingHead}>
+          <p className={`eyebrow ${styles.foundingEyebrow}`}>{eyebrow}</p>
+          <h3 id={titleId} className={styles.foundingTitle}>
+            {title}
+          </h3>
+        </div>
+
+        <div className={styles.foundingSide}>
+          <p className={styles.foundingBody}>{body}</p>
+          <a href="#book" className={`link ${styles.foundingLink}`}>
+            {cta}
+            <ArrowRight className={styles.foundingArrow} />
+          </a>
+        </div>
+      </motion.aside>
+    </Reveal>
   );
 }
 

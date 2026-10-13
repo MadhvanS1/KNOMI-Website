@@ -4,10 +4,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PetpoojaFitmentAuditor from "./PetpoojaFitmentAuditor";
 import styles from "./PetpoojaReview.module.css";
-import { OG_IMAGE, pricing } from "@/content/site";
+import { GOAL, OG_IMAGE, pricing } from "@/content/site";
 
 const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}–${ecosystemPlan.priceMax}, per table, per month`;
+const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
 
 export const metadata: Metadata = {
   title: "Petpooja POS Review: Honest Pros, Cons & Peak-Hour Operational Audit (2026) | KNOMI",
@@ -322,11 +322,11 @@ export default function PetpoojaReviewPage() {
               <strong>Deploy KNOMI on Dining Tables:</strong> Guests open an illustrated menu themed to your restaurant, with no app and no login to browse. They order drinks and starters themselves, confirm with their phone number, and the order goes to your kitchen display or a network KOT printer. On the Signature plan, KNOMI orders flow into Petpooja.
             </li>
             <li>
-              <strong>Unlock Invisible Demand:</strong> Petpooja records completed transactions. On the Ecosystem plan, Knomi Sense measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix.
+              <strong>Unlock Invisible Demand:</strong> Petpooja records completed transactions. On the Ecosystem plan, Knomi Compass, powered by Knomi Sense, measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix.
             </li>
           </ul>
           <p>
-            This gives you Petpooja&apos;s compliance at the counter and Knomi Host at every table, suggesting the pairing the way your best server would, with no POS migration. Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+            This gives you Petpooja&apos;s compliance at the counter and Knomi Host at every table, suggesting the pairing the way your best server would, with no POS migration. {GOAL}
           </p>
 
           {/* Author Bio Box */}
@@ -336,7 +336,7 @@ export default function PetpoojaReviewPage() {
               <h4>Madhvan Sharma</h4>
               <div className={styles.authorRole}>Co-Founder, KNOMI</div>
               <p className={styles.authorBio}>
-                Madhvan co-founded KNOMI in Bengaluru to give restaurants a menu that knows their guests. He writes about restaurant economics and guest experience.
+                Madhvan co-founded KNOMI in Bengaluru to help restaurants know every guest and grow every table. He writes about restaurant economics and guest experience.
               </p>
             </div>
           </div>

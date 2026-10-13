@@ -307,7 +307,7 @@ export default function QrMenuSetupCostEstimator() {
               </label>
               <div style={{ padding: '12px 14px', borderRadius: '8px', backgroundColor: 'var(--color-bg-surface-elevated, #1c1411)', border: '1px solid var(--color-border-default)' }}>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
-                  KNOMI charges a flat fee per table, per month and takes 0% commission: Menu ₹149, Signature ₹{SIGNATURE_PRICE_PER_TABLE} (recommended, includes ordering) or Ecosystem ₹500–600. This comparison uses Signature for your {tableCount} tables. What your guests order is yours.
+                  KNOMI charges a flat fee per table, per month and takes 0% commission: Menu ₹149, Signature ₹{SIGNATURE_PRICE_PER_TABLE} (recommended, includes ordering) or Ecosystem ₹500. This comparison uses Signature for your {tableCount} tables. What your guests order is yours.
                 </p>
               </div>
             </div>

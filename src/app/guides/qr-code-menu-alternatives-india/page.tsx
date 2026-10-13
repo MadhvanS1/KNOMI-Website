@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MenuArchitectureSelector from './MenuArchitectureSelector';
 import styles from './MenuAlternativesGuide.module.css';
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'QR Code Menu Alternatives: 6 Smarter Ordering Systems for Indian Restaurants (2026) | KNOMI',
@@ -337,18 +337,18 @@ export default function QrCodeMenuAlternativesPage() {
                   </span>
                 </div>
                 <div className={styles.altCostLine}>
-                  Pricing: Menu Rs 149, Signature Rs 250 (our recommended plan), Ecosystem Rs 500–600 per table, per month · 0% commission · no table hardware to buy
+                  Pricing: Menu Rs 149, Signature Rs 250 (our recommended plan), Ecosystem Rs 500 per table, per month · 0% commission · no table hardware to buy
                 </div>
                 <p>
-                  KNOMI turns the QR on your table into an illustrated menu themed to your restaurant, with a warm host inside it.
+                  KNOMI is guest experience infrastructure: the QR on your table opens an illustrated menu themed to your restaurant,
+                  with Knomi Host inside it to suggest the right dish at the right moment.
                   Instead of a PDF or an app download, the menu opens directly in mobile Safari or Chrome. Guests browse with no login
-                  and confirm their order with their phone number. Our goal is to lift your average order by around 25%. In the trial we
-                  measure it on your own tables, and you see the numbers.
+                  and confirm their order with their phone number. {GOAL}
                 </p>
                 <div className={styles.altProsCons}>
-                  <strong>Strengths:</strong> No app download and no login to browse; every dish illustrated and themed to your room, with dietary information alongside; Knomi Host suggests pairings, remembers preferences and invites guests to leave a Google review; orders go straight to your kitchen display; works alongside your existing cashier till (Petpooja, Restroworks, SlickPOS or another); 0% commission.
+                  <strong>Strengths:</strong> No app download and no login to browse; every dish illustrated and themed to your room, with dietary information alongside; Knomi Host suggests pairings and remembers preferences; Knomi Pulse checks in before the bill and alerts your manager if something wasn&apos;t right; orders go straight to your kitchen display; works alongside your existing cashier till (Petpooja, Restroworks, SlickPOS or another); 0% commission.
                   <br />
-                  <strong>Weaknesses:</strong> Requires that diners have a functioning smartphone with a web browser (keep a printed menu for guests who prefer one); Knomi Sense menu intelligence is part of the Ecosystem plan only.
+                  <strong>Weaknesses:</strong> Requires that diners have a functioning smartphone with a web browser (keep a printed menu for guests who prefer one); the full Knomi Sense and Knomi Compass menu insights are part of the Ecosystem plan only.
                 </div>
               </div>
             </div>
@@ -476,7 +476,7 @@ export default function QrCodeMenuAlternativesPage() {
               <h2 className={styles.ctaTitle}>Experience Frictionless Visual Ordering</h2>
               <p className={styles.ctaText}>
                 Replace the PDF menu and skip the hardware tablets. KNOMI gives every table an illustrated menu
-                guests can order from, with no app, no login and 0% commission.
+                guests can order from and Knomi Host to suggest what goes with it, with no app, no login and 0% commission.
               </p>
               <Link href="/guides/why-pdf-qr-menus-fail-restaurants" className={styles.ctaButton}>
                 Read Why PDF Menus Fail &rarr;

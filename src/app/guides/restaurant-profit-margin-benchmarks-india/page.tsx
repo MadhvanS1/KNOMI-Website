@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarginCalculator from "./MarginCalculator";
 import styles from "./MarginGuide.module.css";
-import { OG_IMAGE, bookHref } from "@/content/site";
+import { GOAL, OG_IMAGE, bookHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Restaurant Profit Margin in India: An Honest P&L Breakdown (2026) | KNOMI",
@@ -506,8 +506,7 @@ export default function ProfitMarginGuidePage() {
               <strong>Expand average ticket size at the moment of ordering:</strong> Fixed overhead (rent, staff,
               power) does not increase when a seated diner adds a dessert or beverage. In KNOMI,{" "}
               <strong>Knomi Host</strong>, the host inside the menu, suggests the pairing while the guest is choosing:
-              garlic bread with the pizza, a cold coffee with the brownie. Our goal is to lift your average order by
-              around 25%. In the trial we measure it on your own tables, and you see the numbers.
+              garlic bread with the pizza, a cold coffee with the brownie. {GOAL}
             </li>
             <li>
               <strong>Model your front-of-house workload:</strong> When orders go straight from the guest&apos;s phone
@@ -548,9 +547,9 @@ export default function ProfitMarginGuidePage() {
           <div className={styles.ctaContainer}>
             <h2 className={styles.ctaTitle}>Ready to protect your restaurant net margin?</h2>
             <p className={styles.ctaDesc}>
-              KNOMI gives your tables an illustrated QR menu with Knomi Host inside it: guests order from their phone,
-              orders land on your kitchen display, and you pay 0% commission. One flat price per table, per month:
-              Menu ₹149, Signature ₹250 (our recommendation), or Ecosystem ₹500–600.
+              KNOMI helps you grow every table: Knomi Host suggests the right pairing inside an illustrated menu, guests
+              order from their phone, orders land on your kitchen display, and you pay 0% commission. One flat price per table, per month:
+              Menu ₹149, Signature ₹250 (our recommendation), or Ecosystem ₹500.
             </p>
             <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href={bookHref} className="btn btn--primary btn--large">

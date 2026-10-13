@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CafeOrderingAuditor from './CafeOrderingAuditor';
 import styles from './CafeOrderingGuide.module.css';
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'Best Ordering System for Cafes and Coffee Shops in India (2026 Guide) | KNOMI',
@@ -379,8 +379,7 @@ export default function BestOrderingSystemCafesPage() {
                   to their order, suggest a pairing: <em>&quot;Freshly baked pain au chocolat, warmed and served with
                   sea salt butter (+₹180).&quot;</em> On screen, a well-timed suggestion feels like a note from the menu
                   rather than a sales pitch. This is the moment Knomi Host is built for: it suggests the pairing gently,
-                  at the right time. Our goal is to lift your average order by around 25%. In the trial we measure it
-                  on your own tables, and you see the numbers.
+                  at the right time. {GOAL}
                 </p>
               </div>
 

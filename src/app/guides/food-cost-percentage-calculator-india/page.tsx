@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FoodCostCalculator from "./FoodCostCalculator";
 import styles from "./FoodCostGuide.module.css";
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Food Cost Percentage: Formula, Benchmarks & Calculator for Indian Restaurants (2026) | KNOMI",
@@ -425,8 +425,7 @@ export default function FoodCostGuidePage() {
             <p className={styles.calcBannerSub}>
               Waiters can forget to suggest sides, breads, and pairings during a busy service.
               Knomi Host, the host inside every KNOMI menu, suggests the pairing as guests order: the
-              naan with the curry, a cooler with the biryani. Our goal is to lift your average order by
-              around 25%. In the trial we measure it on your own tables, and you see the numbers.
+              naan with the curry, a cooler with the biryani. {GOAL}
             </p>
             <Link href="/#book" className={styles.calcBtn}>
               Book a walkthrough

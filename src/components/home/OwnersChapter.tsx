@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useReducer, useRef, useState, type ReactNode } from "react";
+import { useEffect, useReducer, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { AnimatePresence, motion, useInView, usePageInView, useReducedMotion } from "framer-motion";
 import SectionHead from "@/components/ui/SectionHead";
+import HostArt from "@/components/ui/HostArt";
 import { EASE_OUT, Reveal } from "@/components/ui/Reveal";
-import { ArrowUpRight, Check } from "@/components/ui/Icons";
+import { Check } from "@/components/ui/Icons";
 import Wordmark from "@/components/ui/Wordmark";
 import { ownersChapter } from "@/content/site";
 import styles from "./OwnersChapter.module.css";
 
 /* ---------------------------------------------------------------------------
-   Chapter III — Grow with me. "Everything behind the pass."
+   For owners — "Everything behind the pass." Knomi Dash, Pulse & Compass.
    A bento of six tiles, each carrying a small working model of the feature.
    Every model idles while offscreen or in a hidden tab, and holds a finished
    still frame for visitors who prefer reduced motion.
@@ -29,8 +30,13 @@ const KDS_COPY = {
 } as const;
 // copy: node label in the POS diagram (the KNOMI node uses the wordmark)
 const POS_LABEL = "Your POS";
-// copy: the review prompt a guest sees inside the menu
-const REVIEW_COPY = { settled: "Table 7 · Bill settled", lead: "Thanks for dining with us.", action: "Review us on Google" } as const;
+// copy: the Knomi Pulse check-in a guest answers before the bill, and the alert the manager gets (illustrative)
+const PULSE_COPY = {
+  question: "How was everything tonight?",
+  chips: ["Loved it", "It was fine", "Something wasn’t right"],
+  table: "Table 7",
+  alert: "Manager notified",
+} as const;
 // copy: a dish row in the menu editor, with its neighbours
 const UPDATE_COPY = {
   dish: "Tiramisu",
@@ -40,7 +46,7 @@ const UPDATE_COPY = {
   before: { dish: "Panna cotta", price: "₹320" },
   after: { dish: "Affogato", price: "₹260" },
 } as const;
-// copy: Knomi Sense legend
+// copy: Knomi Compass legend
 const SENSE_COPY = { looked: "Looked at", ordered: "Ordered" } as const;
 
 /* ---------- Shared: run only while it can be seen ---------- */
@@ -71,6 +77,25 @@ function useLive<T extends Element>(amount = 0.35) {
   }, [active, spent]);
 
   return { ref, live: active && !spent };
+}
+
+/* Reduced-motion preference for render output, hydration-safe: the server value
+   (false) is used while hydrating, then the real one straight after. framer's
+   useReducedMotion() would read matchMedia during the first client render. */
+const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribeReduced(onChange: () => void) {
+  const query = window.matchMedia(REDUCED_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    subscribeReduced,
+    () => window.matchMedia(REDUCED_QUERY).matches,
+    () => false,
+  );
 }
 
 /* ---------- Line icons (1.5px, currentColor) ---------- */
@@ -120,9 +145,14 @@ const ORDERS: Order[] = [
   { table: 11, dishes: [[2, "Margherita"], [1, "Garlic bread"]] },
   { table: 3, dishes: [[1, "Burrata"]], note: "No onion" },
   { table: 8, dishes: [[1, "Bruschetta"], [1, "Truffle fries"]] },
+  { table: 14, dishes: [[1, "Penne alfredo"]], note: "Extra cheese" },
+  { table: 5, dishes: [[2, "Lemon iced tea"], [1, "Bruschetta"]] },
+  { table: 10, dishes: [[1, "Panna cotta"], [1, "Espresso"]] },
 ];
 
-const LANE_CAP = 3;
+/* Four tickets a lane: the board fills the tall tile and carries on past its
+   bottom edge. ORDERS outnumbers the tickets on screen, so no order shows twice. */
+const LANE_CAP = 4;
 const KDS_CYCLE_MS = 2200;
 /** One cycle, as a cascade: the oldest ready ticket is served, then everything shuffles right, then a new order lands. */
 const KDS_SEQUENCE: [BoardStep, number][] = [
@@ -132,20 +162,15 @@ const KDS_SEQUENCE: [BoardStep, number][] = [
   ["arrive", 880],
 ];
 
+/* Ready: the four oldest. Preparing: the next four. New: the latest four. */
 const INITIAL_BOARD: Board = {
-  tickets: [
-    { id: 0, stage: 2, born: 0 },
-    { id: 1, stage: 2, born: 1 },
-    { id: 2, stage: 2, born: 2 },
-    { id: 3, stage: 1, born: 3 },
-    { id: 4, stage: 1, born: 4 },
-    { id: 5, stage: 1, born: 5 },
-    { id: 6, stage: 0, born: 6 },
-    { id: 7, stage: 0, born: 7 },
-    { id: 8, stage: 0, born: 8 },
-  ],
-  next: 9,
-  tick: 8,
+  tickets: Array.from({ length: LANE_CAP * 3 }, (_, i) => ({
+    id: i,
+    stage: (2 - Math.floor(i / LANE_CAP)) as Stage,
+    born: i,
+  })),
+  next: LANE_CAP * 3,
+  tick: LANE_CAP * 3 - 1,
 };
 
 /* Tickets stay in arrival order, so the first one in a lane is always the oldest. */
@@ -316,47 +341,84 @@ function PosVisual() {
 }
 
 /* ===========================================================================
-   III. Google reviews — the bill is settled, then the gentle ask. The prompt
-   never depends on a rating: every guest sees the same invitation.
+   III. Knomi Pulse — before the bill, Host asks how it went. The guest taps
+   "Something wasn’t right", and the manager's alert slides in while there is
+   still time to make it right. Runs once per visit to the tile, then rests.
    =========================================================================== */
 
-/* Steps: 0 = bill settled, 1 = the ask (also the resting frame). ms to wait before moving on. */
-const REVIEW_HOLD = [1200, 2800];
-const REVIEW_ASK = 1;
+/** The answer this guest gives. */
+const PULSE_PICK = 2;
+/** Steps: 0 = the question, 1 = the answer, 2 = the alert (the resting frame). */
+const PULSE_REST = 2;
+/** How long each step holds before the next, in ms. */
+const PULSE_HOLD = [1500, 1000];
 
-function ReviewsVisual() {
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4.25 11.25V7.5a3.75 3.75 0 0 1 7.5 0v3.75l1 1.25h-9.5Z" />
+      <path d="M6.75 14h2.5" />
+      <path d="M8 2.25v1.5" />
+    </svg>
+  );
+}
+
+function PulseVisual() {
   const { ref, live } = useLive<HTMLDivElement>();
-  const [step, setStep] = useState(REVIEW_ASK);
+  // Any part on screen. Once the tile is fully out of sight it rewinds, so the
+  // next visit plays from the question again without anyone seeing the reset.
+  const onScreen = useInView(ref);
+  const reduced = usePrefersReducedMotion();
+  const [step, setStep] = useState(0);
+  const [wasOnScreen, setWasOnScreen] = useState(onScreen);
+  if (onScreen !== wasOnScreen) {
+    setWasOnScreen(onScreen);
+    if (!onScreen) setStep(0);
+  }
 
   useEffect(() => {
-    if (!live) return;
-    const id = window.setTimeout(() => setStep((s) => (s + 1) % REVIEW_HOLD.length), REVIEW_HOLD[step]);
+    if (!live || step >= PULSE_REST) return;
+    const id = window.setTimeout(() => setStep((s) => Math.min(s + 1, PULSE_REST)), PULSE_HOLD[step]);
     return () => window.clearTimeout(id);
   }, [live, step]);
 
-  const asking = step === REVIEW_ASK;
+  const shown = reduced ? PULSE_REST : step;
 
   return (
-    <div ref={ref} className={`${styles.stage} ${styles.reviews}`}>
-      <div className={styles.receipt}>
-        <span className={styles.receiptCheck}>
-          <Check size={12} />
+    <div ref={ref} className={`${styles.stage} ${styles.pulseStage}`} data-step={shown}>
+      <div className={styles.checkin}>
+        {/* Host peeks over the check-in card's top edge, hands on it, as he does on the menu */}
+        <span className={styles.pulseHost} aria-hidden="true">
+          <HostArt pose="peek" fit="art" size="100%" decorative sizes="96px" />
         </span>
-        {REVIEW_COPY.settled}
+        <div className={styles.checkinCard}>
+          <p className={styles.checkinAsk}>{PULSE_COPY.question}</p>
+          <span className={styles.chips}>
+            {PULSE_COPY.chips.map((chip, i) => (
+              <span key={chip} className={styles.chip}>
+                {i === PULSE_PICK && (
+                  <>
+                    <span className={styles.chipTap} />
+                    <span className={styles.chipFill} />
+                  </>
+                )}
+                <span className={styles.chipLabel}>{chip}</span>
+              </span>
+            ))}
+          </span>
+        </div>
       </div>
 
-      <motion.div
-        className={`theme-dark ${styles.bubble}`}
-        initial={false}
-        animate={asking ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-        transition={{ duration: asking ? 0.7 : 0.35, ease: EASE_OUT }}
-      >
-        <span className={styles.bubbleLead}>{REVIEW_COPY.lead}</span>
-        <span className={styles.bubbleAction}>
-          {REVIEW_COPY.action}
-          <ArrowUpRight size={12} />
+      <div className={`theme-dark ${styles.alert}`}>
+        <span className={styles.alertBell}>
+          <BellIcon />
         </span>
-      </motion.div>
+        <span>
+          <span className={styles.alertTable}>{PULSE_COPY.table}</span>
+          <span className={styles.alertDot}>·</span>
+          {PULSE_COPY.alert}
+        </span>
+      </div>
     </div>
   );
 }
@@ -440,13 +502,13 @@ function UpdatesVisual() {
 }
 
 /* ===========================================================================
-   VI. Knomi Sense — what guests linger on versus what they order.
+   VI. Knomi Compass — what guests linger on versus what they order.
    Bars only: shapes, not figures, so nothing reads as real data.
    =========================================================================== */
 
 type SenseRow = { dish: string; looked: [number, number]; ordered: [number, number]; linger?: boolean };
 
-// copy: illustrative dish names for the Sense bars
+// copy: illustrative dish names for the Compass bars
 const SENSE_ROWS: SenseRow[] = [
   { dish: "Burrata", looked: [0.64, 0.58], ordered: [0.5, 0.44] },
   { dish: "Truffle fries", looked: [0.94, 0.88], ordered: [0.2, 0.27], linger: true },
@@ -518,7 +580,9 @@ type Feature = (typeof ownersChapter.features)[number];
 const TILE_LAYOUT: Record<string, { className: string; delay: number }> = {
   kds: { className: styles.tileKds, delay: 0 },
   pos: { className: styles.tilePos, delay: 0.08 },
-  reviews: { className: styles.tileReviews, delay: 0.16 },
+  // The Pulse feature is keyed "reviews" in site.ts; "pulse" is accepted too.
+  reviews: { className: styles.tilePulse, delay: 0.16 },
+  pulse: { className: styles.tilePulse, delay: 0.16 },
   commission: { className: `theme-dark ${styles.tileCommission}`, delay: 0.16 },
   updates: { className: styles.tileUpdates, delay: 0 },
   sense: { className: styles.tileSense, delay: 0.08 },
@@ -531,7 +595,8 @@ function FeatureVisual({ id }: { id: string }) {
     case "pos":
       return <PosVisual />;
     case "reviews":
-      return <ReviewsVisual />;
+    case "pulse":
+      return <PulseVisual />;
     case "commission":
       return <CommissionVisual />;
     case "updates":

@@ -427,8 +427,8 @@ export default function AggregatorPayoutGuidePage() {
             </li>
             <li>
               <strong>0% Commission:</strong> KNOMI charges one flat monthly fee per table: ₹149 on Menu (the
-              illustrated menu, without ordering), ₹250 on Signature (our recommended plan, with guest self-ordering)
-              and ₹500–600 on Ecosystem. Nothing is deducted from your dine-in sales,
+              illustrated menu, without ordering), ₹250 on Signature (our recommended plan, with Knomi Host and guest
+              self-ordering) and ₹500 on Ecosystem (adding Knomi&apos;s own POS and the full Knomi Sense). Nothing is deducted from your dine-in sales,
               and with no commission there is no GST on commission either.
             </li>
             <li>
@@ -466,9 +466,9 @@ export default function AggregatorPayoutGuidePage() {
           <div className={styles.ctaCard}>
             <h3>Own Your Dining Room Revenue</h3>
             <p>
-              Keep orders from your own dining room off the weekly settlement cycle. KNOMI turns the QR on your table
-              into an illustrated menu guests order from directly, with 0% commission and one flat price per table,
-              per month.
+              Keep orders from your own dining room off the weekly settlement cycle. KNOMI helps you grow every table:
+              guests order directly from an illustrated menu while Knomi Host suggests the right pairing, with 0%
+              commission and one flat price per table, per month.
             </p>
             <a href={bookHref} className={styles.ctaButton}>
               Book a walkthrough &rarr;

@@ -5,12 +5,12 @@ import Footer from '@/components/Footer';
 import DelhiThroughputAuditor from './DelhiThroughputAuditor';
 import ExperienceKnomiBox from '@/components/ExperienceKnomiBox';
 import styles from './DelhiSolutions.module.css';
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'AI Restaurant Ordering System Delhi NCR (2026) | KNOMI',
   description:
-    'QR self-ordering for Delhi NCR restaurants, Gurgaon craft breweries and CP heritage bistros. Guests order from their own phone over the music, tickets go straight to each station, and you pay 0% commission.',
+    'QR self-ordering and upselling for Delhi NCR restaurants, Gurgaon craft breweries and CP heritage bistros. Guests order from their own phone over the music, tickets go straight to each station, and you pay 0% commission.',
   alternates: {
     canonical: '/solutions/delhi-ncr-restaurant-self-ordering',
   },
@@ -318,7 +318,7 @@ export default function DelhiNcrRestaurantSelfOrderingPage() {
               In a busy service, waiters are often too hurried to suggest a pairing or remind guests about dessert.
             </p>
             <p className={styles.paragraph}>
-              KNOMI puts that suggestion inside the menu. When a table orders drinks or a main platter, Knomi Host suggests something that goes with it, such as sizzling kebabs with the beers or a dessert to finish, gently and at the right moment, the way your best server would. Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+              KNOMI puts that suggestion inside the menu. When a table orders drinks or a main platter, Knomi Host suggests something that goes with it, such as sizzling kebabs with the beers or a dessert to finish, gently and at the right moment, the way your best server would. {GOAL}
             </p>
 
             <h2 className={styles.sectionHeading}>
@@ -401,7 +401,7 @@ export default function DelhiNcrRestaurantSelfOrderingPage() {
                     <td>Free or a small fee</td>
                     <td>Typically device cost plus a software fee</td>
                     <td>Varies: subscription and/or per-order fees</td>
-                    <td className={styles.knomiCol}>Signature, with self-ordering: ₹250 per table / month (Menu only: ₹149; Ecosystem: ₹500–600); 0% commission</td>
+                    <td className={styles.knomiCol}>Signature, with self-ordering: ₹250 per table / month (Menu only: ₹149; Ecosystem: ₹500); 0% commission</td>
                   </tr>
                 </tbody>
               </table>

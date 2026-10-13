@@ -495,7 +495,8 @@ export default function GstFoodRatesGuidePage() {
               integrates with the POS you already use.
               <br />
               3. <strong>Simple Per-Table Pricing:</strong> Menu ₹149, Signature ₹250 (our recommended plan, including
-              guest self-ordering and integration with your existing POS) and Ecosystem ₹500–600 (including Knomi Sense), per table, per
+              Knomi Host, Knomi Pulse, guest self-ordering, integration with your existing POS and the essentials of Knomi Sense)
+              and Ecosystem ₹500 (adding Knomi&apos;s own POS, the full Knomi Sense and Knomi Compass), per table, per
               month. <Link href="/#pricing">See pricing</Link>.
             </p>
           </div>
@@ -526,9 +527,9 @@ export default function GstFoodRatesGuidePage() {
           <div className={styles.ctaCard}>
             <h3>Take Dine-In Orders With Zero Commission</h3>
             <p>
-              KNOMI turns the QR on your table into an illustrated menu guests order from directly, with no app and no
-              login. Orders go to your kitchen display, billing stays on the POS you already use, and we take 0%
-              commission.
+              KNOMI helps you grow every table: guests order directly from an illustrated menu, with no app and no
+              login, while Knomi Host suggests the right pairing. Orders go to your kitchen display, billing stays on the
+              POS you already use, and we take 0% commission.
             </p>
             <Link href="/#book" className={styles.ctaButton}>
               Book a walkthrough

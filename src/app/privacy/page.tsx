@@ -184,8 +184,9 @@ export default function PrivacyPage() {
             <section className={styles.section}>
               <h2 className={styles.sectionHeading}>4. Technical Telemetry and Behavioral Analytics (Knomi Sense)</h2>
               <p className={styles.paragraph}>
-                KNOMI processes technical interaction telemetry to power Knomi Host recommendations, Knomi Sense menu
-                intelligence (available on the Ecosystem plan), and the Kitchen Display System (KDS):
+                KNOMI processes technical interaction telemetry to power Knomi Sense and the features built on it: Knomi Host
+                recommendations, Knomi Compass menu insights (available on the Ecosystem plan), and Knomi Dash, the live orders
+                view and Kitchen Display System (KDS):
               </p>
               <ul className={styles.list}>
                 <li className={styles.listItem}>
@@ -197,7 +198,7 @@ export default function PrivacyPage() {
                   table turnover metrics.
                 </li>
                 <li className={styles.listItem}>
-                  <strong>How Analytics Are Used:</strong> Menu insights shown to restaurants, including Knomi Sense, are
+                  <strong>How Analytics Are Used:</strong> Menu insights shown to restaurants, including Knomi Compass, are
                   presented in aggregate. The underlying interaction events are linked to the dining session (and, once a
                   diner has placed an order, to their account). Telemetry is used exclusively to provide the KNOMI service
                   to the specific restaurant where the visit occurred and to refine algorithm performance.

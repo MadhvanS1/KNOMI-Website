@@ -616,7 +616,7 @@ export default function HowToStartCloudKitchenIndiaPage() {
           <div className={styles.ctaCard}>
             <h2 className={styles.ctaTitle}>Add a Commission-Free Counter to Your Kitchen</h2>
             <p className={styles.ctaSubtitle}>
-              KNOMI is guest experience infrastructure for dine-in rooms and pickup counters: an illustrated QR menu with no app download or login, orders straight to your kitchen display, running alongside the POS you already use, with a flat monthly fee and 0% commission.
+              KNOMI is guest experience infrastructure for dine-in rooms and pickup counters that helps you grow every order: an illustrated QR menu with no app download or login, Knomi Host suggesting the right add-on, orders straight to your kitchen display, running alongside the POS you already use, with a flat monthly fee and 0% commission.
             </p>
             <Link href={bookHref} className={styles.ctaBtn}>
               Book a Walkthrough &rarr;

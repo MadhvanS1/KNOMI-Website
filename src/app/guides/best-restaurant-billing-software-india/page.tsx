@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BillingSoftwareAuditor from './BillingSoftwareAuditor';
 import styles from './BillingSoftwareGuide.module.css';
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'Best Restaurant Billing Software in India: 6 POS Systems Compared (2026 Guide) | KNOMI',
@@ -356,7 +356,7 @@ export default function BestRestaurantBillingSoftwarePage() {
                   <ul>
                     <li>Guest re-engagement: sends SMS and WhatsApp promotional coupons based on past visit frequency.</li>
                     <li>Aggregator consolidation: pulls orders from Zomato and Swiggy into the billing terminal.</li>
-                    <li>Customer feedback collection, including prompts for Google reviews.</li>
+                    <li>Customer feedback collection.</li>
                   </ul>
                 </div>
                 <div className={styles.posWeaknesses}>
@@ -409,28 +409,30 @@ export default function BestRestaurantBillingSoftwarePage() {
                   </span>
                 </div>
                 <div className={styles.posCostLine}>
-                  Pricing: Menu Rs 149, Signature Rs 250 (our recommended plan), Ecosystem Rs 500–600 per table, per month · 0% commission
+                  Pricing: Menu Rs 149, Signature Rs 250 (our recommended plan), Ecosystem Rs 500 per table, per month · 0% commission
                 </div>
                 <p>
-                  KNOMI is not a billing system, and it doesn&apos;t try to replace your cashier POS or your GST accounting workflow.
-                  It is guest experience infrastructure: an illustrated QR menu themed to your restaurant, with a warm host inside it,
-                  that lets guests order from the table and sends those orders to your kitchen display. It works alongside the POS you
-                  already use, and on the Signature plan it integrates with it.
+                  KNOMI doesn&apos;t ask you to replace your cashier POS or your GST accounting workflow. It is guest experience
+                  infrastructure that helps restaurants grow and upsell: Knomi Host, a warm host inside an illustrated menu themed to
+                  your restaurant, suggests the right dish at the right moment, guests order from the table, and those orders go to
+                  your kitchen display. It works alongside the POS you already use, and on the Signature plan it integrates with it.
+                  Restaurants that want one system can choose Knomi&apos;s own POS on the Ecosystem plan.
                 </p>
                 <div className={styles.posStrengths}>
                   <strong>Key Strengths:</strong>
                   <ul>
                     <li>No app, no login: guests scan the table QR and browse in their phone&apos;s browser, then confirm the order with their phone number.</li>
-                    <li>Knomi Host: suggests the pairing, remembers guest preferences (no onion, extra spicy), and invites guests to leave a Google review.</li>
-                    <li>Live orders and kitchen display: orders land on the kitchen display the moment a guest confirms, and you see every table on a live dashboard.</li>
+                    <li>Knomi Host: suggests the pairing and remembers guest preferences (no onion, extra spicy).</li>
+                    <li>Knomi Pulse: checks in before the bill and alerts your manager if something wasn&apos;t right.</li>
+                    <li>Knomi Dash, live orders and kitchen display: orders land on the kitchen display the moment a guest confirms, and you see every table on a live dashboard.</li>
                     <li>Preserves your back office: keep your existing POS for cash handling, accounting sync, and GST compliance.</li>
                   </ul>
                 </div>
                 <div className={styles.posWeaknesses}>
                   <strong>Operational Trade-Offs:</strong>
                   <ul>
-                    <li>Not a standalone cashier till: KNOMI is purpose-built for dining room ordering and the guest experience; you still use your primary POS for physical cash drawers and end-of-day statutory filing.</li>
-                    <li>Knomi Sense menu intelligence is part of the Ecosystem plan only.</li>
+                    <li>Not a cashier till on Signature: KNOMI is purpose-built for dining room ordering and the guest experience, so you keep your primary POS for physical cash drawers and end-of-day statutory filing. Knomi&apos;s own POS comes with the Ecosystem plan.</li>
+                    <li>The full Knomi Sense and Knomi Compass insights are part of the Ecosystem plan only.</li>
                   </ul>
                 </div>
               </div>
@@ -493,7 +495,7 @@ export default function BestRestaurantBillingSoftwarePage() {
                   <tr style={{ background: 'rgba(169, 71, 47,0.08)' }}>
                     <td><strong>KNOMI (Co-existence)</strong></td>
                     <td>Guest Experience & Table Ordering</td>
-                    <td>Rs 149–600 per table / month (0% commission)</td>
+                    <td>Rs 149–500 per table / month (0% commission)</td>
                     <td>Guests use their own phones</td>
                     <td>Works alongside your till</td>
                     <td>Knomi Host pairing suggestions</td>
@@ -544,8 +546,7 @@ export default function BestRestaurantBillingSoftwarePage() {
               </li>
             </ol>
             <p>
-              This keeps your accounting stable behind the counter and gives the dining room a host at every table.
-              Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+              This keeps your accounting stable behind the counter and gives the dining room a host at every table. {GOAL}
             </p>
 
             {/* Author Bio */}

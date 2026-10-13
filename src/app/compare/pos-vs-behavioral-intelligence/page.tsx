@@ -8,12 +8,12 @@ import styles from './PosVsBehavioral.module.css';
 import { OG_IMAGE, bookHref, pricing } from "@/content/site";
 
 const ecosystemPlan = pricing.plans[2];
-const ECOSYSTEM_PRICE = `₹${ecosystemPlan.priceMin}–${ecosystemPlan.priceMax}`;
+const ECOSYSTEM_PRICE = `₹${ecosystemPlan.priceMin}`;
 
 export const metadata: Metadata = {
   title: 'Why a POS Is Not Enough: Behavioral Intelligence vs Legacy Restaurant Software (2026) | KNOMI',
   description:
-    'Traditional restaurant POS systems only track completed transactions. See how behavioral intelligence measures invisible demand, pre-order hesitation and dish dwell time, and how Knomi Sense puts it on a 2x2 menu matrix.',
+    'Traditional restaurant POS systems only track completed transactions. See how behavioral intelligence measures invisible demand, pre-order hesitation and dish dwell time, and how Knomi Compass, powered by Knomi Sense, puts it on a 2x2 menu matrix.',
   alternates: {
     canonical: '/compare/pos-vs-behavioral-intelligence',
   },
@@ -58,15 +58,15 @@ const faqs = [
   },
   {
     q: 'How does tracking diner dwell time increase restaurant revenue?',
-    a: 'Item-level dwell time shows which dishes attract a lot of interest but few orders. Clarifying the portion, rewriting the description or pairing the dish with a drink gives hesitant guests a reason to say yes, without raising menu prices. Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.',
+    a: 'Item-level dwell time shows which dishes attract a lot of interest but few orders. Clarifying the portion, rewriting the description or pairing the dish with a drink gives hesitant guests a reason to say yes, without raising menu prices. We expect to lift your average order by about 25%, and in the trial we’ll show you the numbers from your own tables.',
   },
   {
     q: 'How does the 2x2 Attention-to-Order matrix differ from the classic menu engineering matrix?',
-    a: 'The classic menu engineering matrix (Kasavana and Smith, 1982, adapted from the Boston Consulting Group growth-share matrix) sorts dishes by sales volume and gross margin (Stars, Plowhorses, Puzzles, Dogs), which only reflects past purchases. Knomi Sense plots attention (how long guests linger on a dish) against conversion (how often viewing turns into adding it to the order), which reveals high-interest dishes that a volume-only view can mistake for dead items.',
+    a: 'The classic menu engineering matrix (Kasavana and Smith, 1982, adapted from the Boston Consulting Group growth-share matrix) sorts dishes by sales volume and gross margin (Stars, Plowhorses, Puzzles, Dogs), which only reflects past purchases. Knomi Compass, powered by Knomi Sense, plots attention (how long guests linger on a dish) against conversion (how often viewing turns into adding it to the order), which reveals high-interest dishes that a volume-only view can mistake for dead items.',
   },
   {
     q: 'Can KNOMI help catch slow service before guests write a negative online review?',
-    a: 'It gives your team more to go on. Orders appear on the live orders dashboard and kitchen display the moment guests confirm, and guests can call a server from the menu instead of waiting to catch someone\'s eye. Near the end of the meal, Knomi Host invites guests to leave a Google review.',
+    a: 'It gives your team more to go on. Orders appear on the live orders dashboard and kitchen display the moment guests confirm, and guests can call a server from the menu instead of waiting to catch someone\'s eye. Before the bill, Knomi Pulse asks guests how the meal went, and if something wasn’t right, your manager is alerted while the guest is still at the table.',
   },
 ];
 
@@ -208,8 +208,9 @@ export default function PosVsBehavioralPage() {
           <p className={styles.quickAnswerText}>
             A traditional restaurant POS is an accounting tool that records completed sales, so it can&apos;t see what happens
             before the bill is printed. Behavioral intelligence measures what guests do on the menu: which dishes they open, how long
-            they linger, and which ones they view but don&apos;t order. Knomi Sense, part of KNOMI&apos;s Ecosystem plan, puts that on a
-            2x2 attention-to-order matrix, while Knomi Host suggests pairings at the moment of choice. It all runs alongside your existing POS.
+            they linger, and which ones they view but don&apos;t order. Knomi Sense, the guest experience infrastructure behind KNOMI,
+            learns from it; Knomi Compass, on the Ecosystem plan, puts it on a 2x2 attention-to-order matrix; and Knomi Host suggests
+            pairings at the moment of choice. It all runs alongside your existing POS.
           </p>
         </section>
 
@@ -217,7 +218,7 @@ export default function PosVsBehavioralPage() {
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
             <div className={styles.statNumber}>2x2</div>
-            <div className={styles.statLabel}>Knomi Sense matrix: attention vs orders, for every dish</div>
+            <div className={styles.statLabel}>Knomi Compass matrix: attention vs orders, for every dish</div>
           </div>
           <div className={styles.statCard}>
             <div className={styles.statNumber}>+25%</div>
@@ -464,7 +465,7 @@ export default function PosVsBehavioralPage() {
 
             <h2>Seeing the Floor in Real Time: Catching Slow Service Before It Becomes a Review</h2>
             <p>
-              Every restaurant manager dreads a 1-star Google review that reads something like this:{' '}
+              Every restaurant manager dreads a 1-star online review that reads something like this:{' '}
               <em>&ldquo;Food was decent, but we waited ages for someone to take our order, and again to pay.&rdquo;</em>
             </p>
             <p>
@@ -478,10 +479,10 @@ export default function PosVsBehavioralPage() {
             <ol>
               <li><strong>Seated &amp; Exploring:</strong> Guests open the illustrated menu and browse, with no app and no login.</li>
               <li><strong>Ordering:</strong> Knomi Host suggests pairings, and guests confirm the order with their phone number.</li>
-              <li><strong>Kitchen Line Active:</strong> The order appears on the kitchen display and the live orders dashboard the moment it is confirmed.</li>
+              <li><strong>Kitchen Line Active:</strong> The order appears on Knomi Dash, your live orders view and kitchen display, the moment it is confirmed.</li>
               <li><strong>Dining &amp; Enjoying:</strong> Guests can add another round or a dessert from the menu without waiting for a server.</li>
               <li><strong>Asking for Help:</strong> Guests can ask for a server, water or cutlery from the menu instead of waving.</li>
-              <li><strong>Before They Leave:</strong> Near the end of the meal, Knomi Host invites guests to leave a Google review.</li>
+              <li><strong>Before the Bill:</strong> Knomi Pulse asks how the meal went. If something wasn&apos;t right, your manager is alerted while the guest is still at the table.</li>
             </ol>
 
             <div className={styles.calloutBox}>
@@ -515,8 +516,9 @@ export default function PosVsBehavioralPage() {
                 (Petpooja integration is available).
               </li>
               <li>
-                <strong>Knomi Sense:</strong> On the Ecosystem plan ({ECOSYSTEM_PRICE} per table, per month), adds the attention-to-order
-                matrix and browsing insights to your dashboard, with no disruption to your cashier or back-office accounting.
+                <strong>Knomi Sense &amp; Compass:</strong> Signature includes the essentials of Knomi Sense. On the Ecosystem plan
+                ({ECOSYSTEM_PRICE} per table, per month), the full Knomi Sense and Knomi Compass add the attention-to-order matrix and
+                browsing insights to your dashboard, with no disruption to your cashier or back-office accounting.
               </li>
             </ul>
 

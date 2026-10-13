@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import UpsellingConversionAuditor from './UpsellingConversionAuditor';
 import styles from './UpsellingGuide.module.css';
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'Restaurant Upselling Techniques: Visual Cues vs Rushed Waiters | KNOMI',
@@ -614,8 +614,7 @@ export default function RestaurantUpsellingTechniquesPage() {
               <p>
                 To earn an extra ₹20 Lakhs a year through traditional growth in this example, you would need to seat roughly 250
                 additional tables every month, with the ad spending, aggregator discounts and kitchen strain that brings.
-                Upselling looks for that money among the guests who are already sitting at your tables. Our goal is to lift
-                your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+                Upselling looks for that money among the guests who are already sitting at your tables. {GOAL}
               </p>
             </div>
 

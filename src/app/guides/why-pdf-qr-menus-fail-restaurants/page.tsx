@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PdfMenuFrictionAuditor from './PdfMenuFrictionAuditor';
 import styles from './PdfMenuFrictionGuide.module.css';
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'The Heavy PDF Menu Problem: Why Diners Hate QR Codes in India (2026 Guide) | KNOMI',
@@ -483,8 +483,7 @@ export default function WhyPdfQrMenusFailPage() {
             <div className={styles.ctaBox}>
               <h2 className={styles.ctaTitle}>Replace Your Sluggish PDF Menu Today</h2>
               <p className={styles.ctaText}>
-                Swap pinch-and-zoom for an illustrated menu themed to your restaurant, with Knomi Host suggesting the pairing at every table.
-                Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+                Swap pinch-and-zoom for an illustrated menu themed to your restaurant, with Knomi Host suggesting the pairing at every table. {GOAL}
               </p>
               <Link href="/guides/best-restaurant-billing-software-india" className={styles.ctaButton}>
                 Explore POS Co-Existence Architecture &rarr;

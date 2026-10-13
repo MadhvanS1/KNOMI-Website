@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PubRoundVelocityAuditor from './PubRoundVelocityAuditor';
 import styles from './BarOrderingGuide.module.css';
-import { OG_IMAGE, bookHref } from "@/content/site";
+import { GOAL, OG_IMAGE, bookHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'Ordering System for Bars, Pubs & Microbreweries in India (2026 Guide) | KNOMI',
@@ -506,8 +506,7 @@ export default function OrderingSystemBarsBreweriesPage() {
               <h2 className={styles.ctaTitle}>Accelerate Taproom Round Velocity with KNOMI</h2>
               <p className={styles.ctaText}>
                 Let guests order the next round from their phone, send drinks to the bar and food to the kitchen, and let
-                Knomi Host suggest the bar snack that goes with it, all at 0% commission.
-                Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+                Knomi Host suggest the bar snack that goes with it, all at 0% commission. {GOAL}
               </p>
               <Link href={bookHref} className={styles.ctaButton}>
                 Book a walkthrough

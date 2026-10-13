@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import styles from "./PetpoojaMigrationAuditor.module.css";
-import { pricing } from "@/content/site";
+import { GOAL, pricing } from "@/content/site";
 
 type TabMode = "roi" | "coexistence";
 type ScenarioKey = "status_quo" | "rip_replace" | "coexistence";
@@ -156,7 +156,7 @@ export default function PetpoojaMigrationAuditor() {
               <div>
                 <div className={styles.bannerTitle}>What the Target Would Mean for You</div>
                 <p className={styles.bannerSubtitle}>
-                  Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers. This is an estimate on your inputs, not a forecast.
+                  {GOAL} This is an estimate on your inputs, not a forecast.
                 </p>
               </div>
               <div>
@@ -213,7 +213,7 @@ export default function PetpoojaMigrationAuditor() {
               <ul className={styles.archFeatureList}>
                 <li className={styles.archFeatureItem}>✓ No POS migration; billing stays as it is</li>
                 <li className={styles.archFeatureItem}>✓ Illustrated menu opens in the browser, no app or login</li>
-                <li className={styles.archFeatureItem}>✓ Knomi Sense shows dishes viewed but not ordered (Ecosystem plan)</li>
+                <li className={styles.archFeatureItem}>✓ Knomi Compass shows dishes viewed but not ordered (Ecosystem plan)</li>
               </ul>
             </div>
           </div>
@@ -241,7 +241,7 @@ export default function PetpoojaMigrationAuditor() {
               <>
                 <div className={styles.archDetailTitle}>The Modern Co-Existence Strategy</div>
                 <p className={styles.archDetailText}>
-                  Keep what already works. Petpooja stays at the counter for daily cash reconciliation, Tally exports and GST filing. KNOMI QR stands go on the tables: guests open an illustrated menu with no app and no login, Knomi Host suggests pairings, and guests confirm their order with a phone number. Orders go to your kitchen display and, on the Signature plan (₹{SIGNATURE_PRICE} per table, per month), into Petpooja. On the Ecosystem plan, Knomi Sense adds menu intelligence to your dashboard.
+                  Keep what already works. Petpooja stays at the counter for daily cash reconciliation, Tally exports and GST filing. KNOMI QR stands go on the tables: guests open an illustrated menu with no app and no login, Knomi Host suggests pairings, and guests confirm their order with a phone number. Orders go to your kitchen display and, on the Signature plan (₹{SIGNATURE_PRICE} per table, per month), into Petpooja. Signature includes the essentials of Knomi Sense; on the Ecosystem plan, the full Knomi Sense and Knomi Compass add menu insights to your dashboard.
                 </p>
               </>
             )}

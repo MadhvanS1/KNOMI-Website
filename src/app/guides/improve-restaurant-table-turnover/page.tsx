@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TableTurnoverCalculator from './TableTurnoverCalculator';
 import styles from './TableTurnoverGuide.module.css';
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'How to Improve Table Turnover Rate Without Rushing Guests (2026 Guide) | KNOMI',
@@ -202,7 +202,7 @@ export default function ImproveTableTurnoverPage() {
             <p>
               This hurts restaurant profitability. Diners visit restaurants for escape, conversation, and hospitality.
               The second a guest feels rushed or treated like a cog on a conveyor belt, their sense of value collapses.
-              They skip dessert, pass on a second round, tip less, and are more likely to leave a poor review on Google.
+              They skip dessert, pass on a second round, tip less, and are more likely to leave a poor review online.
             </p>
             <p>
               The solution to expanding dining capacity is not hurrying your guests.
@@ -426,8 +426,7 @@ export default function ImproveTableTurnoverPage() {
               <h2 className={styles.ctaTitle}>Accelerate Your Dinner Rush Turns</h2>
               <p className={styles.ctaText}>
                 Cut the waiting, not the meal. With KNOMI, guests order from an illustrated menu on their phone the moment they
-                are ready, orders land on your kitchen display, and Knomi Host suggests the pairing along the way.
-                Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+                are ready, orders land on your kitchen display, and Knomi Host suggests the pairing along the way. {GOAL}
               </p>
               <Link href="/guides/qr-code-menu-alternatives-india" className={styles.ctaButton}>
                 Explore Tabletop Ordering Systems &rarr;

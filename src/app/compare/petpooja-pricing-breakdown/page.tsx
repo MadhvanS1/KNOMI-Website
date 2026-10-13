@@ -7,7 +7,7 @@ import styles from "./PetpoojaPricing.module.css";
 import { OG_IMAGE, pricing } from "@/content/site";
 
 const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}–${ecosystemPlan.priceMax}, per table, per month`;
+const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
 
 export const metadata: Metadata = {
   title: "Petpooja Pricing: The Real Cost, Add-On Modules & Total TCO (2026) | KNOMI",
@@ -384,7 +384,7 @@ export default function PetpoojaPricingPage() {
               <strong>Consider KNOMI Instead of a POS QR Add-On:</strong> A billing-first QR module lists your menu. KNOMI is built to sell it: an illustrated menu themed to your restaurant that guests open with no app and no login.
             </li>
             <li>
-              <strong>Deploy KNOMI on Tables:</strong> Knomi Host suggests the pairing at the moment a guest chooses, orders go to your kitchen display, and on the Signature plan KNOMI integrates with Petpooja so orders flow into it. On the Ecosystem plan, Knomi Sense shows the dishes guests look at but don&apos;t order.
+              <strong>Deploy KNOMI on Tables:</strong> Knomi Host suggests the pairing at the moment a guest chooses, orders go to your kitchen display, and on the Signature plan KNOMI integrates with Petpooja so orders flow into it. On the Ecosystem plan, Knomi Compass, powered by Knomi Sense, shows the dishes guests look at but don&apos;t order.
             </li>
           </ul>
           <p>
@@ -398,7 +398,7 @@ export default function PetpoojaPricingPage() {
               <h4>Madhvan Sharma</h4>
               <div className={styles.authorRole}>Co-Founder, KNOMI</div>
               <p className={styles.authorBio}>
-                Madhvan co-founded KNOMI in Bengaluru to give restaurants a menu that knows their guests. He writes about restaurant economics and guest experience.
+                Madhvan co-founded KNOMI in Bengaluru to help restaurants know every guest and grow every table. He writes about restaurant economics and guest experience.
               </p>
             </div>
           </div>

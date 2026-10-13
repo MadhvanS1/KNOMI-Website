@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BreakEvenCalculator from "./BreakEvenCalculator";
 import styles from "./BreakEvenGuide.module.css";
-import { OG_IMAGE, bookHref } from "@/content/site";
+import { GOAL, OG_IMAGE, bookHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Restaurant Break Even Point: Formula, Indian Example & Calculator (2026) | KNOMI",
@@ -468,8 +468,7 @@ export default function BreakEvenGuidePage() {
               <strong>Grow the average ticket:</strong> A higher average spend per guest lowers the number of covers
               you need to break even, without adding a rupee of rent. <strong>Knomi Host</strong>, the host inside
               the KNOMI menu, suggests pairings at every table: a drink with the starter, dessert near the end of the
-              meal. Our goal is to lift your average order by around 25%. In the trial we measure it on your own
-              tables, and you see the numbers.
+              meal. {GOAL}
             </li>
             <li>
               <strong>Track actual vs theoretical food consumption:</strong> Recipe costing and weekly pantry
@@ -510,9 +509,9 @@ export default function BreakEvenGuidePage() {
           <div className={styles.ctaContainer}>
             <h2 className={styles.ctaTitle}>See how KNOMI fits your break-even math</h2>
             <p className={styles.ctaDesc}>
-              KNOMI turns the QR on your table into an illustrated menu guests order from directly, with no app and
-              no login. Knomi Host suggests pairings at every table, orders go straight to your kitchen display, and
-              we take 0% commission: one flat price per table, per month.
+              KNOMI helps you grow every table. Guests order directly from an illustrated menu, with no app and no
+              login, and Knomi Host suggests the right pairing as they choose. Orders go straight to your kitchen
+              display, and we take 0% commission: one flat price per table, per month.
             </p>
             <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
               <a href={bookHref} className="btn btn--primary btn--large">

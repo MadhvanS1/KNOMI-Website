@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Instrument_Sans, Instrument_Serif } from "next/font/google";
+import { Caveat, Instrument_Sans, Instrument_Serif } from "next/font/google";
 import localFont from "next/font/local";
 import SmoothScroll from "@/components/SmoothScroll";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
@@ -23,6 +23,14 @@ const sans = Instrument_Sans({
   variable: "--font-instrument-sans",
 });
 
+/* Knomi Host's handwriting, as in the menu's speech bubbles. */
+const hand = Caveat({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  display: "swap",
+  variable: "--font-instrument-hand",
+});
+
 /* Neither Instrument face has a ₹ glyph. These ₹-only subsets (Noto Serif, Inter; OFL)
    sit first in the font stacks and, thanks to unicode-range, are used for nothing else. */
 const rupeeSerif = localFont({
@@ -43,16 +51,20 @@ const rupeeSans = localFont({
   declarations: [{ prop: "unicode-range", value: "U+20B9" }],
 });
 
+const title = "KNOMI | Every guest known. Every table grown.";
+
 const description =
-  "KNOMI turns the QR on your table into an illustrated menu with a warm host inside it. Guests order without an app or login, Knomi Host suggests the perfect pairing, and it all works alongside your existing POS. 0% commission.";
+  "KNOMI is guest experience infrastructure that helps restaurants grow. Knomi Sense remembers every guest, Knomi Host suggests the right dish at the right moment at every table, and your average bill rises. No app, no login, works alongside your POS, 0% commission.";
 
 export const metadata: Metadata = {
-  title: "KNOMI | The menu that knows your guests",
+  title,
   description,
   keywords: [
+    "guest experience infrastructure",
+    "restaurant upselling",
+    "restaurant upselling software",
     "QR menu for restaurants",
     "digital menu India",
-    "restaurant upselling",
     "guest experience platform",
     "QR ordering system restaurants",
     "self ordering system India",
@@ -67,16 +79,17 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "KNOMI | The menu that knows your guests",
+    title,
     description:
-      "An illustrated QR menu with a warm host inside it. No app, no login, 0% commission, and it works alongside your POS.",
+      "Guest experience infrastructure that helps restaurants grow, upsell and look after every guest. A warm host at every table, powered by Knomi Sense. No app, no login, 0% commission.",
     url: "https://www.knomi.in",
     siteName: "KNOMI",
     images: [OG_IMAGE],
     locale: "en_IN",
     type: "website",
   },
-  // Title and description fall back to each page's own openGraph values.
+  // Title and description fall back to each page's own openGraph values (here, the
+  // homepage's above). Setting them here would make every page inherit the homepage's.
   twitter: {
     card: "summary_large_image",
     images: [OG_IMAGE.url],
@@ -116,7 +129,8 @@ const jsonLd = {
       url: "https://www.knomi.in",
       logo: "https://www.knomi.in/logo.png",
       slogan: "Know me. Remember me. Grow with me.",
-      description: "Guest experience infrastructure for restaurants: an intelligent, illustrated QR menu with an in-menu host.",
+      description:
+        "Guest experience infrastructure for restaurants. KNOMI helps restaurants grow, upsell and look after every guest: Knomi Sense remembers every guest and connects Knomi Canvas, Host, Pulse, Dash and Compass.",
       foundingDate: "2025",
       address: {
         "@type": "PostalAddress",
@@ -158,19 +172,20 @@ const jsonLd = {
         "@type": "AggregateOffer",
         priceCurrency: "INR",
         lowPrice: "149",
-        highPrice: "600",
+        highPrice: "500",
         description: "Per table, per month. 0% commission on orders.",
       },
       creator: { "@type": "Organization", name: "KNOMI", url: "https://www.knomi.in" },
       featureList: [
-        "Illustrated QR menu themed to each restaurant",
-        "No app download or login for guests",
-        "Knomi Host in-menu recommendations",
+        "Knomi Sense: guest experience infrastructure that remembers every guest and connects every part of KNOMI",
+        "Knomi Canvas: an illustrated menu themed to each restaurant, with no app download or login for guests",
+        "Knomi Host: an in-menu host who greets guests, suggests pairings and remembers preferences",
+        "Upselling at the right moment: pairings, desserts and second rounds",
         "Guest self-ordering with phone confirmation",
-        "Kitchen display system",
-        "Works alongside the restaurant's existing POS",
-        "Google review prompt",
-        "Knomi Sense menu intelligence (Ecosystem plan)",
+        "Knomi Pulse: an end-of-meal check-in that alerts the manager",
+        "Knomi Dash: live orders, tables and kitchen display",
+        "Knomi Compass: insights on which dishes guests view, linger on and skip",
+        "Orders flow into the restaurant's existing POS (Petpooja integration)",
         "0% commission",
       ],
     },
@@ -185,7 +200,7 @@ export default function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID || "G-B7Q0FDXQ17";
 
   return (
-    <html lang="en-IN" className={`${serif.variable} ${sans.variable} ${rupeeSerif.variable} ${rupeeSans.variable}`} suppressHydrationWarning>
+    <html lang="en-IN" className={`${serif.variable} ${sans.variable} ${hand.variable} ${rupeeSerif.variable} ${rupeeSans.variable}`} suppressHydrationWarning>
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 

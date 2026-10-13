@@ -106,7 +106,7 @@ export default function IncreaseAverageOrderValuePage() {
         name: 'How does digital tabletop ordering increase average check size?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'A digital menu like KNOMI puts the suggestion in front of every guest, every time. Guests browse an illustrated menu at their own pace, and Knomi Host, the host inside the menu, suggests a pairing when they add a dish: garlic bread with the pizza, a cold coffee with the brownie. Nothing depends on a busy waiter remembering to ask. Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.',
+          text: 'A digital menu like KNOMI puts the suggestion in front of every guest, every time. Guests browse an illustrated menu at their own pace, and Knomi Host, the host inside the menu, suggests a pairing when they add a dish: garlic bread with the pizza, a cold coffee with the brownie. Nothing depends on a busy waiter remembering to ask. We expect to lift your average order by about 25%, and in the trial we’ll show you the numbers from your own tables.',
         },
       },
       {

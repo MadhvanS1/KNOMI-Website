@@ -401,7 +401,7 @@ export default function HyperpureReviewGuidePage() {
             <li><strong>0% Commission:</strong> KNOMI charges a flat fee per table, per month and takes nothing from your orders. What your guests order is yours.</li>
             <li><strong>No App, No Login:</strong> Diners scan the table QR and browse an illustrated menu themed to your restaurant in their phone&apos;s browser, then confirm an order with their phone number.</li>
             <li><strong>Works Alongside Your POS:</strong> Billing stays with the POS you already use; on the Signature plan, KNOMI integrates with it.</li>
-            <li><strong>Simple Pricing:</strong> Menu ₹149, Signature ₹250 (recommended) or Ecosystem ₹500–600, per table, per month. See <Link href="/#pricing">pricing</Link>.</li>
+            <li><strong>Simple Pricing:</strong> Menu ₹149, Signature ₹250 (recommended) or Ecosystem ₹500, per table, per month. See <Link href="/#pricing">pricing</Link>.</li>
           </ul>
 
           <div className={styles.tableWrapper}>

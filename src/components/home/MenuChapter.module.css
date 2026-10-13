@@ -12,7 +12,7 @@
 
 .story {
   --rail-gap: clamp(36px, 3.6vw, 60px);
-  margin-top: clamp(3.5rem, 2rem + 5vw, 7rem);
+  margin-top: clamp(2.5rem, 1.6rem + 3vw, 4.5rem);
 }
 
 /* ---------------------------------------------------------------------
@@ -117,7 +117,7 @@
   position: relative;
   list-style: none;
   display: grid;
-  gap: clamp(5rem, 3rem + 8vw, 7.5rem);
+  gap: clamp(3.5rem, 2.5rem + 4vw, 5rem);
 }
 
 .step {
@@ -243,7 +243,7 @@
   --arch-h: calc(var(--apex) + var(--pw) * 2 - var(--overhang));
   position: relative;
   width: min(calc(var(--pw) * 1.4), 100%);
-  margin: clamp(2.5rem, 8vw, 3.5rem) auto 0;
+  margin: clamp(2rem, 6vw, 2.75rem) auto 0;
   padding-top: var(--apex);
 }
 
@@ -399,7 +399,7 @@
   .step {
     display: flex;
     align-items: center;
-    min-height: 75vh;
+    min-height: 56vh;
   }
 
   .figure {

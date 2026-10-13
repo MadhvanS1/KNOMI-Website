@@ -10,9 +10,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: max(100svh, 720px);
-  padding-top: calc(var(--nav-h) + clamp(20px, 3.4vh, 56px));
-  padding-bottom: clamp(44px, 6vh, 88px);
+  /* Fills the first screen, but never stretches into empty bands on tall monitors */
+  min-height: clamp(680px, 100svh, 980px);
+  padding-top: calc(var(--nav-h) + clamp(12px, 2.4vh, 40px));
+  padding-bottom: clamp(32px, 4.6vh, 64px);
   background-color: var(--bg);
   overflow: clip;
 }
@@ -54,19 +55,24 @@
   flex-direction: column;
   align-items: flex-start;
   min-width: 0;
+  /* The headline is sized to this column, so each line of the couplet always fits on one line */
+  container-type: inline-size;
 }
 
 .title {
-  margin-top: clamp(22px, 2.4vw, 32px);
-  font-size: clamp(3rem, 0.35rem + 6.55vw, 6.5rem);
-  line-height: 0.94;
+  margin-top: clamp(20px, 2.2vw, 30px);
+  /* Each line ("Every guest known." / "Every table grown.") measures about 6.05em,
+     so 15.6% of the column keeps both on one line with a little air to spare. */
+  font-size: clamp(2.5rem, 15.6cqi, 7.25rem);
+  line-height: 0.95;
   letter-spacing: -0.03em;
   text-wrap: initial;
+  white-space: nowrap;
 }
 
 .lead {
-  margin-top: clamp(24px, 2.4vw, 34px);
-  max-width: 31em;
+  margin-top: clamp(22px, 2.2vw, 32px);
+  max-width: 30em;
 }
 
 .ctas {
@@ -74,7 +80,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 18px 34px;
-  margin-top: clamp(32px, 3.2vw, 44px);
+  margin-top: clamp(28px, 2.8vw, 40px);
 }
 
 .primary {
@@ -108,8 +114,8 @@
   gap: 10px 16px;
   width: 100%;
   max-width: 36rem;
-  margin-top: clamp(36px, 4.2vw, 60px);
-  padding-top: 22px;
+  margin-top: clamp(30px, 3.4vw, 48px);
+  padding-top: 20px;
   border-top: 1px solid var(--line);
   font-size: var(--fs-small);
   line-height: 1.4;
@@ -253,160 +259,115 @@
   margin-left: calc(var(--p) / -2);
 }
 
-/* ---------- Knomi Host bubble ---------- */
+/* ---------- Knomi Host ----------
+   He lounges on the top edge of the left menu screen, arms folded, the way he
+   leans on the dish in the KNOMI menu. .hostGroup has the left screen's exact
+   box (.side.sideLeft) and depth, and .hostTilt its settled -8deg tilt, so the
+   edge he rests on is the screen's real top edge. He sits above the hero phone. */
+
+.side.hostGroup {
+  z-index: 4;
+  aspect-ratio: 1 / 2;
+  pointer-events: none;
+  /* Host's width */
+  --hw: clamp(116px, calc(var(--p) * 0.5), 160px);
+}
+
+.hostTilt {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-8deg);
+  transform-origin: 50% 100%;
+}
+
+/* His art box (the cut-out's own shape) stands on the screen's top edge; the
+   cut-out's transparent margin is taken up so his forearms rest on the bezel. */
+.perch {
+  position: absolute;
+  /* Past the screen's rounded corner, so all of his forearms are on the straight edge */
+  left: 12%;
+  bottom: calc(100% - var(--hw) * 0.034);
+  width: var(--hw);
+  line-height: 0;
+  transform-origin: 50% 100%;
+  /* He rises from behind the edge: nothing of him shows below it. */
+  clip-path: inset(-60% -60% 0 -60%);
+  /* His breath waits until he has settled and spoken. */
+  --host-breath-delay: 4.6s;
+}
+
+.nod {
+  transform-origin: 46% 100%;
+}
+
+/* ---------- His speech bubble ----------
+   Warm paper, a fine russet outline, a hand-cut irregular corner and a tail that
+   curls back to him. His words are hand-lettered, as in the menu. */
 
 .bubbleWrap {
-  --bw: clamp(204px, calc(var(--p) * 0.8), 240px);
+  --bw: clamp(214px, calc(var(--p) * 0.8), 252px);
   position: absolute;
-  z-index: 4;
+  z-index: 1;
   width: var(--bw);
-  /* Right edge overlaps the phone's left edge by about a quarter of its width
-     (clear of the menu's title); bottom sits at ~40% of the phone's height,
-     just above the illustrated host on the dish. */
-  left: calc(50% - var(--p) * 0.24 - var(--bw));
-  bottom: calc(var(--p) * 1.2);
-}
-
-.bubblePop {
-  transform-origin: 82% 100%;
-}
-
-.float {
-  animation: hostFloat 6.5s var(--ease-in-out) infinite;
-}
-
-@keyframes hostFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
+  /* Up and to his right, over the top corner of the hero phone, clear of the inscription */
+  left: calc(var(--p) * 0.3);
+  bottom: calc(100% + var(--p) * 0.27);
 }
 
 .bubble {
+  --edge: color-mix(in srgb, var(--russet) 52%, transparent);
   position: relative;
-  padding: 14px 16px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background-color: var(--surface);
-  box-shadow: var(--shadow-lift);
+  padding: 12px 16px 14px 17px;
+  border: 1px solid var(--edge);
+  border-radius: 22px 26px 24px 17px / 19px 24px 27px 21px;
+  background-color: var(--paper);
+  box-shadow:
+    0 2px 4px rgba(28, 20, 17, 0.05),
+    0 22px 40px -22px rgba(28, 20, 17, 0.42);
+  transform-origin: 10% 100%;
 }
 
-/* Tail, pointing down at the host drawn on the dish */
-.bubble::after {
-  content: "";
+/* The tail leaves the bubble's lower-left and points down at his face. */
+.tail {
   position: absolute;
-  bottom: -6.5px;
-  right: max(22px, calc(var(--p) * 0.08));
-  width: 12px;
-  height: 12px;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  border-bottom-right-radius: 3px;
-  background-color: var(--surface);
-  transform: rotate(45deg);
-}
-
-.bubbleHead {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.avatar {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 26px;
+  left: 15px;
+  top: calc(100% - 1px);
+  width: 30px;
   height: 26px;
-  border-radius: 50%;
-  background-color: var(--terracotta);
-  color: var(--paper);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 15px;
-  line-height: 1;
-  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--paper) 22%, transparent);
+  overflow: visible;
 }
 
-.bubbleName {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--fg-3);
+.tailFill {
+  fill: var(--paper);
 }
 
-.live {
-  width: 6px;
-  height: 6px;
-  margin-left: auto;
-  border-radius: 50%;
-  background-color: var(--olive);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--olive) 18%, transparent);
-}
-
-.message {
-  position: relative;
-  margin-top: 10px;
-}
-
-.typing {
-  position: absolute;
-  top: 6px;
-  left: 0;
-  display: inline-flex;
-  gap: 4px;
-  padding: 7px 10px;
-  border-radius: var(--r-pill);
-  background-color: var(--surface-sunk);
-}
-
-.typing span {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background-color: var(--fg-3);
-  animation: typingDot 1s var(--ease-in-out) 3;
-}
-
-.typing span:nth-child(2) {
-  animation-delay: 0.15s;
-}
-
-.typing span:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-@keyframes typingDot {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.45;
-  }
-  40% {
-    transform: translateY(-3px);
-    opacity: 1;
-  }
+.tailStroke {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 
 .bubbleLine {
-  font-family: var(--font-serif);
-  font-size: 1.125rem;
-  line-height: 1.24;
-  letter-spacing: -0.005em;
-  color: var(--fg);
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: clamp(1.3rem, calc(var(--p) * 0.081), 1.55rem);
+  line-height: 1.04;
+  letter-spacing: 0.002em;
+  color: var(--ink);
   text-wrap: pretty;
 }
 
+.addRow {
+  display: flex;
+  margin-top: 10px;
+}
+
 .add {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 12px;
-  padding: 6px 12px 6px 9px;
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
   border-radius: var(--r-pill);
   background-color: var(--terracotta);
   color: var(--paper);
@@ -414,6 +375,97 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1.3;
+  overflow: hidden;
+  box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--terracotta) 90%, transparent);
+}
+
+/* The two states share one cell, so the pill keeps its size as it changes */
+.addLabel {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px 6px 9px;
+}
+
+/* Olive wash for the "added" state (opacity only, no colour transition) */
+.addFill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--olive);
+}
+
+/* ---------- Order slip ---------- */
+
+.slipWrap {
+  position: absolute;
+  z-index: 4;
+  right: calc(var(--p) * -0.02);
+  bottom: calc(var(--p) * 0.15);
+  width: clamp(176px, calc(var(--p) * 0.68), 210px);
+}
+
+.slip {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-lift);
+}
+
+/* A line from the table's ticket: who, then what and how much */
+.slipMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.slipCheck {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--olive);
+  color: var(--paper);
+}
+
+.slipLine {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.2;
+}
+
+.slipItem {
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.slipLeader {
+  min-width: 10px;
+  margin-inline: 6px;
+  align-self: center;
+  transform: translateY(2px);
+}
+
+.slipPrice {
+  color: var(--accent);
+  font-feature-settings: "lnum" 1;
+  white-space: nowrap;
 }
 
 /* ---------- Ornaments ---------- */
@@ -460,7 +512,21 @@
   background-color: var(--fg-3);
   transform: scaleY(0);
   transform-origin: 50% 0%;
-  animation: cueDraw 2.6s var(--ease-in-out) infinite;
+  /* One pass down the line, then it settles drawn (no endless loop) */
+  animation:
+    cueSettle 1.1s var(--ease-out) 4.4s both,
+    cueDraw 2.6s var(--ease-in-out) 1.8s 1;
+}
+
+@keyframes cueSettle {
+  from {
+    transform: scaleY(0);
+    transform-origin: 50% 0%;
+  }
+  to {
+    transform: scaleY(1);
+    transform-origin: 50% 0%;
+  }
 }
 
 @keyframes cueDraw {
@@ -492,9 +558,8 @@
 }
 
 /* Loops rest while the hero is off screen */
-.paused .float,
-.paused .typing span,
-.paused .cueLine span {
+.paused .cueLine span,
+.paused .perch [data-pose] {
   animation-play-state: paused;
 }
 
@@ -513,7 +578,13 @@
   }
 
   .bubbleWrap {
-    --bw: clamp(196px, calc(var(--p) * 0.84), 228px);
+    --bw: clamp(204px, calc(var(--p) * 0.86), 228px);
+    left: calc(var(--p) * 0.26);
+  }
+
+  /* Keep the slip inside the gutter while the still-life leans right */
+  .slipWrap {
+    right: calc(var(--p) * 0.08);
   }
 }
 
@@ -521,8 +592,8 @@
   .hero {
     justify-content: flex-start;
     min-height: 0;
-    padding-top: calc(var(--nav-h) + clamp(36px, 7vw, 64px));
-    padding-bottom: clamp(56px, 10vw, 96px);
+    padding-top: calc(var(--nav-h) + clamp(24px, 5vw, 48px));
+    padding-bottom: clamp(40px, 7vw, 72px);
   }
 
   .hero::before {
@@ -531,7 +602,7 @@
 
   .inner {
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(56px, 10vw, 88px);
+    gap: clamp(52px, 9vw, 80px);
   }
 
   .copy {
@@ -539,7 +610,7 @@
   }
 
   .title {
-    font-size: clamp(2.6rem, 1.05rem + 8.4vw, 6rem);
+    font-size: clamp(2.4rem, 15.6cqi, 5.75rem);
   }
 
   /* Never wider than the column: children are placed from its centre, so the
@@ -558,38 +629,58 @@
 }
 
 @media (max-width: 600px) {
+  /* A little taller, so the still-life sits lower in the arch and his bubble has
+     room above the phone without covering the restaurant's name on the menu. */
   .stage {
     --spread: 0.4;
     --sw: 0.56;
     --ring: 1.54;
+    height: calc(var(--p) * 2.61);
+  }
+
+  .side.hostGroup {
+    --hw: clamp(100px, 29vw, 124px);
+  }
+
+  /* The left screen peeks in from the edge of the viewport here, so he leans in
+     further along its top, partly in front of the hero phone. */
+  .perch {
+    left: 30%;
   }
 
   .bubbleWrap {
-    --bw: min(176px, 47vw);
-    left: max(-8px, calc(50% - var(--p) * 0.24 - var(--bw)));
-    bottom: calc(var(--p) * 1);
+    --bw: min(204px, 56vw);
+    left: calc(var(--p) * 0.3);
+    bottom: calc(100% + var(--p) * 0.45);
   }
 
   .bubble {
-    padding: 11px 12px 13px;
+    padding: 10px 13px 12px 14px;
   }
 
   .bubbleLine {
-    font-size: 0.98rem;
+    font-size: 1.3rem;
   }
 
-  .avatar {
-    width: 22px;
-    height: 22px;
-    font-size: 13px;
+  .slipWrap {
+    right: -6px;
+    bottom: calc(var(--p) * 0.36);
+    width: min(168px, 46vw);
   }
 
-  .bubbleName {
-    font-size: 0.625rem;
+  .slip {
+    padding: 8px 11px 9px;
+  }
+
+  .slipLine {
+    font-size: 0.9375rem;
+  }
+
+  .addRow {
+    margin-top: 8px;
   }
 
   .add {
-    margin-top: 10px;
     font-size: 0.6875rem;
   }
 
@@ -630,13 +721,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cueRow,
-  .typing {
+  .cueRow {
     display: none;
-  }
-
-  .float {
-    animation: none;
   }
 }
 
@@ -649,8 +735,15 @@
 .inSideRight,
 .inPhone,
 .inBubble,
-.inTypingOut,
-.inLine {
+.inWrite,
+.inAddRow,
+.inPerch,
+.inNod,
+.inTap,
+.inAddOut,
+.inAddedIn,
+.inAddedFill,
+.inSlip {
   animation-fill-mode: both;
   animation-delay: var(--d, 0s);
   animation-timing-function: var(--ease-out);
@@ -738,37 +831,149 @@
   }
 }
 
+/* Host rises from behind the menu's top edge (his perch clips anything below it),
+   settles with a little give, then gives one small nod as he speaks. */
+.inPerch {
+  animation-name: perchIn;
+  animation-duration: 1.25s;
+}
+
+@keyframes perchIn {
+  from {
+    opacity: 0;
+    transform: translateY(62%) rotate(4deg);
+  }
+  45% {
+    opacity: 1;
+  }
+}
+
+.inNod {
+  animation-name: nod;
+  animation-duration: 1.4s;
+  animation-timing-function: var(--ease-in-out);
+}
+
+@keyframes nod {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  35% {
+    transform: rotate(-3.5deg);
+  }
+  70% {
+    transform: rotate(1.5deg);
+  }
+}
+
+/* The bubble opens from its tail, beside his face... */
 .inBubble {
   animation-name: bubbleIn;
-  animation-duration: 0.8s;
+  animation-duration: 0.9s;
 }
 
 @keyframes bubbleIn {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.92);
+    transform: translateY(10px) scale(0.9);
   }
 }
 
-.inTypingOut {
-  animation-name: typingOut;
-  animation-duration: 0.25s;
+/* ...and his line is written in, left to right (the insets leave room for the hand's loops) */
+.inWrite {
+  animation-name: write;
+  animation-duration: 1.2s;
 }
 
-@keyframes typingOut {
+@keyframes write {
+  from {
+    clip-path: inset(-20% 100% -30% -6%);
+  }
   to {
-    opacity: 0;
+    clip-path: inset(-20% -6% -30% -6%);
   }
 }
 
-.inLine {
-  animation-name: lineIn;
+.inAddRow {
+  animation-name: addRowIn;
+  animation-duration: 0.8s;
+}
+
+@keyframes addRowIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* The guest says yes: the pill is pressed, and turns from the offer to "Added" */
+.inTap {
+  animation-name: tap;
   animation-duration: 0.6s;
 }
 
-@keyframes lineIn {
+@keyframes tap {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.92);
+  }
+}
+
+.inAddOut {
+  animation-name: addOut;
+  animation-duration: 0.35s;
+}
+
+@keyframes addOut {
+  to {
+    opacity: 0;
+    transform: translateY(-70%);
+  }
+}
+
+.inAddedIn {
+  animation-name: addedIn;
+  animation-duration: 0.6s;
+}
+
+@keyframes addedIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(70%);
+  }
+}
+
+.inAddedFill {
+  animation-name: addedFill;
+  animation-duration: 0.6s;
+}
+
+@keyframes addedFill {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ...and the pairing slides onto the table's order */
+.inSlip {
+  animation-name: slipIn;
+  animation-duration: 1.1s;
+}
+
+@keyframes slipIn {
+  from {
+    opacity: 0;
+    transform: translateX(-18px) scale(0.94);
+    clip-path: inset(-64px 100% -64px -64px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    /* Ends outside the box so the shadow is never clipped */
+    clip-path: inset(-64px -64px -64px -64px);
   }
 }

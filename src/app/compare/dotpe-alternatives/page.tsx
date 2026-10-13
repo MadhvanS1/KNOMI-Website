@@ -7,7 +7,7 @@ import styles from "./DotPeAlternatives.module.css";
 import { OG_IMAGE, pricing } from "@/content/site";
 
 const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}–${ecosystemPlan.priceMax}, per table, per month`;
+const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
 
 export const metadata: Metadata = {
   title: "Best DotPe Alternatives for Indian Restaurants (Frictionless Dining & 0% Commission) (2026) | KNOMI",
@@ -156,7 +156,7 @@ const comparisonMatrix = [
   },
   {
     tool: "KNOMI",
-    type: "Guest Experience: Illustrated Menu & Ordering",
+    type: "Guest Experience Infrastructure: Host, Menu, Ordering & Upselling",
     pricing: `₹${menuPlan.priceMin}–₹${ecosystemPlan.priceMax} per table / month, 0% commission`,
     otpRequirement: "No app, no login to browse; phone number only to confirm the order",
     upsellingEngine: "Knomi Host suggests pairings as guests choose",
@@ -200,7 +200,7 @@ export default function DotPeAlternativesPage() {
             <div className={styles.aeoBox}>
               <span className={styles.aeoLabel}>Direct Overview (AEO Summary)</span>
               <p className={styles.aeoText}>
-                The best DotPe alternative depends on whether you need a billing cashier or a guest-facing menu. For counter accounting, Petpooja and Posist are established POS systems. For the table, KNOMI turns your QR into an illustrated menu guests can open without a login, with Knomi Host inside it suggesting pairings, orders going straight to your kitchen display, and 0% commission on a flat per-table fee: {PRICE_LADDER}.
+                The best DotPe alternative depends on whether you need a billing cashier or a guest-facing menu. For counter accounting, Petpooja and Posist are established POS systems. For the table, KNOMI is guest experience infrastructure built to grow every bill: an illustrated menu guests can open without a login, with Knomi Host inside it suggesting pairings, orders going straight to your kitchen display, and 0% commission on a flat per-table fee: {PRICE_LADDER}.
               </p>
             </div>
 
@@ -318,8 +318,9 @@ export default function DotPeAlternativesPage() {
           <ul>
             <li><strong>No Login to Browse:</strong> Guests scan and the menu opens in Safari or Chrome. No app, no account. They confirm with their phone number only when they place an order.</li>
             <li><strong>0% Commission:</strong> Plans are {PRICE_LADDER}. What your guests order is yours.</li>
-            <li><strong>Knomi Host:</strong> An illustrated menu themed to your restaurant, with a host inside it that suggests pairings, remembers preferences like no onion or extra spicy, and invites guests to leave a Google review.</li>
-            <li><strong>Invisible Demand Intelligence (Knomi Sense):</strong> On the Ecosystem plan, Knomi Sense measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix.</li>
+            <li><strong>Knomi Host:</strong> A warm host inside your illustrated menu (Knomi Canvas, themed to your restaurant) who suggests the right pairing at the right moment and remembers preferences like no onion or extra spicy.</li>
+            <li><strong>Knomi Pulse:</strong> Before the bill, Pulse asks how the meal went. If something wasn&apos;t right, your manager hears about it while the guest is still at the table.</li>
+            <li><strong>Invisible Demand Intelligence (Knomi Compass):</strong> On the Ecosystem plan, Knomi Compass, powered by the full Knomi Sense, measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix.</li>
           </ul>
 
           <h2>4. The Best of Both Worlds: The Co-Existence Architecture</h2>
@@ -330,7 +331,7 @@ export default function DotPeAlternativesPage() {
             <div className={styles.calloutTitle}>The Co-Existence Blueprint</div>
             <p className={styles.calloutText}>
               • <strong>Counter Billing &amp; GST:</strong> Keep a cashier POS (such as Petpooja) at the front desk for GST invoices and end-of-day cash reconciliation.<br />
-              • <strong>Tabletop Ordering &amp; Intelligence:</strong> Put KNOMI on the tables for guest self-ordering, Knomi Host pairings and a gentle Google review prompt. On the Signature plan, KNOMI integrates with the POS you already use.
+              • <strong>Tabletop Ordering &amp; Intelligence:</strong> Put KNOMI on the tables for guest self-ordering, Knomi Host pairings and a Knomi Pulse check-in that alerts your manager before the bill. On the Signature plan, KNOMI integrates with the POS you already use.
             </p>
           </div>
           <p>
@@ -344,7 +345,7 @@ export default function DotPeAlternativesPage() {
               <h4>Madhvan Sharma</h4>
               <div className={styles.authorRole}>Co-Founder, KNOMI</div>
               <p className={styles.authorBio}>
-                Madhvan co-founded KNOMI in Bengaluru to give restaurants a menu that knows their guests. He writes about restaurant economics and guest experience.
+                Madhvan co-founded KNOMI in Bengaluru to help restaurants know every guest and grow every table. He writes about restaurant economics and guest experience.
               </p>
             </div>
           </div>
@@ -364,7 +365,7 @@ export default function DotPeAlternativesPage() {
           <div className={styles.ctaCard}>
             <h3>Ready to Remove the Pre-Browse Login at Your Tables?</h3>
             <p>
-              KNOMI turns the QR on your table into an illustrated menu with Knomi Host inside it. No app, no login to browse, 0% commission, and a flat fee per table, from ₹{menuPlan.priceMin} a month (Signature, our recommended plan, is ₹{signaturePlan.priceMin}).
+              KNOMI helps you grow every table: Knomi Host suggests the right dish inside an illustrated menu themed to your room. No app, no login to browse, 0% commission, and a flat fee per table, from ₹{menuPlan.priceMin} a month (Signature, our recommended plan, is ₹{signaturePlan.priceMin}).
             </p>
             <Link href="/compare/dotpe-vs-knomi" className={styles.ctaButton}>
               Compare DotPe vs KNOMI Head-to-Head

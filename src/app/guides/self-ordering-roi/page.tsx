@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "What is the ROI of a self-ordering system for an Indian restaurant?",
-    a: "It depends on your floor, so model it with your own numbers. The return comes from two places: staff time (when guests place their own orders, servers spend less time taking orders and more time running food and looking after guests) and average order (a menu that suggests pairings at every table). Weigh those against the cost: KNOMI's Signature plan is ₹250 per table, per month, which is ₹5,000 a month for 20 tables, with 0% commission. Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.",
+    a: "It depends on your floor, so model it with your own numbers. The return comes from two places: staff time (when guests place their own orders, servers spend less time taking orders and more time running food and looking after guests) and average order (a menu that suggests pairings at every table). Weigh those against the cost: KNOMI's Signature plan is ₹250 per table, per month, which is ₹5,000 a month for 20 tables, with 0% commission. We expect to lift your average order by about 25%, and in the trial we’ll show you the numbers from your own tables.",
   },
   {
     q: "Does self-ordering completely replace human restaurant staff?",

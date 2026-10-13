@@ -6,7 +6,7 @@ import styles from "./CompareDotpe.module.css";
 import { OG_IMAGE, bookHref, pricing } from "@/content/site";
 
 const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}–${ecosystemPlan.priceMax}, per table, per month`;
+const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
 
 export const metadata: Metadata = {
   title: "DotPe vs KNOMI: Restaurant QR Ordering & Intelligence Comparison (2026)",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     images: [OG_IMAGE],
     title: "DotPe vs KNOMI: Restaurant QR Ordering & Intelligence Comparison",
     description:
-      "Comparing DotPe and KNOMI: open browsing vs a login before the menu, 0% commission vs per-transaction fees, and Knomi Sense menu intelligence.",
+      "Comparing DotPe and KNOMI: open browsing vs a login before the menu, 0% commission vs per-transaction fees, upselling at every table, and Knomi Compass menu insights.",
     url: "https://www.knomi.in/compare/dotpe-vs-knomi",
     siteName: "KNOMI",
     type: "article",
@@ -31,7 +31,7 @@ const comparisonMatrix = [
   {
     feature: "Core Focus",
     dotpe: "Digital commerce: QR ordering, payments, online store, takeaway & delivery",
-    knomi: "Dine-in guest experience: illustrated menu, Knomi Host and ordering",
+    knomi: "Dine-in guest experience infrastructure: Knomi Host upselling at every table, an illustrated menu and ordering, powered by Knomi Sense",
   },
   {
     feature: "Diner Onboarding Friction",
@@ -41,7 +41,7 @@ const comparisonMatrix = [
   {
     feature: "Dine-In Commission",
     dotpe: "Pricing reported to include per-transaction fees plus gateway charges",
-    knomi: `0% commission; flat ₹${menuPlan.priceMin} / ₹${signaturePlan.priceMin} / ₹${ecosystemPlan.priceMin}–${ecosystemPlan.priceMax} per table, per month`,
+    knomi: `0% commission; flat ₹${menuPlan.priceMin} / ₹${signaturePlan.priceMin} / ₹${ecosystemPlan.priceMin} per table, per month`,
   },
   {
     feature: "Menu Aesthetics & Branding",
@@ -51,7 +51,7 @@ const comparisonMatrix = [
   {
     feature: "Browsing & Demand Analytics",
     dotpe: "Order and sales reporting",
-    knomi: "Knomi Sense: dwell time, scroll depth and dishes viewed but not ordered (Ecosystem plan)",
+    knomi: "Knomi Compass, powered by Knomi Sense: dwell time, scroll depth and dishes viewed but not ordered (Ecosystem plan)",
   },
   {
     feature: "Guest Recognition",
@@ -61,12 +61,12 @@ const comparisonMatrix = [
   {
     feature: "Service Flow",
     dotpe: "QR ordering and payments",
-    knomi: "Orders go straight to the kitchen display; guests can call a server from the menu",
+    knomi: "Orders go straight to Knomi Dash, the live orders view and kitchen display; guests can call a server from the menu",
   },
   {
-    feature: "Table Review Management",
+    feature: "End-of-Meal Guest Check-In",
     dotpe: "Depends on setup",
-    knomi: "Knomi Host invites guests to leave a Google review near the end of the meal",
+    knomi: "Knomi Pulse asks how the meal went before the bill and alerts your manager if something wasn’t right",
   },
 ];
 
@@ -84,8 +84,8 @@ const faqs = [
     a: `No. KNOMI takes 0% commission; you pay a flat fee instead. Plans are ${PRICE_LADDER}. What your guests order is yours.`,
   },
   {
-    q: "What does Knomi Sense show that order reports don't?",
-    a: "Order reports show what sold. Knomi Sense, part of the Ecosystem plan, shows what guests looked at: how long they linger on each dish, how far they scroll, and which dishes they view but don't order. It places every dish on a 2x2 menu engineering matrix (attention vs orders), so you can see what to rename, re-describe, re-position or re-price.",
+    q: "What does Knomi Compass show that order reports don't?",
+    a: "Order reports show what sold. Knomi Compass, powered by the full Knomi Sense on the Ecosystem plan, shows what guests looked at: how long they linger on each dish, how far they scroll, and which dishes they view but don't order. It places every dish on a 2x2 menu engineering matrix (attention vs orders), so you can see what to rename, re-describe, re-position or re-price.",
   },
   {
     q: "Can KNOMI work with our existing kitchen printers?",
@@ -218,8 +218,8 @@ export default function DotpeVsKnomiPage() {
                 reported a phone number and OTP step before the menu in some DotPe setups, and its pricing has been
                 reported to include per-transaction fees. <strong>KNOMI is built for seated dining rooms:</strong> an
                 illustrated menu guests open without an app or a login, Knomi Host suggesting pairings, orders going
-                straight to your kitchen display, 0% commission on a flat per-table fee, and Knomi Sense menu
-                intelligence on the Ecosystem plan.
+                straight to your kitchen display, 0% commission on a flat per-table fee, and Knomi Compass menu
+                insights, powered by Knomi Sense, on the Ecosystem plan.
               </p>
             </div>
 
@@ -342,10 +342,10 @@ export default function DotpeVsKnomiPage() {
               <div className={styles.pillarCard}>
                 <div className={styles.pillarTitle}>
                   <span>4. Invisible Demand vs End-of-Day Receipts</span>
-                  <span className={styles.pillarTag}>Knomi Sense</span>
+                  <span className={styles.pillarTag}>Knomi Compass</span>
                 </div>
                 <p className={styles.pillarDesc}>
-                  Order-based reports show what sold. Knomi Sense, on the Ecosystem plan, shows what guests looked at:
+                  Order-based reports show what sold. Knomi Compass, powered by Knomi Sense on the Ecosystem plan, shows what guests looked at:
                   how long they linger on your cocktail list, how far they scroll, and which dishes they view but
                   don&apos;t order. That points you to dishes guests are drawn to but hesitate over, perhaps because of
                   the portion description or the price.
@@ -408,7 +408,7 @@ export default function DotpeVsKnomiPage() {
                   </li>
                   <li className={styles.decisionItem}>
                     <span className={styles.checkMark}>✓</span>
-                    <span>You want 0% commission on dine-in orders, and the option of Knomi Sense browsing insights on the Ecosystem plan.</span>
+                    <span>You want 0% commission on dine-in orders, and the option of Knomi Compass browsing insights on the Ecosystem plan.</span>
                   </li>
                 </ul>
               </div>

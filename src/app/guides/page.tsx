@@ -410,10 +410,10 @@ export default function GuidesHubPage() {
               Give Every Table a Host Who Knows Your Menu
             </h2>
             <p className={styles.ctaSubtitle}>
-              KNOMI turns the QR on your table into an illustrated menu themed to your
-              restaurant, with Knomi Host inside it to suggest pairings and remember what
-              guests like. Orders reach your kitchen display and KNOMI works alongside the
-              POS you already use, at 0% commission.
+              KNOMI helps restaurants grow every table. Knomi Host, the host inside your
+              illustrated menu, suggests the right pairing at the right moment and Knomi Sense
+              remembers what every guest likes. Orders reach Knomi Dash, your kitchen display,
+              and KNOMI works alongside the POS you already use, at 0% commission.
             </p>
             <Link href={bookHref} className={styles.ctaBtn}>
               Book a walkthrough

@@ -7,12 +7,12 @@ import styles from "./ComparePetpooja.module.css";
 import { OG_IMAGE, bookHref, pricing } from "@/content/site";
 
 const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}–${ecosystemPlan.priceMax}, per table, per month`;
+const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
 
 export const metadata: Metadata = {
   title: "Petpooja Alternatives for Cafes & Restaurants (2026 Comparison) | KNOMI",
   description:
-    "Comparing Petpooja alternatives for Indian restaurants, cafes and breweries. See how KNOMI works alongside Petpooja: an illustrated QR menu with Knomi Host, guest self-ordering and Knomi Sense menu intelligence.",
+    "Comparing Petpooja alternatives for Indian restaurants, cafes and breweries. See how KNOMI works alongside Petpooja to grow every table: Knomi Host upselling inside an illustrated QR menu, guest self-ordering, and Knomi Compass menu insights, powered by Knomi Sense.",
   alternates: {
     canonical: "/compare/petpooja-alternatives",
   },
@@ -51,13 +51,13 @@ const comparisonMatrix = [
     feature: "Order Entry",
     petpooja: "Servers enter orders at a terminal or captain app",
     dotpe: "Guests enter orders on their phones",
-    knomi: "Guests order themselves; orders land on the kitchen display",
+    knomi: "Guests order themselves; orders land on Knomi Dash, your kitchen display",
   },
   {
     feature: "Browsing & Demand Analytics",
     petpooja: "Sales reports built on billed items",
     dotpe: "Order and sales reporting",
-    knomi: "Knomi Sense: dwell time and dishes viewed but not ordered (Ecosystem plan)",
+    knomi: "Knomi Compass, powered by Knomi Sense: dwell time and dishes viewed but not ordered (Ecosystem plan)",
   },
   {
     feature: "Menu Personalization",
@@ -66,16 +66,16 @@ const comparisonMatrix = [
     knomi: "Illustrated menu themed to your restaurant; Knomi Host remembers preferences",
   },
   {
-    feature: "Table Review Boost",
+    feature: "Guest Feedback & Recovery",
     petpooja: "Feedback add-on module (quoted separately)",
     dotpe: "Depends on setup",
-    knomi: "Knomi Host invites guests to leave a Google review",
+    knomi: "Knomi Pulse checks in before the bill and alerts your manager if something wasn’t right",
   },
   {
     feature: "Pricing Model",
     petpooja: "Annual software licence + add-on module fees",
     dotpe: "Reported per-transaction fees + gateway charges",
-    knomi: `₹${menuPlan.priceMin} / ₹${signaturePlan.priceMin} / ₹${ecosystemPlan.priceMin}–${ecosystemPlan.priceMax} per table, per month; 0% commission`,
+    knomi: `₹${menuPlan.priceMin} / ₹${signaturePlan.priceMin} / ₹${ecosystemPlan.priceMin} per table, per month; 0% commission`,
   },
 ];
 
@@ -97,8 +97,8 @@ const faqs = [
     a: "In a server-led dining room, a lot of each shift goes on reciting specials, writing down orders and walking tickets to the billing desk. With KNOMI, guests order from their phones and the order goes straight to the kitchen display, so your team can spend more of the rush on hospitality. What that is worth depends on your floor; we would rather measure it with you than promise a number.",
   },
   {
-    q: "What makes Knomi Sense different from standard sales reports?",
-    a: "POS reports show what sold. Knomi Sense, part of the Ecosystem plan, shows what almost sold. It measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix (Stars, Puzzles, Workhorses, Dogs), so you can spot dishes guests consider but skip.",
+    q: "What makes Knomi Compass different from standard sales reports?",
+    a: "POS reports show what sold. Knomi Compass, powered by the full Knomi Sense on the Ecosystem plan, shows what almost sold. It measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix (Stars, Puzzles, Workhorses, Dogs), so you can spot dishes guests consider but skip.",
   },
   {
     q: "Does switching from Petpooja mean losing my historical data?",
@@ -147,7 +147,7 @@ const comparisonJsonLd = {
       "@type": "Article",
       "headline": "Petpooja Alternatives for Cafes & Restaurants (2026 Comparison) | KNOMI",
       "description":
-        "Comparing Petpooja alternatives for Indian restaurants, cafes and breweries, and how KNOMI's illustrated QR menu, Knomi Host and Knomi Sense work alongside Petpooja.",
+        "Comparing Petpooja alternatives for Indian restaurants, cafes and breweries, and how KNOMI's Knomi Host, illustrated menu and Knomi Sense work alongside Petpooja to grow every table.",
       "url": "https://www.knomi.in/compare/petpooja-alternatives",
       "mainEntityOfPage": {
         "@type": "WebPage",
@@ -352,13 +352,13 @@ export default function PetpoojaAlternativesPage() {
               <div className={styles.pillarCard}>
                 <div className={styles.pillarTitle}>
                   <span>2. Unlocking Invisible Demand</span>
-                  <span className={styles.pillarTag}>Knomi Sense</span>
+                  <span className={styles.pillarTag}>Knomi Compass</span>
                 </div>
                 <p className={styles.pillarDesc}>
-                  POS software tells you what guests bought; it can&apos;t see what they considered. Knomi Sense,
-                  on the Ecosystem plan, measures how long guests linger on each dish and how often a view
-                  turns into an order. Say 30 guests open your signature dessert in a week and only a handful
-                  order it: Knomi Sense flags it, so you can look at the description, portion or price.
+                  POS software tells you what guests bought; it can&apos;t see what they considered. Knomi Compass,
+                  powered by Knomi Sense on the Ecosystem plan, measures how long guests linger on each dish and how
+                  often a view turns into an order. Say 30 guests open your signature dessert in a week and only a
+                  handful order it: Compass flags it, so you can look at the description, portion or price.
                 </p>
               </div>
 
@@ -377,14 +377,14 @@ export default function PetpoojaAlternativesPage() {
 
               <div className={styles.pillarCard}>
                 <div className={styles.pillarTitle}>
-                  <span>4. A Gentle Google Review Prompt</span>
-                  <span className={styles.pillarTag}>Reviews</span>
+                  <span>4. A Check-In Before the Bill</span>
+                  <span className={styles.pillarTag}>Knomi Pulse</span>
                 </div>
                 <p className={styles.pillarDesc}>
-                  Reviews tend to come from the guests who remember to leave them. Near the end of the meal,
-                  Knomi Host invites guests to leave a Google review while the experience is still fresh, and
-                  because guests can call a server from the menu, small problems can be put right at the table
-                  before the bill arrives.
+                  Unhappy guests rarely complain at the table; you find out later, or never. Before the bill,
+                  Knomi Pulse asks how the meal went. If something wasn&apos;t right, your manager hears about it
+                  while the guest is still at the table, and because guests can call a server from the menu, small
+                  problems can be put right before they leave.
                 </p>
               </div>
             </div>
@@ -440,7 +440,7 @@ export default function PetpoojaAlternativesPage() {
                   </li>
                   <li className={styles.decisionItem}>
                     <span className={styles.checkMark}>✓</span>
-                    <span>You want to see which dishes guests consider but skip, with Knomi Sense on the Ecosystem plan.</span>
+                    <span>You want to see which dishes guests consider but skip, with Knomi Compass on the Ecosystem plan.</span>
                   </li>
                   <li className={styles.decisionItem}>
                     <span className={styles.checkMark}>✓</span>

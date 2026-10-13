@@ -1,101 +1,145 @@
 "use client";
 
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type MouseEvent } from "react";
+import Image from "next/image";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useMotionValueEvent,
+  useScroll,
+  useTransform,
+  type MotionValue,
+  type Variants,
+} from "framer-motion";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import HostArt from "@/components/ui/HostArt";
+import PhoneFrame from "@/components/ui/PhoneFrame";
 import SectionHead from "@/components/ui/SectionHead";
-import AnimatedNumber from "@/components/ui/AnimatedNumber";
 import { EASE_OUT, Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
-import { Plus } from "@/components/ui/Icons";
-import { hero, hostChapter } from "@/content/site";
+import { hero, hostChapter, hostScreens } from "@/content/site";
 import styles from "./HostChapter.module.css";
 
-// copy: illustrative UI labels inside the mock order sheet (not claims)
-const TABLE_LABEL = "Table 7";
-const SHEET_TITLE = "My order";
-const TOTAL_LABEL = "Total";
-const DECLINE_LABEL = "No thanks";
-// copy: the seal states the goal, never a result (Brain §5). It always sits beside goal + goalNote.
-const SEAL_VALUE = "+25%";
-const SEAL_RING = "Our goal · average order";
-
-const { demo } = hostChapter;
-const HOST_NAME = hero.hostBubble.name;
-
-const inr = new Intl.NumberFormat("en-IN");
-const rupees = (n: number) => `₹${inr.format(n)}`;
-const BASE_TOTAL = demo.item.price;
-const UPSOLD_TOTAL = demo.item.price + demo.suggestion.price;
-
 /*
- * The upsell moment, as a little play in five beats:
- *   idle -> typing (host is "writing") -> suggesting -> added -> settled
- * plus "declined" when the guest says no. Times are ms from the first beat.
+ * Chapter II — Knomi Host, the character.
+ * 1. He leans on the sill of a lamp-lit arch, chin on his hand, and says hello
+ *    in his own handwriting.
+ * 2. "Host at work": the six real KNOMI menu screens he lives in. On desktop the
+ *    reel is pinned and glides sideways as the reader scrolls; elsewhere (and with
+ *    reduced motion) it is a swipeable, snapping row.
+ * 3. What he does, in three quiet columns.
  */
-type Phase = "idle" | "typing" | "suggesting" | "added" | "settled" | "declined";
 
-const BEAT = { suggest: 700, tap: 1850, accept: 2300, settle: 3100 };
-const AUTOPLAY_DELAY = 900;
-const REPLAY_DELAY = 350;
-const SETTLE_AFTER_ACCEPT = 800;
+const { dressed, behaviours } = hostChapter;
+const HOST_NAME = hero.hostBubble.name;
+const SCREENS = hostScreens;
+const TOTAL = SCREENS.length;
+const ROMAN = ["i", "ii", "iii", "iv", "v", "vi"];
+const pad = (n: number) => String(n).padStart(2, "0");
 
-/* Spring-like overshoot for small pops and the seal landing. */
-const EASE_POP: [number, number, number, number] = [0.34, 1.35, 0.64, 1];
+/* His greeting, as on the menu's first screen: "Hey there!" set large, the question below. */
+const GREETING = (SCREENS.find((s) => s.id === "greet") ?? SCREENS[0]).line;
+const [HELLO, ASK] = (() => {
+  const m = GREETING.match(/^(.+?[!?.])\s+(.+)$/);
+  return m ? [m[1], m[2]] : [GREETING, ""];
+})();
+const HELLO_WORDS = HELLO.split(" ");
+const ASK_WORDS = ASK ? ASK.split(" ") : [];
 
-/* false on the server and during hydration, true afterwards. Lets reduced-motion
-   users get the settled state without a hydration mismatch. */
-const noopSubscribe = () => () => {};
-function useHydrated() {
-  return useSyncExternalStore(
-    noopSubscribe,
-    () => true,
-    () => false,
-  );
+const SKYLINE = "/images/illustrations/skyline-cafe.webp";
+const EASE_POP: [number, number, number, number] = [0.34, 1.45, 0.64, 1];
+
+/* ---------- Media preferences (hydration-safe: the server value renders first) ---------- */
+
+/** Desktop and tall enough for the pinned reel. Keep in sync with the CSS media query. */
+const PIN_QUERY = "(min-width: 1024px) and (min-height: 680px) and (prefers-reduced-motion: no-preference)";
+const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribeTo(query: string) {
+  return (onChange: () => void) => {
+    const mq = window.matchMedia(query);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  };
+}
+const subscribePin = subscribeTo(PIN_QUERY);
+const subscribeReduced = subscribeTo(REDUCED_QUERY);
+const getServerFalse = () => false;
+
+function usePinned() {
+  return useSyncExternalStore(subscribePin, () => window.matchMedia(PIN_QUERY).matches, getServerFalse);
 }
 
-/* ---------- Icons (1.5px line, currentColor) ---------- */
+function useReduced() {
+  return useSyncExternalStore(subscribeReduced, () => window.matchMedia(REDUCED_QUERY).matches, getServerFalse);
+}
 
-function PairingIcon() {
+/* ---------- Line drawings (decorative) ---------- */
+
+/* A brass street lantern, like the one hanging over the KNOMI menu. */
+function Lantern() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="9" cy="12" r="5.75" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="15" cy="12" r="5.75" stroke="currentColor" strokeWidth="1.5" />
+    <svg viewBox="0 0 40 104" fill="none" aria-hidden="true">
+      <path d="M20 0v40" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="20" cy="42.6" r="2.6" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M11 54.5 20 45.4l9 9.1Z" fill="currentColor" />
+      <path d="M9.5 54.5h21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M12.6 56.2h14.8l-2.2 23.4h-10.4Z" className={styles.lanternGlass} />
+      <path
+        d="M12.6 56.2h14.8l-2.2 23.4h-10.4ZM20 56.2v23.4"
+        stroke="currentColor"
+        strokeWidth="1.1"
+        strokeLinejoin="round"
+      />
+      <path d="M13.4 79.6h13.2l-2 4.6h-9.2Z" fill="currentColor" />
+      <circle cx="20" cy="87.2" r="1.8" fill="currentColor" />
     </svg>
   );
 }
 
-function MemoryIcon() {
+/* The little "excited" strokes drawn around him in the product. */
+function Ticks() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 30 30" fill="none" aria-hidden="true">
       <path
-        d="M7.25 3.75h9.5c.55 0 1 .45 1 1v15.1L12 15.9l-5.75 3.95V4.75c0-.55.45-1 1-1Z"
+        d="M21.5 10.6 26.8 5.6M18.4 7.8 19.6 1.6M23.6 15.2l5.6-1.2"
         stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
       />
     </svg>
   );
 }
 
-function ReviewIcon() {
+function Heart() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 24 22" aria-hidden="true">
       <path
-        d="m12 3.6 2.55 5.2 5.7.83-4.13 4.02.98 5.68L12 16.65l-5.1 2.68.98-5.68L3.75 9.63l5.7-.83L12 3.6Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
+        d="M12 20.4S2.2 14.6 2.2 7.9C2.2 4.7 4.6 2.4 7.4 2.4c2 0 3.6 1.1 4.6 2.8 1-1.7 2.6-2.8 4.6-2.8 2.8 0 5.2 2.3 5.2 5.5 0 6.7-9.8 12.5-9.8 12.5Z"
+        fill="currentColor"
       />
     </svg>
   );
 }
 
-function ReplayIcon() {
+/* Bubble tail: filled in paper so it covers the bubble's edge, outlined on its two curves only. */
+const TAIL_PATH = "M7 0C7 8 5.4 14.6 1.4 20.4 9.4 17.8 15.6 10.6 19 0";
+
+function Tail() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <svg className={styles.tail} viewBox="0 0 20 21" aria-hidden="true">
+      <path d={`${TAIL_PATH}Z`} className={styles.tailFill} />
+      <path d={TAIL_PATH} className={styles.tailLine} />
+    </svg>
+  );
+}
+
+function Arrow() {
+  return (
+    <svg viewBox="0 0 24 12" fill="none" aria-hidden="true">
       <path
-        d="M12.6 8a4.6 4.6 0 1 1-1.35-3.25M11.4 2.1v2.8H8.6"
+        d="M1 6h21M17 1.5 22 6l-5 4.5"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="1.4"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -103,399 +147,413 @@ function ReplayIcon() {
   );
 }
 
-const BEHAVIOUR_ICONS = [PairingIcon, MemoryIcon, ReviewIcon];
+/* ---------- 1. Host in his niche ---------- */
 
-/* ---------- The seal ---------- */
+function Niche() {
+  const reduce = useReduced();
+  const ref = useRef<HTMLDivElement>(null);
+  // Idle motion (breathing, the lamp's sway) only runs while he is on screen.
+  const awake = useInView(ref, { margin: "0px 0px -8% 0px" });
 
-/* A gently scalloped rosette, like a brass bottle seal. Built once. */
-const SEAL_PATH = (() => {
-  const n = 30;
-  const cx = 60;
-  const inner = 55.5;
-  const outer = 60.5;
-  const pt = (r: number, a: number) =>
-    `${(cx + r * Math.cos(a)).toFixed(2)} ${(cx + r * Math.sin(a)).toFixed(2)}`;
-  let d = "";
-  for (let i = 0; i < n; i++) {
-    const a0 = (i / n) * Math.PI * 2;
-    const a1 = ((i + 0.5) / n) * Math.PI * 2;
-    const a2 = ((i + 1) / n) * Math.PI * 2;
-    if (i === 0) d += `M${pt(inner, a0)}`;
-    d += ` Q${pt(outer, a1)} ${pt(inner, a2)}`;
-  }
-  return `${d}Z`;
-})();
+  const tr = (duration: number, delay = 0, ease: [number, number, number, number] = EASE_OUT) =>
+    reduce ? { duration: 0 } : { duration, delay, ease };
 
-const RING_R = 44.5;
-const RING_LENGTH = Math.round(2 * Math.PI * RING_R);
-const RING_TEXT = `${SEAL_RING} · `.toUpperCase();
+  const v = {
+    alcove: { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: tr(1.15) } },
+    glow: { hidden: { opacity: 0 }, show: { opacity: 1, transition: tr(1.8, 0.35) } },
+    skyline: { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: tr(1.5, 0.4) } },
+    arch: {
+      hidden: { clipPath: "inset(100% 0% 0% 0%)" },
+      show: { clipPath: "inset(0% 0% 0% 0%)", transition: tr(1.5, 0.3) },
+    },
+    lamp: { hidden: { opacity: 0, y: -18 }, show: { opacity: 1, y: 0, transition: tr(1.3, 0.5) } },
+    rise: { hidden: { y: "62%" }, show: { y: "0%", transition: tr(1.3, 0.6) } },
+    contact: { hidden: { opacity: 0, scaleX: 0.6 }, show: { opacity: 1, scaleX: 1, transition: tr(1.1, 0.95) } },
+    plaque: { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: tr(1, 0.9) } },
+    ticks: {
+      hidden: { opacity: 0, scale: 0.4, rotate: -14 },
+      show: { opacity: 1, scale: 1, rotate: 0, transition: tr(0.8, 1.55, EASE_POP) },
+    },
+    heart: { hidden: { opacity: 0, scale: 0.3 }, show: { opacity: 1, scale: 1, transition: tr(0.8, 1.75, EASE_POP) } },
+    bubble: {
+      hidden: { opacity: 0, scale: 0.84, y: 10 },
+      show: { opacity: 1, scale: 1, y: 0, transition: tr(0.95, 1.3, EASE_POP) },
+    },
+  } satisfies Record<string, Variants>;
 
-function Seal() {
+  // His words arrive one by one, as if he were saying them.
+  const word: Variants = {
+    hidden: { opacity: 0, y: 7 },
+    show: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: reduce ? { duration: 0 } : { duration: 0.7, delay: 1.55 + i * 0.075, ease: EASE_OUT },
+    }),
+  };
+
   return (
     <motion.div
-      className={styles.seal}
-      aria-hidden="true"
-      initial={{ opacity: 0, scale: 1.25, rotate: -15 }}
-      animate={{ opacity: 1, scale: 1, rotate: -8 }}
-      exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.25, ease: EASE_OUT } }}
-      transition={{
-        scale: { duration: 0.55, ease: EASE_POP },
-        rotate: { duration: 0.6, ease: EASE_OUT },
-        opacity: { duration: 0.18 },
-      }}
+      ref={ref}
+      className={styles.niche}
+      data-awake={awake}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.35 }}
     >
-      <motion.span
-        className={styles.sealPulse}
-        initial={{ opacity: 0.6, scale: 1 }}
-        animate={{ opacity: 0, scale: 1.55 }}
-        transition={{ duration: 0.9, delay: 0.3, ease: EASE_OUT }}
-      />
-      <svg className={styles.sealSvg} viewBox="0 0 120 120">
-        <defs>
-          <linearGradient id="knomi-seal-fill" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" className={styles.sealStopA} />
-            <stop offset="1" className={styles.sealStopB} />
-          </linearGradient>
-          <path id="knomi-seal-arc" d={`M60 60 m-${RING_R} 0 a${RING_R} ${RING_R} 0 1 1 ${RING_R * 2} 0 a${RING_R} ${RING_R} 0 1 1 -${RING_R * 2} 0`} />
-        </defs>
-        <path d={SEAL_PATH} fill="url(#knomi-seal-fill)" />
-        <circle cx="60" cy="60" r="52" className={styles.sealRing} />
-        <circle cx="60" cy="60" r="34" className={styles.sealDash} />
-        <text className={styles.sealText}>
-          <textPath href="#knomi-seal-arc" textLength={RING_LENGTH} lengthAdjust="spacing">
-            {RING_TEXT}
-          </textPath>
-        </text>
-      </svg>
-      <span className={styles.sealValue}>{SEAL_VALUE}</span>
+      <span className={`ornament ${styles.starA}`} aria-hidden="true" />
+      <span className={`ornament ${styles.starB}`} aria-hidden="true" />
+
+      <div className={styles.stage}>
+        {/* The alcove: back wall, lamplight, a sketch of the town, a brass hairline arch. */}
+        <motion.div className={styles.alcove} variants={v.alcove} aria-hidden="true">
+          <motion.span className={styles.glow} variants={v.glow} />
+          <motion.span className={styles.skyline} variants={v.skyline}>
+            <Image src={SKYLINE} alt="" fill sizes="440px" className={styles.skylineImg} />
+          </motion.span>
+          <span className={styles.shade} />
+          <motion.span className={styles.innerArch} variants={v.arch} />
+          <motion.span className={styles.lamp} variants={v.lamp}>
+            <span className={styles.lampSway}>
+              <Lantern />
+            </span>
+          </motion.span>
+        </motion.div>
+
+        {/* The sill he leans on (drawn), with his name plate on its face. */}
+        <div className={styles.sill} aria-hidden="true">
+          <span className={styles.sillTop} />
+          <span className={styles.sillFront} />
+        </div>
+        <motion.p className={styles.plaque} variants={v.plaque} aria-hidden="true">
+          <span className={styles.screw} />
+          <span className={styles.plaqueName}>{HOST_NAME}</span>
+          <span className={styles.screw} />
+        </motion.p>
+
+        {/* Host, rising from behind the sill to rest his arms on it. */}
+        <div className={styles.figureClip}>
+          <motion.span className={styles.contact} variants={v.contact} aria-hidden="true" />
+          <motion.div className={styles.figure} variants={v.rise}>
+            <span className={styles.breathe}>
+              <HostArt pose="think" size="100%" className={styles.hostArt} />
+            </span>
+          </motion.div>
+        </div>
+
+        <motion.span className={styles.ticks} variants={v.ticks} aria-hidden="true">
+          <Ticks />
+        </motion.span>
+        <motion.span className={styles.heartSpot} variants={v.heart} aria-hidden="true">
+          <span className={styles.heart}>
+            <Heart />
+          </span>
+        </motion.span>
+
+        {/* What he says, in his handwriting. */}
+        <div className={styles.bubbleSpot}>
+          <motion.div className={styles.bubble} variants={v.bubble}>
+            <Tail />
+            <p className={styles.say}>
+              <span className="sr-only">{GREETING}</span>
+              <span className={styles.sayHello} aria-hidden="true">
+                {HELLO_WORDS.map((w, i) => (
+                  <span key={`h${i}`}>
+                    <motion.span className={styles.word} variants={word} custom={i}>
+                      {w}
+                    </motion.span>{" "}
+                  </span>
+                ))}
+              </span>
+              {ASK_WORDS.length > 0 && (
+                <span className={styles.sayAsk} aria-hidden="true">
+                  {ASK_WORDS.map((w, i) => (
+                    <span key={`a${i}`}>
+                      <motion.span className={styles.word} variants={word} custom={HELLO_WORDS.length + i + 1}>
+                        {w}
+                      </motion.span>{" "}
+                    </span>
+                  ))}
+                </span>
+              )}
+            </p>
+          </motion.div>
+        </div>
+      </div>
     </motion.div>
   );
 }
 
-/* ---------- The interactive upsell demo ---------- */
+/* ---------- 2. Host at work: the reel of real menu screens ---------- */
 
-function UpsellDemo() {
-  const sheetRef = useRef<HTMLDivElement>(null);
-  const replayRef = useRef<HTMLButtonElement>(null);
-  const timers = useRef<number[]>([]);
-  const focusReplayNext = useRef(false);
+type Geo = {
+  /** True while the pinned, scroll-driven reel is active. */
+  on: boolean;
+  /** How far the track travels sideways (px). */
+  dist: number;
+  /** Width of the visible window (px). */
+  vw: number;
+  /** Each slide's centre: along the track (pinned) or the rail's scroll content (swipe). */
+  centers: number[];
+};
 
-  const [phase, setPhase] = useState<Phase>("idle");
-  const [tapping, setTapping] = useState(false);
-  const [touched, setTouched] = useState(false);
-  // Bumped on replay so the total resets to ₹200 instead of rolling back down.
-  const [round, setRound] = useState(0);
+const NO_GEO: Geo = { on: false, dist: 0, vw: 0, centers: [] };
 
-  const hydrated = useHydrated();
-  const prefersReduced = useReducedMotion();
-  const reduce = hydrated && prefersReduced === true;
-  const inView = useInView(sheetRef, { once: true, amount: 0.5 });
+/**
+ * The reel's focus, along the track: on the first phone when the pin begins and on
+ * the last when it ends, so each phone takes its turn standing upright in the light.
+ */
+function focusAt(g: Geo, shift: number) {
+  const first = g.centers[0] ?? 0;
+  const last = g.centers[g.centers.length - 1] ?? first;
+  const p = g.dist > 0 ? Math.min(1, Math.max(0, -shift / g.dist)) : 0;
+  return first + p * (last - first);
+}
 
-  // Reduced motion: no autoplay. Show the finished moment until the guest asks to replay it.
-  const view: Phase = reduce && !touched ? "settled" : phase;
+const slideReveal: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 1.1, ease: EASE_OUT } },
+};
 
-  const clearTimers = useCallback(() => {
-    timers.current.forEach((id) => window.clearTimeout(id));
-    timers.current = [];
-  }, []);
-
-  const later = useCallback((ms: number, fn: () => void) => {
-    timers.current.push(window.setTimeout(fn, ms));
-  }, []);
-
-  const schedule = useCallback(
-    (delay: number) => {
-      later(delay, () => setPhase("typing"));
-      later(delay + BEAT.suggest, () => setPhase("suggesting"));
-      later(delay + BEAT.tap, () => setTapping(true));
-      later(delay + BEAT.accept, () => {
-        const active = document.activeElement;
-        if (active && active !== sheetRef.current && sheetRef.current?.contains(active)) focusReplayNext.current = true;
-        setTapping(false);
-        setPhase("added");
-      });
-      later(delay + BEAT.settle, () => setPhase("settled"));
-    },
-    [later],
-  );
-
-  // First time the sheet is properly in view, play the moment once.
-  useEffect(() => {
-    if (!inView || reduce) return;
-    schedule(AUTOPLAY_DELAY);
-    return clearTimers;
-  }, [inView, reduce, schedule, clearTimers]);
-
-  // Never leave a timer running after unmount.
-  useEffect(() => clearTimers, [clearTimers]);
-
-  // Keyboard users who answered the host land on Replay, not on <body>.
-  useEffect(() => {
-    if ((view === "settled" || view === "declined") && focusReplayNext.current) {
-      focusReplayNext.current = false;
-      replayRef.current?.focus({ preventScroll: true });
-    }
-  }, [view]);
-
-  const accept = (e: MouseEvent<HTMLButtonElement>) => {
-    clearTimers();
-    setTapping(false);
-    if (e.detail === 0) focusReplayNext.current = true;
-    if (reduce) {
-      setPhase("settled");
-      return;
-    }
-    setPhase("added");
-    later(SETTLE_AFTER_ACCEPT, () => setPhase("settled"));
-  };
-
-  // Keyboard and switch users get as long as they need: once focus reaches the
-  // host's buttons the scripted tap is cancelled and the question waits.
-  const takeOver = () => {
-    if (phase !== "suggesting") return;
-    clearTimers();
-    setTapping(false);
-  };
-
-  const decline = (e: MouseEvent<HTMLButtonElement>) => {
-    clearTimers();
-    setTapping(false);
-    if (e.detail === 0) focusReplayNext.current = true;
-    setPhase("declined");
-  };
-
-  const replay = (e: MouseEvent<HTMLButtonElement>) => {
-    clearTimers();
-    setTapping(false);
-    setTouched(true);
-    setRound((r) => r + 1);
-    if (e.detail === 0) sheetRef.current?.focus({ preventScroll: true });
-    if (reduce) {
-      setPhase("suggesting");
-      return;
-    }
-    setPhase("idle");
-    if (e.detail === 0) {
-      later(REPLAY_DELAY, () => setPhase("typing"));
-      later(REPLAY_DELAY + BEAT.suggest, () => setPhase("suggesting"));
-      return;
-    }
-    schedule(REPLAY_DELAY);
-  };
-
-  const showHost = view === "typing" || view === "suggesting";
-  const ready = view === "suggesting";
-  const upsold = view === "added" || view === "settled";
-  const total = upsold ? UPSOLD_TOTAL : BASE_TOTAL;
-  const canReplay = view === "settled" || view === "declined";
+function Slide({
+  item,
+  index,
+  geo,
+  x,
+  setRef,
+}: {
+  item: (typeof SCREENS)[number];
+  index: number;
+  geo: MotionValue<Geo>;
+  x: MotionValue<number>;
+  setRef: (el: HTMLLIElement | null) => void;
+}) {
+  // -1 … 1: where this phone sits relative to the reel's focus.
+  // The reel runs along a shallow arc: phones settle upright at the focus and
+  // dip and lean a little away from it. Flat (0) outside the pinned reel.
+  // (Every input is read on each run: the function form only tracks values it reads.)
+  const n = useTransform(() => {
+    const g = geo.get();
+    const shift = x.get();
+    if (!g.on || !g.vw) return 0;
+    const d = (g.centers[index] ?? 0) - focusAt(g, shift);
+    return Math.max(-1, Math.min(1, d / (g.vw * 0.62)));
+  });
+  const rotate = useTransform(n, (t) => t * 2.6);
+  const y = useTransform(n, (t) => t * t * 26);
+  const scale = useTransform(n, (t) => 1 - Math.abs(t) * 0.05);
 
   return (
-    <div className={styles.demo}>
-      <Reveal y={36} amount={0.3} delay={0.1}>
-        <div className={styles.sheetWrap}>
-          <span className={styles.arch} aria-hidden="true">
-            <span className={`ornament ${styles.archStar}`} />
-          </span>
-          <span className={styles.glow} aria-hidden="true" />
-          <span className={styles.backSheet} aria-hidden="true" />
-
-          <div ref={sheetRef} className={styles.sheet} role="group" aria-label={demo.label} tabIndex={-1}>
-            <div className={styles.sheetHead}>
-              <span>{demo.label}</span>
-              <span className={styles.table}>{TABLE_LABEL}</span>
-            </div>
-            <div className={styles.rule} aria-hidden="true" />
-
-            <p className={styles.sheetTitle}>{SHEET_TITLE}</p>
-
-            <ul className={styles.lines}>
-              <li>
-                <div className={styles.line}>
-                  <span className={styles.lineName}>{demo.item.name}</span>
-                  <span className="leader" aria-hidden="true" />
-                  <span className={styles.linePrice}>{rupees(demo.item.price)}</span>
-                </div>
-              </li>
-              <AnimatePresence initial={false}>
-                {upsold && (
-                  <motion.li
-                    key="suggestion"
-                    className={styles.lineClip}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{
-                      height: { duration: 0.6, ease: EASE_OUT },
-                      opacity: { duration: 0.4, delay: 0.08 },
-                    }}
-                  >
-                    <motion.div
-                      className={styles.line}
-                      initial={{ y: 16 }}
-                      animate={{ y: 0 }}
-                      exit={{ y: 8 }}
-                      transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.06 }}
-                    >
-                      <motion.span
-                        className={styles.lineWash}
-                        aria-hidden="true"
-                        initial={{ scaleX: 0, opacity: 1 }}
-                        animate={{ scaleX: 1, opacity: 0 }}
-                        transition={{
-                          scaleX: { duration: 0.75, delay: 0.15, ease: EASE_OUT },
-                          opacity: { duration: 0.9, delay: 1.1, ease: "easeOut" },
-                        }}
-                      />
-                      <span className={styles.lineName}>
-                        {demo.suggestion.name}
-                        <span className={styles.hostMark} aria-hidden="true">
-                          K
-                        </span>
-                      </span>
-                      <span className="leader" aria-hidden="true" />
-                      <span className={styles.linePrice}>{rupees(demo.suggestion.price)}</span>
-                    </motion.div>
-                  </motion.li>
-                )}
-              </AnimatePresence>
-            </ul>
-
-            <AnimatePresence initial={false}>
-              {showHost && (
-                <motion.div
-                  key="host"
-                  className={styles.hostClip}
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{
-                    height: { duration: 0.55, ease: EASE_OUT },
-                    opacity: { duration: 0.3 },
-                  }}
-                >
-                  <motion.div
-                    className={styles.host}
-                    initial={{ y: 12, scale: 0.96 }}
-                    animate={{ y: 0, scale: 1 }}
-                    exit={{ y: -6, scale: 0.98 }}
-                    transition={{ duration: 0.6, ease: EASE_POP }}
-                  >
-                    <motion.span
-                      className={styles.avatar}
-                      aria-hidden="true"
-                      initial={{ scale: 0.6 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.05, ease: EASE_POP }}
-                    >
-                      K
-                    </motion.span>
-                    <div className={styles.hostBody}>
-                      <span className={styles.hostName}>{HOST_NAME}</span>
-                      <div className={styles.bubble} data-ready={ready}>
-                        <span className={styles.dots} aria-hidden="true">
-                          <span />
-                          <span />
-                          <span />
-                        </span>
-                        <p className={styles.bubbleText}>{demo.bubble}</p>
-                      </div>
-                      <div className={styles.actions} data-ready={ready} onFocus={takeOver}>
-                        <button
-                          type="button"
-                          className={styles.accept}
-                          data-pressing={tapping}
-                          onClick={accept}
-                        >
-                          <Plus size={14} className={styles.acceptIcon} />
-                          <span>
-                            {demo.accept}
-                            <span className={styles.acceptPrice}>
-                              {" · "}
-                              {rupees(demo.suggestion.price)}
-                            </span>
-                          </span>
-                          <AnimatePresence>
-                            {tapping && (
-                              <motion.span
-                                key="ripple"
-                                className={styles.ripple}
-                                aria-hidden="true"
-                                initial={{ opacity: 0.85, scale: 1 }}
-                                animate={{ opacity: 0, scale: 1.4 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.7, ease: EASE_OUT }}
-                              />
-                            )}
-                          </AnimatePresence>
-                          <AnimatePresence>
-                            {tapping && (
-                              <motion.span
-                                key="tap"
-                                className={styles.tapDot}
-                                aria-hidden="true"
-                                initial={{ opacity: 0, scale: 0.4 }}
-                                animate={{ opacity: [0, 0.55, 0], scale: [0.4, 1, 1.15] }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.5, ease: EASE_OUT }}
-                              />
-                            )}
-                          </AnimatePresence>
-                        </button>
-                        <button type="button" className={styles.decline} onClick={decline}>
-                          {DECLINE_LABEL}
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className={styles.total} aria-hidden="true">
-              <span className={styles.totalLabel}>{TOTAL_LABEL}</span>
-              <span className="leader" />
-              <AnimatedNumber key={round} value={total} prefix="₹" duration={0.9} className={styles.totalValue} />
-            </div>
-            <span className="sr-only" aria-live="polite" aria-atomic="true">
-              {ready ? `${HOST_NAME}: ${demo.bubble}` : `${TOTAL_LABEL} ${rupees(total)}`}
+    <motion.li ref={setRef} className={styles.slide} style={{ rotate, y, scale }}>
+      <motion.figure className={styles.shot} variants={slideReveal}>
+        <PhoneFrame
+          src={item.src}
+          alt={item.alt}
+          sizes="(max-width: 1023px) 64vw, 300px"
+          className={styles.phone}
+        />
+        <figcaption className={styles.caption}>
+          <span className={styles.verb}>
+            <span className={styles.verbNum} aria-hidden="true">
+              {pad(index + 1)}
             </span>
-          </div>
+            {item.verb}
+          </span>{" "}
+          <span className={styles.line}>“{item.line}”</span>
+        </figcaption>
+      </motion.figure>
+    </motion.li>
+  );
+}
 
-          <AnimatePresence>{view === "settled" && <Seal key="seal" />}</AnimatePresence>
-        </div>
-      </Reveal>
+function HostAtWork() {
+  const pinned = usePinned();
+  const reduce = useReduced();
 
-      <div className={styles.controls}>
-        <AnimatePresence>
-          {canReplay && (
-            <motion.div
-              key="replay"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 4, transition: { duration: 0.2 } }}
-              transition={{ duration: 0.5, delay: view === "declined" ? 0.35 : 0.55, ease: EASE_OUT }}
+  const workRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLOListElement>(null);
+  const slideRefs = useRef<(HTMLLIElement | null)[]>([]);
+
+  const { scrollYProgress } = useScroll({ target: workRef, offset: ["start start", "end end"] });
+  const geo = useMotionValue<Geo>(NO_GEO);
+  const x = useTransform(() => {
+    const g = geo.get();
+    const p = scrollYProgress.get();
+    return g.on ? -p * g.dist : 0;
+  });
+
+  const [active, setActive] = useState(0);
+
+  /** The slide whose centre is nearest `pos` (in the same coordinates as `centers`). */
+  const pick = useCallback((pos: number) => {
+    const { centers } = geo.get();
+    if (!centers.length) return;
+    let best = 0;
+    let bestD = Infinity;
+    centers.forEach((c, i) => {
+      const d = Math.abs(c - pos);
+      if (d < bestD) {
+        bestD = d;
+        best = i;
+      }
+    });
+    setActive(best);
+  }, [geo]);
+
+  const syncPinned = useCallback(() => {
+    const g = geo.get();
+    if (g.on) pick(focusAt(g, x.get()));
+  }, [geo, pick, x]);
+
+  const syncRail = useCallback(() => {
+    const rail = railRef.current;
+    const { on, centers } = geo.get();
+    if (!rail || on || !centers.length) return;
+    // At rest, slide i sits where slide 0 sits at scroll 0 (centred on phones, at the
+    // start edge on wider screens), so the reference point is slide 0's resting place.
+    pick(rail.scrollLeft + centers[0]);
+  }, [geo, pick]);
+
+  useMotionValueEvent(x, "change", syncPinned);
+
+  // Measure the reel: travel distance, window width and where each phone sits.
+  useEffect(() => {
+    const vp = viewportRef.current;
+    const track = trackRef.current;
+    const rail = railRef.current;
+    if (!vp || !track || !rail) return;
+
+    let frame = 0;
+    const measure = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const trackRect = track.getBoundingClientRect();
+        const railRect = rail.getBoundingClientRect();
+        const centers = slideRefs.current.map((el) => {
+          if (!el) return 0;
+          const r = el.getBoundingClientRect();
+          const mid = (r.left + r.right) / 2;
+          return pinned ? mid - trackRect.left : mid - railRect.left + rail.scrollLeft;
+        });
+        geo.set({
+          on: pinned,
+          dist: pinned ? Math.max(0, track.offsetWidth - vp.clientWidth) : 0,
+          vw: pinned ? vp.clientWidth : rail.clientWidth,
+          centers,
+        });
+        if (pinned) syncPinned();
+        else syncRail();
+      });
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(vp);
+    ro.observe(track);
+    return () => {
+      cancelAnimationFrame(frame);
+      ro.disconnect();
+    };
+  }, [pinned, geo, syncPinned, syncRail]);
+
+  // Swipe mode: follow the rail's own scroll.
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || pinned) return;
+    let frame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(syncRail);
+    };
+    rail.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      rail.removeEventListener("scroll", onScroll);
+    };
+  }, [pinned, syncRail]);
+
+  const goTo = (i: number) => {
+    const rail = railRef.current;
+    const { centers } = geo.get();
+    const c = centers[i];
+    if (!rail || c === undefined) return;
+    rail.scrollTo({ left: c - centers[0], behavior: reduce ? "auto" : "smooth" });
+  };
+
+  return (
+    <div ref={workRef} className={styles.work}>
+      <div className={styles.sticky}>
+        <div ref={viewportRef} className={styles.viewport}>
+          <motion.div ref={trackRef} className={styles.track} style={{ x }}>
+            <Reveal className={styles.workHead} amount={0.4}>
+              <div className={styles.peekLedge}>
+                <span className={styles.peek}>
+                  <HostArt pose="peek" size="100%" decorative />
+                </span>
+              </div>
+              <p className={styles.workEyebrow}>In the KNOMI menu</p>
+              <h3 className={styles.workTitle}>
+                Host <em>at work</em>
+              </h3>
+              <p className={styles.workHint} aria-hidden="true">
+                <span className={styles.hintPinned}>Keep scrolling</span>
+                <span className={styles.hintRail}>Swipe through</span>
+                <Arrow />
+              </p>
+            </Reveal>
+
+            <motion.ol
+              ref={railRef}
+              className={styles.rail}
+              aria-label="Knomi Host in six real KNOMI menu screens"
+              // Focusable only when it scrolls itself (swipe mode), so keyboards can move it.
+              tabIndex={pinned ? undefined : 0}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.11, delayChildren: 0.1 } } }}
             >
-              <button
-                ref={replayRef}
-                type="button"
-                className={`btn btn--ghost btn--sm ${styles.replay}`}
-                onClick={replay}
-              >
-                <ReplayIcon />
-                {demo.replay}
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+              {SCREENS.map((item, i) => (
+                <Slide
+                  key={item.id}
+                  item={item}
+                  index={i}
+                  geo={geo}
+                  x={x}
+                  setRef={(el) => {
+                    slideRefs.current[i] = el;
+                  }}
+                />
+              ))}
+            </motion.ol>
+          </motion.div>
+        </div>
 
-      <Reveal className={styles.goal} delay={0.15} amount={0.4} y={20}>
-        <p className={styles.goalText}>{hostChapter.goal}</p>
-        <p className={styles.goalNote}>
-          <span className="ornament" aria-hidden="true" />
-          {hostChapter.goalNote}
-        </p>
-      </Reveal>
+        {/* Pinned reel: a thin progress line. */}
+        <div className={`wrap ${styles.meter}`} aria-hidden="true">
+          <span className={styles.count}>
+            <span className={styles.countNow}>{pad(active + 1)}</span> / {pad(TOTAL)}
+          </span>
+          <span className={styles.bar}>
+            <motion.span className={styles.fill} style={{ scaleX: scrollYProgress }} />
+          </span>
+        </div>
+
+        {/* Swipe mode: dots. */}
+        <div className={styles.dots}>
+          {SCREENS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              className={styles.dot}
+              aria-label={`Screen ${i + 1} of ${TOTAL}: ${s.verb}`}
+              aria-current={i === active ? "true" : undefined}
+              onClick={() => goTo(i)}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -504,9 +562,9 @@ function UpsellDemo() {
 
 export default function HostChapter() {
   return (
-    <section id="host" className={styles.section}>
-      <div className={`theme-dark ${styles.panel}`}>
-        <div className={`wrap ${styles.grid}`}>
+    <section id="host" className={`section section--alt ${styles.section}`}>
+      <div className="wrap">
+        <div className={styles.intro}>
           <div className={styles.head}>
             <SectionHead
               numeral={hostChapter.numeral}
@@ -514,30 +572,36 @@ export default function HostChapter() {
               titleLead={hostChapter.titleLead}
               titleAccent={hostChapter.titleAccent}
               lead={hostChapter.lead}
+              breakBeforeAccent
             />
           </div>
 
-          <div className={styles.stage}>
-            <UpsellDemo />
+          <div className={styles.nicheCol}>
+            <Niche />
           </div>
 
-          <Stagger as="ul" className={styles.list} stagger={0.1} amount={0.25}>
-            {hostChapter.behaviours.map((b, i) => {
-              const Icon = BEHAVIOUR_ICONS[i % BEHAVIOUR_ICONS.length];
-              return (
-                <StaggerItem as="li" key={b.title} className={styles.item}>
-                  <span className={styles.iconArch}>
-                    <Icon />
-                  </span>
-                  <div className={styles.itemText}>
-                    <h3 className={styles.itemTitle}>{b.title}</h3>
-                    <p className={styles.itemBody}>{b.body}</p>
-                  </div>
-                </StaggerItem>
-              );
-            })}
-          </Stagger>
+          <Reveal className={styles.dressed} delay={0.3} amount={0.5}>
+            <p className={styles.dressedText}>
+              <span className={styles.dressedTitle}>{dressed.title}.</span> {dressed.body}
+            </p>
+          </Reveal>
         </div>
+      </div>
+
+      <HostAtWork />
+
+      <div className="wrap">
+        <Stagger as="ul" className={styles.behaviours} stagger={0.12} amount={0.3}>
+          {behaviours.map((b, i) => (
+            <StaggerItem as="li" key={b.title} className={styles.behaviour}>
+              <span className={styles.bNum} aria-hidden="true">
+                {ROMAN[i]}
+              </span>
+              <h3 className={styles.bTitle}>{b.title}</h3>
+              <p className={styles.bBody}>{b.body}</p>
+            </StaggerItem>
+          ))}
+        </Stagger>
       </div>
     </section>
   );

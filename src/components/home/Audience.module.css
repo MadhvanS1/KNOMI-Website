@@ -32,7 +32,7 @@ section.section {
 
 .arcade {
   width: clamp(150px, 12.5vw, 184px);
-  margin-top: clamp(32px, 4vw, 56px);
+  margin-top: clamp(28px, 3vw, 44px);
 }
 
 .arcadeSvg {
@@ -138,7 +138,7 @@ section.section {
   grid-template-columns: clamp(40px, 5vw, 76px) minmax(0, 1fr) 24px;
   column-gap: clamp(12px, 1.6vw, 24px);
   align-items: baseline;
-  padding-block: clamp(30px, 3.4vw, 48px);
+  padding-block: clamp(24px, 2.5vw, 36px);
   border-top: 1px solid var(--line-strong);
 }
 
@@ -234,7 +234,7 @@ section.section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: clamp(88px, 10vw, 156px);
+  margin-top: clamp(52px, 6vw, 92px);
 }
 
 .drift {
@@ -261,7 +261,7 @@ section.section {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-top: clamp(28px, 3vw, 44px);
+  margin-top: clamp(20px, 2.4vw, 32px);
 }
 
 .endLine {
@@ -300,7 +300,7 @@ section.section {
   }
 
   .listCol {
-    margin-top: clamp(44px, 9vw, 72px);
+    margin-top: clamp(32px, 7vw, 52px);
   }
 
   .body {
@@ -312,7 +312,7 @@ section.section {
   .row {
     grid-template-columns: 34px minmax(0, 1fr) 14px;
     column-gap: 12px;
-    padding-block: 26px;
+    padding-block: 22px;
   }
 
   .mark {
@@ -325,7 +325,7 @@ section.section {
   }
 
   .vignette {
-    margin-top: 72px;
+    margin-top: 44px;
   }
 
   .drift {

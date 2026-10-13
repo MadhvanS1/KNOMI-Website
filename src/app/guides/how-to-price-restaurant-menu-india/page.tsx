@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MenuPricingCalculator from "./MenuPricingCalculator";
 import styles from "./MenuPricingGuide.module.css";
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "How to Price Menu Items in an Indian Restaurant: Formula, Psychology & Calculator (2026) | KNOMI",
@@ -521,8 +521,7 @@ export default function MenuPricingGuidePage() {
             <p className={styles.calcBannerSub}>
               Raising dish prices across the board can trigger customer backlash. KNOMI&apos;s
               illustrated menu gives every dish its own page, and Knomi Host suggests the pairing as
-              guests order. Our goal is to lift your average order by around 25%. In the trial we
-              measure it on your own tables, and you see the numbers.
+              guests order. {GOAL}
             </p>
             <Link href="/#book" className={styles.calcBtn}>
               Book a walkthrough

@@ -9,7 +9,7 @@ import styles from "./Solutions.module.css";
 
 const title = "KNOMI by City | Restaurant Ordering in Bengaluru, Mumbai, Delhi NCR and more";
 const description =
-  "How KNOMI's illustrated QR menu and Knomi Host fit the dining rooms of six Indian cities: Bengaluru, Mumbai, Hyderabad, Delhi NCR, Chennai and Pune.";
+  "How KNOMI helps restaurants grow and upsell in six Indian cities: Bengaluru, Mumbai, Hyderabad, Delhi NCR, Chennai and Pune. A warm host at every table, an illustrated menu and Knomi Sense behind them.";
 
 export const metadata: Metadata = {
   title,
@@ -66,15 +66,15 @@ export default function SolutionsHub() {
               as="h1"
               immediate
               delay={0.12}
-              lead="One menu, shaped for"
+              lead="One host, shaped for"
               accent="every city’s tables."
               breakBeforeAccent
               className={`h1 ${styles.title}`}
             />
             <Reveal immediate fade={false} delay={0.35} y={16}>
               <p className="lead">
-                Every city eats differently. These guides show how an illustrated QR menu with a warm host inside it fits
-                the rooms, rushes and rituals of six Indian food cities.
+                Every city eats differently. These guides show how KNOMI, a warm host at every table with Knomi Sense
+                behind it, fits the rooms, rushes and rituals of six Indian food cities.
               </p>
             </Reveal>
           </header>

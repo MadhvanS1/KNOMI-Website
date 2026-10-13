@@ -161,7 +161,7 @@ export default function SetupQrMenuIndiaPage() {
         name: 'How much does it cost to set up a QR menu for a 20-table restaurant in India?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'On the indicative bulk prices used in the estimator in this guide, 20 anti-glare A6 acrylic table tents (about 2,600 rupees) plus one 80mm ESC/POS Ethernet kitchen thermal printer (about 4,800 rupees) come to roughly 7,400 rupees, a little more with spare stands. Wooden NFC stands or a KDS tablet raise the total. Software is a separate monthly cost: KNOMI, for example, is priced per table per month with 0% commission: Menu at 149 rupees, Signature at 250 rupees (recommended) and Ecosystem at 500 to 600 rupees.',
+          text: 'On the indicative bulk prices used in the estimator in this guide, 20 anti-glare A6 acrylic table tents (about 2,600 rupees) plus one 80mm ESC/POS Ethernet kitchen thermal printer (about 4,800 rupees) come to roughly 7,400 rupees, a little more with spare stands. Wooden NFC stands or a KDS tablet raise the total. Software is a separate monthly cost: KNOMI, for example, is priced per table per month with 0% commission: Menu at 149 rupees, Signature at 250 rupees (recommended) and Ecosystem at 500 rupees.',
         },
       },
       {
@@ -623,7 +623,7 @@ export default function SetupQrMenuIndiaPage() {
                     <td><strong>Recurring Software Cost</strong></td>
                     <td>Free (Google Drive / Hosting)</td>
                     <td>A commission on each order</td>
-                    <td>Per table / month: ₹149 (Menu), ₹250 (Signature, with ordering), ₹500–600 (Ecosystem); 0% commission</td>
+                    <td>Per table / month: ₹149 (Menu), ₹250 (Signature, with ordering), ₹500 (Ecosystem); 0% commission</td>
                   </tr>
                   <tr>
                     <td><strong>Menu Delivery</strong></td>
@@ -712,7 +712,7 @@ export default function SetupQrMenuIndiaPage() {
             <ExperienceKnomiBox
               city="Restaurant"
               title="Transform Your Dining Floor with KNOMI QR Ordering"
-              description="An illustrated menu themed to your restaurant, Knomi Host suggesting the pairing at every table, orders straight to your kitchen display, and 0% commission. Plans are per table, per month: Menu ₹149, Signature ₹250 (recommended) and Ecosystem ₹500–600."
+              description="An illustrated menu themed to your restaurant, Knomi Host suggesting the pairing at every table, orders straight to your kitchen display, and 0% commission. Plans are per table, per month: Menu ₹149, Signature ₹250 (recommended) and Ecosystem ₹500."
               buttonText="Book a walkthrough →"
               buttonHref="/#book"
             />
@@ -728,7 +728,7 @@ export default function SetupQrMenuIndiaPage() {
                 <div className={styles.faqAnswer}>
                   On the indicative bulk prices used in the estimator in this guide, 20 anti-glare A6 acrylic table tents (about 2,600 rupees) plus one 80mm ESC/POS Ethernet kitchen thermal printer (about 4,800 rupees)
                   come to roughly 7,400 rupees, a little more with spare stands. Wooden NFC stands or a KDS tablet raise the total. Software is a separate monthly cost: KNOMI, for example, is priced per table per month
-                  with 0% commission: Menu at 149 rupees, Signature at 250 rupees (recommended) and Ecosystem at 500 to 600 rupees.
+                  with 0% commission: Menu at 149 rupees, Signature at 250 rupees (recommended) and Ecosystem at 500 rupees.
                 </div>
               </div>
 

@@ -5,12 +5,12 @@ import Footer from '@/components/Footer';
 import PuneBreweryThroughputAuditor from './PuneBreweryThroughputAuditor';
 import ExperienceKnomiBox from '@/components/ExperienceKnomiBox';
 import styles from './PuneSolutions.module.css';
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'AI Restaurant Ordering System Pune (2026) | KNOMI',
   description:
-    'QR self-ordering for Pune microbreweries, Koregaon Park garden bistros and FC Road cafés. Fewer long walks for your servers, the next round ordered from the guest’s phone, and 0% commission.',
+    'QR self-ordering and upselling for Pune microbreweries, Koregaon Park garden bistros and FC Road cafés. Fewer long walks for your servers, the next round ordered from the guest’s phone, and 0% commission.',
   alternates: {
     canonical: '/solutions/pune-restaurant-self-ordering',
   },
@@ -321,7 +321,7 @@ export default function PuneRestaurantSelfOrderingPage() {
               The moment a pint is nearly finished is the moment a guest decides on the next one. In a noisy taproom with a live band or DJ, catching a server at that moment is hard, and sometimes the table simply asks for the bill instead.
             </p>
             <p className={styles.paragraph}>
-              With KNOMI, a diner glances at their glass, orders another pint on their phone, and the ticket goes to the bar station as soon as they confirm. Knomi Host can suggest something to eat alongside it. Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+              With KNOMI, a diner glances at their glass, orders another pint on their phone, and the ticket goes to the bar station as soon as they confirm. Knomi Host can suggest something to eat alongside it. {GOAL}
             </p>
 
             <h2 className={styles.sectionHeading}>
@@ -404,7 +404,7 @@ export default function PuneRestaurantSelfOrderingPage() {
                     <td>Free or a small fee</td>
                     <td>Typically device cost plus a software fee</td>
                     <td>Varies: subscription and/or per-order fees</td>
-                    <td className={styles.knomiCol}>Signature, with self-ordering: ₹250 per table / month (Menu only: ₹149; Ecosystem: ₹500–600); 0% commission</td>
+                    <td className={styles.knomiCol}>Signature, with self-ordering: ₹250 per table / month (Menu only: ₹149; Ecosystem: ₹500); 0% commission</td>
                   </tr>
                 </tbody>
               </table>

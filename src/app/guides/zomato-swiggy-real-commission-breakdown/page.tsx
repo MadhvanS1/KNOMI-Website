@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AggregatorCommissionCalculator from "./AggregatorCommissionCalculator";
 import styles from "./AggregatorGuide.module.css";
-import { OG_IMAGE } from "@/content/site";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Zomato & Swiggy Commission 2026: The Real Settlement Math | KNOMI",
@@ -497,12 +497,11 @@ export default function AggregatorCommissionGuidePage() {
             </li>
             <li>
               <strong>0% Commission:</strong> A flat fee per table, per month (Menu ₹149, Signature ₹250,
-              Ecosystem ₹500–600) and nothing taken from your orders. What your guests order is yours.
+              Ecosystem ₹500) and nothing taken from your orders. What your guests order is yours.
             </li>
             <li>
               <strong>Knomi Host at Every Table:</strong> Knomi Host suggests the pairing as guests order, the way
-              your best server would. Our goal is to lift your average order by around 25%. In the trial we measure
-              it on your own tables, and you see the numbers.
+              your best server would. {GOAL}
             </li>
           </ul>
 

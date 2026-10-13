@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ServiceChargeCalculator from "./ServiceChargeCalculator";
 import styles from "./ServiceChargeGuide.module.css";
-import { OG_IMAGE, bookHref } from "@/content/site";
+import { GOAL, OG_IMAGE, bookHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Restaurant Service Charge Legal Rules India: CCPA, Court Rulings & Menu Math | KNOMI",
@@ -374,7 +374,7 @@ export default function ServiceChargeGuidePage() {
             Another answer to fee squabbles is growing the table&apos;s spend in a way guests welcome. Even good waiters cannot suggest dessert or a mocktail pairing at every table during a rush; a digital menu can suggest the pairing at the moment the guest is choosing. In KNOMI, that is the job of Knomi Host, the host inside the menu.
           </p>
           <p>
-            As simple arithmetic: if 350 of 1,000 monthly tables add a ₹160 dessert at a 70% gross margin, that is ₹39,200 a month in extra gross profit, with nothing for anyone to dispute at the counter. Our goal is to lift your average order by around 25%. In the trial we measure it on your own tables, and you see the numbers.
+            As simple arithmetic: if 350 of 1,000 monthly tables add a ₹160 dessert at a 70% gross margin, that is ₹39,200 a month in extra gross profit, with nothing for anyone to dispute at the counter. {GOAL}
           </p>
 
           {/* Author Bio Box */}
@@ -404,7 +404,7 @@ export default function ServiceChargeGuidePage() {
           <div className={styles.ctaCard}>
             <h3>Replace Billing Friction With Revenue Guests Welcome</h3>
             <p>
-              Instead of a fee guests can refuse, let Knomi Host suggest the pairing they actually want, inside an illustrated menu themed to your restaurant. 0% commission and one flat price per table, per month: Menu ₹149, Signature ₹250 (our recommendation), or Ecosystem ₹500–600.
+              Instead of a fee guests can refuse, let Knomi Host suggest the pairing they actually want, inside an illustrated menu themed to your restaurant. 0% commission and one flat price per table, per month: Menu ₹149, Signature ₹250 (our recommendation), or Ecosystem ₹500.
             </p>
             <Link href={bookHref} className={styles.ctaButton}>
               Book a walkthrough
