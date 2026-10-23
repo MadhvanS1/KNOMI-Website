@@ -61,9 +61,10 @@
 }
 
 .title {
-  /* Each line ("Every guest known." / "Every table grown.") measures about 6.05em,
-     so 15.6% of the column keeps both on one line with a little air to spare. */
-  font-size: clamp(2.5rem, 15.6cqi, 7.25rem);
+  /* The longer line ("Hospitality") measures about 3.35em, so 21% of the column sets
+     it at roughly 70% of the column's width: large, with air to its right. The cap
+     keeps it from overpowering the picture on wide screens. */
+  font-size: clamp(2.75rem, 21cqi, 8.5rem);
   line-height: 0.95;
   letter-spacing: -0.03em;
   text-wrap: initial;
@@ -657,8 +658,10 @@
     max-width: 680px;
   }
 
+  /* Tablet and phone: a little smaller than desktop's 21%, so the picture still
+     starts on the first phone screen. */
   .title {
-    font-size: clamp(2.4rem, 15.6cqi, 5.75rem);
+    font-size: clamp(2.6rem, 20cqi, 7rem);
   }
 
   /* Never wider than the column: children are placed from its centre, so the

@@ -112,7 +112,7 @@ export const metadata: Metadata = {
     images: [OG_IMAGE],
     title: "About KNOMI | Guest experience infrastructure for restaurants",
     description:
-      "Every guest known, every table grown. Built in Bengaluru, alongside the tools restaurants already use.",
+      "Hospitality that sells. Built in Bengaluru, alongside the tools restaurants already use.",
     url: "https://www.knomi.in/about",
     siteName: "KNOMI",
     type: "website",

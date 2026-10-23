@@ -6,13 +6,16 @@
 }
 
 /* Each word sits in its own clipping window. The padding gives italic
-   overhangs and descenders room so they are not shaved off. */
+   overhangs and descenders room so they are not shaved off: Instrument Serif's
+   g and y reach about 0.3em below the baseline at these tight line heights, so
+   the bottom needs 0.34em (0.14em sliced the tails flat). Negative margins keep
+   the line box exactly where it was. */
 .mask {
   display: inline-block;
   overflow: hidden;
   vertical-align: top;
-  padding: 0.04em 0.08em 0.14em 0;
-  margin: -0.04em -0.08em -0.14em 0;
+  padding: 0.08em 0.12em 0.34em 0.08em;
+  margin: -0.08em -0.12em -0.34em -0.08em;
 }
 
 .word {

@@ -52,7 +52,7 @@ const rupeeSans = localFont({
   declarations: [{ prop: "unicode-range", value: "U+20B9" }],
 });
 
-const title = "KNOMI | Every guest known. Every table grown.";
+const title = "KNOMI | Hospitality that sells";
 
 const description =
   "KNOMI is guest experience infrastructure that helps restaurants grow. Knomi Sense remembers every guest, Knomi Host suggests the right dish at the right moment at every table, and your average bill rises. No app, no login, works alongside your POS, 0% commission.";

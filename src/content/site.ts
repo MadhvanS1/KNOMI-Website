@@ -52,7 +52,7 @@ export const OG_IMAGE = {
   url: "/og-image.jpg",
   width: 1200,
   height: 630,
-  alt: "KNOMI: every guest known, every table grown",
+  alt: "KNOMI: Hospitality that sells. Knomi Host, the chef on an illustrated menu, suggests garlic bread",
 };
 
 export const tagline = ["Know me.", "Remember me.", "Grow with me."] as const;
@@ -120,8 +120,8 @@ const sectionCopy = <T extends SectionCopy>(copy: T): T & SectionCopy => copy;
 
 export const hero = {
   // Two lines; the second renders in the italic accent.
-  titleLead: "Every guest known.",
-  titleAccent: "Every table grown.",
+  titleLead: "Hospitality",
+  titleAccent: "that sells.",
   lead:
     "An illustrated QR menu with a chef, Knomi Host, who suggests the right dish at the right moment. Guests feel looked after, and your average bill rises.",
   primaryCta: { label: "Book a walkthrough", href: "#book" },
