@@ -23,6 +23,7 @@ const TABLE_LABEL = "Table 7";
 const TICKET_TITLE = "Order";
 const TOTAL_LABEL = "Total";
 const ADDED_LABEL = "Added to the order:";
+const DECLINED_LABEL = "Offered, not added:";
 const CATEGORY: Record<string, string> = {
   arrive: "Pizza",
   choose: "Pizza",
@@ -40,7 +41,6 @@ const SEAL_RING = "Our goal · average order";
 
 const MOMENTS = upsell.moments;
 const LAST = MOMENTS.length - 1;
-const STEP_TOTAL = String(MOMENTS.length).padStart(2, "0");
 const pad = (n: number) => String(n).padStart(2, "0");
 
 const POSES: readonly HostPose[] = ["greet", "lean", "point", "peek", "pay", "sit", "think"];
@@ -51,8 +51,22 @@ const rupees = (n: number) => `₹${inr.format(n)}`;
 
 /** Every dish Host adds to the order, with the moment it lands on the ticket. */
 const ADDS = MOMENTS.flatMap((m, i) => (m.add ? [{ name: m.add.name, price: m.add.price, at: i }] : []));
+/** What he offers and the guest turns down (dessert): a faded, struck line on the ticket,
+ *  never added to the bill. Host offers once and doesn't push. */
+const DECLINES = MOMENTS.flatMap((m, i) =>
+  m.declined ? [{ name: m.declined.name, price: m.declined.price, note: m.declined.note, at: i }] : [],
+);
+/** The ticket's rows in the order they happen, so a declined dish sits where it was offered. */
+const TICKET_ROWS = [
+  ...ADDS.map((a) => ({ ...a, note: null as string | null })),
+  ...DECLINES,
+].sort((a, b) => a.at - b.at);
 const FINAL_BILL = MOMENTS[LAST].bill;
-const ORDER_SUMMARY = `${TICKET_TITLE}: ${ADDS.map((a) => `${a.name} ${rupees(a.price)}`).join(", ")}. ${TOTAL_LABEL} ${rupees(FINAL_BILL)}.`;
+const ORDER_SUMMARY = [
+  `${TICKET_TITLE}: ${ADDS.map((a) => `${a.name} ${rupees(a.price)}`).join(", ")}.`,
+  ...DECLINES.map((d) => `${DECLINED_LABEL} ${d.name} ${rupees(d.price)}, ${d.note}.`),
+  `${TOTAL_LABEL} ${rupees(FINAL_BILL)}.`,
+].join(" ");
 
 type DishKind = "margherita" | "garlic" | "tiramisu" | "bill";
 const DISH: Record<string, DishKind> = {
@@ -85,98 +99,105 @@ const DRIFT_END = -36;
 
 /* ---------------------------------------------------------------------
    Motion
+   Each moment keeps up with the scroll: things arrive in 0.35-0.5s and leave
+   in 0.15-0.2s, and Host's words write themselves in about half a second.
+   Exactly one Host is ever on the card: the old pose leaves before the new
+   one arrives. The one slow, deliberate beat is the +25% seal's stamp.
    --------------------------------------------------------------------- */
 
-/* Gentle overshoot for small pops (chips, the add button) and the seal landing. */
-const EASE_POP: [number, number, number, number] = [0.34, 1.35, 0.64, 1];
+/* The seal's stamp: one overshoot, the page's showpiece. Nothing else bounces. */
+const EASE_STAMP: [number, number, number, number] = [0.34, 1.35, 0.64, 1];
 
 /* Plates glide along the table: in from the right, out to the left. */
 const plateV: Variants = {
-  hidden: { opacity: 0, x: "34%", rotate: 38, scale: 0.86 },
+  hidden: { opacity: 0, x: "22%", rotate: 22, scale: 0.94 },
   shown: {
     opacity: 1,
     x: "0%",
     rotate: 0,
     scale: 1,
-    transition: { duration: 1.15, ease: EASE_OUT, opacity: { duration: 0.6, ease: EASE_OUT } },
+    transition: { duration: 0.5, ease: EASE_OUT, opacity: { duration: 0.3, ease: EASE_OUT } },
   },
   gone: {
     opacity: 0,
-    x: "-30%",
-    rotate: -26,
-    scale: 0.88,
-    transition: { duration: 0.85, ease: EASE_OUT, opacity: { duration: 0.5, delay: 0.1 } },
+    x: "-16%",
+    rotate: -14,
+    scale: 0.96,
+    transition: { duration: 0.2, ease: EASE_OUT },
   },
 };
 
 /* Host rises into his place from just below it (he rests on an edge, so he comes up to it),
-   and sinks back the same way when the moment passes. */
+   and sinks back the same way, quickly, before the next pose comes up. */
 const hostV: Variants = {
-  hidden: { opacity: 0, y: "18%", scale: 0.94, rotate: -2 },
+  hidden: { opacity: 0, y: "8%", scale: 0.95, rotate: -2 },
   shown: {
     opacity: 1,
     y: "0%",
     scale: 1,
     rotate: 0,
-    transition: { duration: 1.15, delay: 0.2, ease: EASE_OUT, opacity: { duration: 0.6, delay: 0.2, ease: EASE_OUT } },
+    transition: { duration: 0.45, ease: EASE_OUT, opacity: { duration: 0.25, ease: EASE_OUT } },
   },
-  gone: { opacity: 0, y: "10%", scale: 0.97, transition: { duration: 0.55, ease: EASE_OUT } },
+  gone: { opacity: 0, y: "4%", scale: 0.97, transition: { duration: 0.15, ease: EASE_OUT } },
 };
 
 /* The add button he hugs turns to "added" once he has settled. */
 const hugV: Variants = {
-  hidden: { opacity: 0, scale: 0.5 },
-  shown: { opacity: 1, scale: 1, transition: { duration: 0.75, delay: 1.25, ease: EASE_POP } },
+  hidden: { opacity: 0, scale: 0.9 },
+  shown: { opacity: 1, scale: 1, transition: { duration: 0.25, delay: 0.35, ease: EASE_OUT } },
   gone: {},
 };
 
 const marksV: Variants = {
-  hidden: { opacity: 0, scale: 0.4 },
-  shown: { opacity: 1, scale: 1, transition: { duration: 0.6, delay: 0.85, ease: EASE_POP } },
-  gone: { opacity: 0, transition: { duration: 0.2 } },
+  hidden: { opacity: 0, scale: 0.9 },
+  shown: { opacity: 1, scale: 1, transition: { duration: 0.25, delay: 0.3, ease: EASE_OUT } },
+  gone: { opacity: 0, transition: { duration: 0.15 } },
 };
 
 const bubbleV: Variants = {
-  hidden: { opacity: 0, y: 16, scale: 0.92 },
-  shown: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.85, delay: 0.38, ease: EASE_OUT, staggerChildren: 0.08, delayChildren: 0.55 },
-  },
-  gone: { opacity: 0, y: -10, scale: 0.97, transition: { duration: 0.45, ease: EASE_OUT } },
+  hidden: { opacity: 0, y: 10, scale: 0.96 },
+  shown: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35, delay: 0.08, ease: EASE_OUT } },
+  gone: { opacity: 0, y: -6, scale: 0.98, transition: { duration: 0.15, ease: EASE_OUT } },
 };
 
-/* The line is "written" left to right. Negative insets leave room for italic overhangs. */
-const writeV: Variants = {
-  hidden: { clipPath: "inset(-12% 100% -18% -4%)" },
-  shown: { clipPath: "inset(-12% -6% -18% -4%)", transition: { duration: 0.95, ease: EASE_OUT } },
+/* The line is "written" left to right: a sheet of the bubble's own paper over the words
+   shrinks away towards the right (a transform, so it stays smooth). */
+const inkV: Variants = {
+  hidden: { scaleX: 1 },
+  shown: { scaleX: 0, transition: { duration: 0.5, delay: 0.16, ease: EASE_OUT } },
   gone: {},
 };
 
+/* Chips follow once the line is written. */
 const chipV: Variants = {
-  hidden: { opacity: 0, y: 8, scale: 0.86 },
-  shown: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, delay: 0.45, ease: EASE_POP } },
+  hidden: { opacity: 0, y: 6, scale: 0.95 },
+  shown: (k: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.25, delay: 0.5 + k * 0.05, ease: EASE_OUT },
+  }),
   gone: {},
 };
 
 const arrowV: Variants = {
-  hidden: { clipPath: "inset(0% 0% 100% 0%)", opacity: 1 },
-  shown: { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, transition: { duration: 0.8, delay: 1.05, ease: EASE_OUT } },
-  gone: { opacity: 0, transition: { duration: 0.3 } },
+  hidden: { opacity: 0, y: -6 },
+  shown: { opacity: 1, y: 0, transition: { duration: 0.3, delay: 0.35, ease: EASE_OUT } },
+  gone: { opacity: 0, transition: { duration: 0.15 } },
 };
 
+/* The ticket: a new line prints in about 0.6s (the line, then its wash). */
 const lineV: Variants = {
-  off: { opacity: 0, y: -10, transition: { duration: 0.45, ease: EASE_OUT } },
-  on: { opacity: 1, y: 0, transition: { duration: 0.85, delay: 0.35, ease: EASE_OUT } },
+  off: { opacity: 0, y: -8, transition: { duration: 0.15, ease: EASE_OUT } },
+  on: { opacity: 1, y: 0, transition: { duration: 0.35, delay: 0.1, ease: EASE_OUT } },
 };
 
 const washV: Variants = {
-  off: { scaleX: 0, opacity: 0, transition: { duration: 0.2 } },
+  off: { scaleX: 0.3, opacity: 0, transition: { duration: 0.15 } },
   on: {
-    scaleX: [0, 1, 1],
-    opacity: [1, 1, 0],
-    transition: { duration: 1.7, delay: 0.45, times: [0, 0.42, 1], ease: EASE_OUT },
+    scaleX: [0.3, 1, 1],
+    opacity: [0, 1, 0],
+    transition: { duration: 0.6, delay: 0.1, times: [0, 0.45, 1], ease: EASE_OUT },
   },
 };
 
@@ -456,8 +477,8 @@ function Ticker({ value, className }: { value: string; className?: string }) {
           key={value}
           className={styles.tickInner}
           initial={{ y: "115%" }}
-          animate={{ y: "0%", transition: { duration: 0.8, ease: EASE_OUT } }}
-          exit={{ y: "-115%", transition: { duration: 0.55, ease: EASE_OUT } }}
+          animate={{ y: "0%", transition: { duration: 0.35, ease: EASE_OUT } }}
+          exit={{ y: "-115%", transition: { duration: 0.15, ease: EASE_OUT } }}
         >
           {value}
         </motion.span>
@@ -519,18 +540,19 @@ function Seal() {
       aria-hidden="true"
       initial={{ opacity: 0, scale: 1.6, rotate: -34 }}
       animate={{ opacity: 1, scale: 1, rotate: -10 }}
-      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.35, ease: EASE_OUT } }}
+      exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.2, ease: EASE_OUT } }}
       transition={{
-        scale: { duration: 0.8, delay: 0.75, ease: EASE_POP },
-        rotate: { duration: 0.95, delay: 0.75, ease: EASE_OUT },
-        opacity: { duration: 0.3, delay: 0.75 },
+        // Lands once the pairing has printed on the ticket, then takes its time.
+        scale: { duration: 0.8, delay: 0.6, ease: EASE_STAMP },
+        rotate: { duration: 0.9, delay: 0.6, ease: EASE_OUT },
+        opacity: { duration: 0.25, delay: 0.6 },
       }}
     >
       <motion.span
         className={styles.sealPulse}
         initial={{ opacity: 0.7, scale: 1 }}
         animate={{ opacity: 0, scale: 1.6 }}
-        transition={{ duration: 1.1, delay: 1.1, ease: EASE_OUT }}
+        transition={{ duration: 1, delay: 0.95, ease: EASE_OUT }}
       />
       <svg className={styles.sealSvg} viewBox="0 0 120 120">
         <defs>
@@ -648,11 +670,11 @@ export default function UpsellJourney() {
     <section id="upsell" className={`section ${styles.root}`} data-mode={story ? "story" : "static"}>
       <div className="wrap">
         <SectionHead
-          numeral={upsell.numeral}
           eyebrow={upsell.eyebrow}
           titleLead={upsell.titleLead}
           titleAccent={upsell.titleAccent}
           lead={upsell.lead}
+          words
         />
 
         <div className={styles.story}>
@@ -670,7 +692,7 @@ export default function UpsellJourney() {
                     key={m.id}
                     className={`${styles.moment} ${i === active ? styles.isActive : ""} ${i < lit ? styles.isLit : ""}`}
                   >
-                    <Reveal className={styles.momentInner} amount={0.3} y={24}>
+                    <Reveal className={styles.momentInner}>
                       <span
                         ref={(el) => {
                           dotRefs.current[i] = el;
@@ -723,6 +745,16 @@ export default function UpsellJourney() {
                             <span className={styles.addedPrice}>{rupees(m.add.price)}</span>
                           </p>
                         )}
+                        {/* Offered, turned down: struck through and left at that. */}
+                        {m.declined && (
+                          <p className={styles.declined}>
+                            <span className="sr-only">{DECLINED_LABEL} </span>
+                            <span className={styles.struck}>{m.declined.name}</span>
+                            <span className={styles.declinedNote}>{m.declined.note}</span>
+                            <span className="leader" aria-hidden="true" />
+                            <span className={`${styles.struck} ${styles.addedPrice}`}>{rupees(m.declined.price)}</span>
+                          </p>
+                        )}
                       </div>
                     </Reveal>
                   </li>
@@ -734,7 +766,10 @@ export default function UpsellJourney() {
           {/* ---------- The stage (desktop: sticky; below desktop: the final bill) ---------- */}
           <div className={styles.stageCol}>
             <div className={styles.stage}>
-              <div className={styles.scene}>
+              {/* Keyed by mode: when the scroll story takes over from the finished meal (after
+                  hydration, or on landing at #upsell), the scene is drawn afresh at the moment
+                  being read, instead of visibly rewinding from the bill to the first moment. */}
+              <div className={styles.scene} key={story ? "story" : "static"}>
                 {/* The guest's menu card, with Host at the moment that matters. */}
                 <div className={styles.cardWrap} data-pose={pose} aria-hidden="true">
                   <div className={styles.card}>
@@ -768,8 +803,9 @@ export default function UpsellJourney() {
                     </div>
                   </div>
 
-                  {/* Host, in the pose for this moment. */}
-                  <AnimatePresence initial={false}>
+                  {/* Host, in the pose for this moment. "wait": the old pose has gone before
+                      the new one rises, so there is only ever one Host on the card. */}
+                  <AnimatePresence initial={false} mode="wait">
                     <motion.div key={pose} className={styles.host} data-pose={pose} variants={hostV} initial="hidden" animate="shown" exit="gone">
                       <HostArt
                         pose={pose}
@@ -798,7 +834,7 @@ export default function UpsellJourney() {
                     data-hug={pose === "point"}
                     initial={false}
                     animate={{ opacity: strip ? 1 : 0, y: strip ? 0 : 10 }}
-                    transition={{ duration: 0.7, ease: EASE_OUT }}
+                    transition={{ duration: 0.3, ease: EASE_OUT }}
                   >
                     <span className={styles.stripRule} />
                     <span className={styles.dishName}>
@@ -812,9 +848,9 @@ export default function UpsellJourney() {
                         <motion.span
                           key={shown.added ? "added" : "add"}
                           className={styles.addIcon}
-                          initial={{ opacity: 0, scale: 0.4, rotate: -90 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.7, delay: 0.5, ease: EASE_POP } }}
-                          exit={{ opacity: 0, scale: 0.4, rotate: 90, transition: { duration: 0.3 } }}
+                          initial={{ opacity: 0, scale: 0.9, rotate: -45 }}
+                          animate={{ opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.25, delay: 0.2, ease: EASE_OUT } }}
+                          exit={{ opacity: 0, scale: 0.9, rotate: 45, transition: { duration: 0.15, ease: EASE_OUT } }}
                         >
                           {shown.added ? <Check size={16} /> : <Plus size={16} />}
                         </motion.span>
@@ -824,9 +860,9 @@ export default function UpsellJourney() {
                           <motion.span
                             key={moment.id}
                             className={styles.addPulse}
-                            initial={{ opacity: 0.75, scale: 1 }}
-                            animate={{ opacity: 0, scale: 1.9, transition: { duration: 1.1, delay: 0.55, ease: EASE_OUT } }}
-                            exit={{ opacity: 0 }}
+                            initial={{ opacity: 0.7, scale: 1 }}
+                            animate={{ opacity: 0, scale: 1.7, transition: { duration: 0.5, delay: 0.3, ease: EASE_OUT } }}
+                            exit={{ opacity: 0, transition: { duration: 0.15 } }}
                           />
                         )}
                       </AnimatePresence>
@@ -845,8 +881,8 @@ export default function UpsellJourney() {
                     )}
                   </AnimatePresence>
 
-                  {/* What Host says. */}
-                  <AnimatePresence initial={false}>
+                  {/* What Host says. It leaves and arrives with him. */}
+                  <AnimatePresence initial={false} mode="wait">
                     <motion.div
                       key={moment.id}
                       className={styles.sb}
@@ -857,13 +893,20 @@ export default function UpsellJourney() {
                       exit="gone"
                     >
                       <Tail className={styles.sbTail} />
-                      <motion.p className={styles.sbLine} variants={writeV}>
+                      <p className={styles.sbLine}>
                         {moment.line}
-                      </motion.p>
+                        <motion.span className={styles.sbInk} variants={inkV} />
+                      </p>
                       {moment.chips && (
                         <span className={styles.sbChips}>
                           {moment.chips.map((c, k) => (
-                            <motion.span key={c} className={styles.chip} data-tone={CHIP_TONES[k % CHIP_TONES.length]} variants={chipV}>
+                            <motion.span
+                              key={c}
+                              className={styles.chip}
+                              data-tone={CHIP_TONES[k % CHIP_TONES.length]}
+                              variants={chipV}
+                              custom={k}
+                            >
                               {c}
                             </motion.span>
                           ))}
@@ -873,15 +916,8 @@ export default function UpsellJourney() {
                   </AnimatePresence>
                 </div>
 
-                {/* The running bill. */}
+                {/* The running bill. (The moments' own numerals are the only step counter.) */}
                 <div className={styles.side}>
-                  <p className={styles.caption} aria-hidden="true">
-                    <Ticker value={pad(active + 1)} className={styles.capNum} />
-                    <span className={styles.capTotal}>/ {STEP_TOTAL}</span>
-                    <span className={styles.capDash}>&mdash;</span>
-                    <Ticker value={moment.label} />
-                  </p>
-
                   <motion.div className={styles.ticketWrap} style={{ y: ticketY }} aria-hidden="true">
                     <div className={styles.ticket}>
                       <div className={styles.tHead}>
@@ -891,21 +927,24 @@ export default function UpsellJourney() {
                       </div>
                       <div className={styles.tRule} />
                       <ul className={styles.tLines}>
-                        {ADDS.map((item) => {
+                        {TICKET_ROWS.map((item) => {
                           const on = active >= item.at;
+                          const declined = item.note !== null;
                           return (
-                            <li key={item.name} className={styles.tLine}>
+                            <li key={item.name} className={styles.tLine} data-declined={declined} data-on={on}>
                               <motion.span
                                 className={styles.tPlaceholder}
                                 initial={false}
                                 animate={{ opacity: on ? 0 : 1 }}
-                                transition={{ duration: 0.5, ease: EASE_OUT }}
+                                transition={{ duration: on ? 0.2 : 0.3, ease: EASE_OUT }}
                               />
                               <motion.span className={styles.tItem} initial={false} animate={on ? "on" : "off"} variants={lineV}>
-                                <motion.span className={styles.tWash} variants={washV} />
-                                <span className={styles.tName}>{item.name}</span>
+                                {/* A declined dish gets no wash: it is crossed out instead. */}
+                                {!declined && <motion.span className={styles.tWash} variants={washV} />}
+                                <span className={`${styles.tName} ${declined ? styles.struck : ""}`}>{item.name}</span>
+                                {declined && <span className={styles.tNote}>{item.note}</span>}
                                 <span className="leader" />
-                                <span className={styles.tPrice}>{rupees(item.price)}</span>
+                                <span className={`${styles.tPrice} ${declined ? styles.struck : ""}`}>{rupees(item.price)}</span>
                               </motion.span>
                             </li>
                           );
@@ -914,7 +953,7 @@ export default function UpsellJourney() {
                       <div className={styles.tTotal}>
                         <span className={styles.tTotalLabel}>{TOTAL_LABEL}</span>
                         <span className="leader" />
-                        <AnimatedNumber value={total} prefix="₹" duration={1} className={styles.tTotalValue} />
+                        <AnimatedNumber value={total} prefix="₹" duration={0.6} className={styles.tTotalValue} />
                       </div>
                     </div>
                     <AnimatePresence initial={false}>{sealOn && <Seal key="seal" />}</AnimatePresence>
@@ -924,10 +963,7 @@ export default function UpsellJourney() {
 
                   <div className={styles.goal} data-on={goalOn}>
                     <p className={styles.goalText}>{GOAL}</p>
-                    <p className={styles.goalNote}>
-                      <span className="ornament" aria-hidden="true" />
-                      {upsell.goalNote}
-                    </p>
+                    <p className={styles.goalNote}>{upsell.goalNote}</p>
                   </div>
                 </div>
               </div>

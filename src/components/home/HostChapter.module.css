@@ -109,6 +109,15 @@
   aspect-ratio: 10 / 13;
 }
 
+/* A hairline marker across his shoulders. The reveal script marks it [data-in] as it
+   nears the screen: that is when he rises and speaks (see "Entrance" below). */
+.cue {
+  position: absolute;
+  inset: 72% 0 auto;
+  height: 1px;
+  pointer-events: none;
+}
+
 /* The alcove: an arch cut into a warm plaster wall */
 .alcove {
   position: absolute;
@@ -482,30 +491,6 @@
   box-shadow: 0 1px 0 color-mix(in srgb, var(--paper) 45%, transparent);
 }
 
-/* ---------- Ornaments ---------- */
-
-.starA,
-.starB {
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.starA {
-  top: 9%;
-  left: -6%;
-  width: 14px;
-  height: 14px;
-}
-
-.starB {
-  top: 52%;
-  right: -7%;
-  width: 10px;
-  height: 10px;
-  opacity: 0.75;
-}
-
 /* Idle motion runs only while he's on screen */
 .niche[data-awake="true"] .breathe,
 .niche[data-awake="true"] .lampSway,
@@ -554,6 +539,135 @@
   }
 }
 
+/* ---------- Entrance ----------
+   Visible at rest: nothing waits unseen unless the shared reveal script is live
+   (html.js[data-reveal-live]), and each part plays once the script marks its cue:
+   - .niche[data-in], as the niche nears the screen: the alcove, lamp and name plate;
+   - .cue[data-in], across his shoulders: Host rises to lean on the sill and says hello,
+     where he can be seen. His words follow one by one.
+   Every part settles within about a second and a half; nothing overshoots. */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html.js[data-reveal-live]) .niche:not([data-in]) :is(.alcove, .plaque),
+  :global(html.js[data-reveal-live]) .cue:not([data-in]) ~ :is(.ticks, .heartSpot),
+  :global(html.js[data-reveal-live]) .cue:not([data-in]) ~ .figureClip .contact,
+  :global(html.js[data-reveal-live]) .cue:not([data-in]) ~ .bubbleSpot .bubble {
+    opacity: 0;
+  }
+
+  /* Waiting below the sill, out of sight. */
+  :global(html.js[data-reveal-live]) .cue:not([data-in]) ~ .figureClip .figure {
+    transform: translateY(62%);
+  }
+
+  /* The alcove and its furniture */
+  :global(html.js) .niche[data-in] .alcove {
+    animation: nicheRise 0.7s var(--ease-out) backwards;
+  }
+
+  :global(html.js) .niche[data-in] .glow {
+    animation: nicheFade 1s var(--ease-out) 0.15s backwards;
+  }
+
+  :global(html.js) .niche[data-in] .skyline {
+    --from-y: 8px;
+    animation: nicheRise 0.8s var(--ease-out) 0.15s backwards;
+  }
+
+  :global(html.js) .niche[data-in] .innerArch {
+    animation: nicheFade 0.8s var(--ease-out) 0.2s backwards;
+  }
+
+  :global(html.js) .niche[data-in] .lamp {
+    --from-y: -12px;
+    animation: nicheRise 0.8s var(--ease-out) 0.25s backwards;
+  }
+
+  :global(html.js) .niche[data-in] .plaque {
+    --from-y: 8px;
+    animation: nicheRise 0.6s var(--ease-out) 0.3s backwards;
+  }
+
+  /* Host, his shadow on the sill, and what he says */
+  :global(html.js) .cue[data-in] ~ .figureClip .figure {
+    animation: hostRise 0.9s var(--ease-out) backwards;
+  }
+
+  :global(html.js) .cue[data-in] ~ .figureClip .contact {
+    animation: contactIn 0.7s var(--ease-out) 0.25s backwards;
+  }
+
+  :global(html.js) .cue[data-in] ~ .bubbleSpot .bubble {
+    animation: bubbleIn 0.5s var(--ease-out) 0.35s backwards;
+  }
+
+  :global(html.js) .cue[data-in] ~ .bubbleSpot .word {
+    animation: wordIn 0.4s var(--ease-out) backwards;
+    animation-delay: calc(0.5s + var(--w, 0) * 45ms);
+  }
+
+  :global(html.js) .cue[data-in] ~ .ticks {
+    animation: ticksIn 0.5s var(--ease-out) 0.8s backwards;
+  }
+
+  :global(html.js) .cue[data-in] ~ .heartSpot {
+    animation: popIn 0.5s var(--ease-out) 0.9s backwards;
+  }
+}
+
+@keyframes nicheRise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--from-y, 16px), 0);
+  }
+}
+
+@keyframes nicheFade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes hostRise {
+  from {
+    transform: translateY(62%);
+  }
+}
+
+@keyframes contactIn {
+  from {
+    opacity: 0;
+    transform: scaleX(0.8);
+  }
+}
+
+@keyframes bubbleIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.92);
+  }
+}
+
+@keyframes wordIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+}
+
+@keyframes ticksIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) rotate(-10deg);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
 /* ---------------------------------------------------------------------
    2. Host at work — the reel
    Default (phones, tablets, reduced motion): a swipeable row that snaps.
@@ -563,7 +677,7 @@
 .work {
   --phone-w: min(64vw, 260px);
   position: relative;
-  margin-top: clamp(4.5rem, 3rem + 4.5vw, 8rem);
+  margin-top: clamp(3rem, 2.2rem + 3.4vw, 5.5rem);
 }
 
 .sticky {
@@ -605,40 +719,25 @@
   width: var(--peek-w);
 }
 
-.workEyebrow {
-  margin-bottom: 8px;
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--fg-2);
-}
-
 .workTitle {
   font-size: var(--fs-h3);
   line-height: 1.05;
-}
-
-.workTitle em {
-  font-style: italic;
-  color: var(--accent);
 }
 
 .workHint {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 12px;
   font-size: var(--fs-micro);
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   color: var(--fg-2);
 }
 
 .workHint svg {
   width: 22px;
   height: auto;
-  color: var(--accent);
 }
 
 .hintPinned {
@@ -682,29 +781,18 @@
 .caption {
   display: grid;
   justify-items: center;
-  gap: 6px;
-  margin-top: 20px;
+  gap: 4px;
+  margin-top: 18px;
   padding-inline: 2px;
   text-align: center;
 }
 
+/* What he is doing, in plain words; his own line follows in his hand. */
 .verb {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
-  font-size: 0.72rem;
+  font-size: var(--fs-micro);
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--fg-2);
-}
-
-.verbNum {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1rem;
-  letter-spacing: 0;
-  color: var(--accent);
 }
 
 .line {
@@ -730,22 +818,46 @@
   width: 28px;
   height: 28px;
   border-radius: 999px;
+  -webkit-tap-highlight-color: transparent;
+  transition: var(--press-transition);
+}
+
+/* Two fixed shapes in one cell: a small bead, and the current screen's pill. The pill
+   fades in from a narrow sliver (never a width change), so the dots keep up with the swipe. */
+.dot::before,
+.dot::after {
+  content: "";
+  grid-area: 1 / 1;
+  height: 7px;
+  border-radius: 999px;
+  transition:
+    opacity 0.2s var(--ease-out),
+    transform 0.25s var(--ease-out);
 }
 
 .dot::before {
-  content: "";
   width: 7px;
-  height: 7px;
-  border-radius: 999px;
   background: color-mix(in srgb, var(--fg-3) 80%, transparent);
-  transition:
-    width 0.8s var(--ease-out),
-    background-color 0.8s var(--ease-out);
+}
+
+.dot::after {
+  width: 22px;
+  background: var(--fg);
+  opacity: 0;
+  transform: scaleX(0.4);
 }
 
 .dot[aria-current="true"]::before {
-  width: 22px;
-  background: var(--accent);
+  opacity: 0;
+}
+
+.dot[aria-current="true"]::after {
+  opacity: 1;
+  transform: none;
+}
+
+.dot:active {
+  scale: 0.94;
 }
 
 /* Progress line (pinned mode) */
@@ -758,11 +870,9 @@
 
 .count {
   flex-shrink: 0;
-  min-width: 4.6em;
-  font-family: var(--font-serif);
-  font-size: 1.05rem;
-  font-feature-settings: "lnum" 1, "tnum" 1;
-  color: var(--fg-2);
+  font-size: var(--fs-small);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-3);
 }
 
 .countNow {
@@ -780,7 +890,7 @@
 .fill {
   position: absolute;
   inset: 0;
-  background: var(--accent);
+  background: var(--fg-2);
   transform-origin: 0 50%;
 }
 
@@ -802,8 +912,9 @@
 @media (min-width: 1024px) and (min-height: 680px) and (prefers-reduced-motion: no-preference) {
   .work {
     --phone-w: clamp(210px, min(20vw, calc((100vh - 300px) / 2)), 300px);
-    /* one screen pinned + 1.8 screens of travel */
-    height: 280vh;
+    /* one screen pinned + 0.8 of a screen of travel: the reel glides by briskly
+       and hands the page on, rather than holding it for two screens */
+    height: 180vh;
     /* the pinned frame brings its own breathing room */
     margin-top: clamp(0.5rem, 1.5vw, 1.5rem);
   }
@@ -854,7 +965,7 @@
     gap: 0;
     padding-left: max(var(--gutter), calc((100% - var(--wrap)) / 2));
     /* the reel comes to rest with its last phone a little right of centre */
-    padding-right: calc(40% - var(--phone-w) / 2);
+    padding-right: calc(34% - var(--phone-w) / 2);
     will-change: transform;
   }
 
@@ -869,7 +980,7 @@
   .rail {
     overflow: visible;
     scroll-snap-type: none;
-    gap: clamp(44px, 4.6vw, 84px);
+    gap: clamp(40px, 4vw, 72px);
     padding: 0;
   }
 
@@ -896,53 +1007,6 @@
   }
 }
 
-/* ---------------------------------------------------------------------
-   3. What he does
-   --------------------------------------------------------------------- */
-
-.behaviours {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
-  margin-top: clamp(4rem, 2.8rem + 4vw, 7rem);
-  list-style: none;
-}
-
-.behaviour {
-  padding-top: 20px;
-  border-top: 1px solid var(--line-strong);
-}
-
-.bNum {
-  display: block;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.2rem;
-  line-height: 1;
-  color: var(--accent-soft);
-}
-
-.bTitle {
-  margin: 12px 0 8px;
-  font-size: var(--fs-h4);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-}
-
-.bBody {
-  max-width: 30em;
-  font-size: var(--fs-small);
-  line-height: 1.65;
-  color: var(--fg-2);
-}
-
-@media (min-width: 768px) {
-  .behaviours {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: clamp(28px, 4vw, 64px);
-  }
-}
-
 /* ---------- Small phones ---------- */
 
 @media (max-width: 479px) {
@@ -958,16 +1022,20 @@
   .sayAsk {
     font-size: 1.25rem;
   }
-
-  .starA,
-  .starB {
-    display: none;
-  }
 }
 
-/* ---------- Reduced motion: everything still ---------- */
+/* ---------- Reduced motion: one short fade, then everything still ----------
+   The niche carries data-motion-safe, so these fades are its own (globals.css). */
 
 @media (prefers-reduced-motion: reduce) {
+  :global(html.js[data-reveal-live]) .niche:not([data-in]) .stage {
+    opacity: 0;
+  }
+
+  :global(html.js) .niche[data-in] .stage {
+    animation: nicheFade 0.3s ease backwards;
+  }
+
   .breathe,
   .lampSway,
   .heart,
@@ -975,7 +1043,21 @@
     animation: none;
   }
 
-  .dot::before {
-    transition: none;
+  /* A press dims the dot instead of shrinking it. */
+  .dot:active {
+    scale: none;
+    opacity: 0.82;
+  }
+}
+
+@media print {
+  .stage :is(.alcove, .plaque, .contact, .bubble, .word, .ticks, .heartSpot) {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  .figure {
+    transform: none !important;
+    animation: none !important;
   }
 }

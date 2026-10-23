@@ -1,0 +1,54 @@
+/* =====================================================================
+   Callout: the one aside box for the compare guides, the city pages and
+   the legal pages (quick answers, notes, quotes).
+   The homepage's quiet surface: paper, a hairline, a soft radius. No
+   coloured rule down the side. Pages keep only placement (margin, width)
+   in their own modules.
+   ===================================================================== */
+
+.box {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: clamp(20px, 2.4vw, 28px) clamp(20px, 2.8vw, 32px);
+  text-align: left;
+}
+
+/* Article paragraphs inside a box keep their spacing between, not after. */
+.box > :last-child {
+  margin-bottom: 0;
+}
+
+/* The single label at the top of a box: the homepage eyebrow, a size down. */
+.label {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.title {
+  margin-bottom: 8px;
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--fg);
+}
+
+.text {
+  margin: 0;
+  max-width: none;
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  line-height: 1.7;
+  color: var(--fg);
+}
+
+.text + .text {
+  margin-top: 12px;
+}

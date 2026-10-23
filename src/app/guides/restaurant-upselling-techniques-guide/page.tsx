@@ -466,14 +466,14 @@ export default function RestaurantUpsellingTechniquesPage() {
                     <td>Depends on who is working and how busy it is</td>
                     <td>Limited (one generic promo)</td>
                     <td>None (no prompts)</td>
-                    <td>Target around +25%, measured on your own tables (not a past result)</td>
+                    <td>A goal we measure with you, on your own tables</td>
                   </tr>
                   <tr>
                     <td><strong>Monthly Cost Structure</strong></td>
                     <td>High training &amp; turnover expense</td>
                     <td>Recurring print replacement fees</td>
                     <td>Free or cheap QR generator</td>
-                    <td>₹250 per table / month on Signature, 0% commission</td>
+                    <td>Shared on a walkthrough call · 0% commission</td>
                   </tr>
                 </tbody>
               </table>
@@ -641,7 +641,7 @@ export default function RestaurantUpsellingTechniquesPage() {
                 Knomi Host suggests the pairing at every table, gently and at the right moment, inside an illustrated menu
                 themed to your restaurant. No app, no login, and 0% commission.
               </p>
-              <Link href="/#book" className={styles.ctaButton}>
+              <Link href="/#book" className={`${styles.ctaButton} pressable`}>
                 Book a walkthrough
               </Link>
             </div>

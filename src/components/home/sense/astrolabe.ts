@@ -87,6 +87,9 @@ const DIAL_R = 2.6;
 const TICKS = 120;
 const CORE_R = 0.4;
 
+/** The wide, soft bloom around the core. Kept low so the brass reads before the glow. */
+const OUTER_HALO = 0.25;
+
 const INTRO_SECONDS = 2.6;
 /** Longest side of the drawing buffer, in device pixels, before the pixel ratio is capped. */
 const MAX_BUFFER = 1600;
@@ -311,7 +314,7 @@ export function createAstrolabe({ canvas, label = null, reducedMotion, onContext
     new SpriteMaterial({ map: haloTexture, transparent: true, blending: AdditiveBlending, depthWrite: false, opacity: 0.95 }),
   );
   const haloOuterMat = keep(
-    new SpriteMaterial({ map: haloTexture, transparent: true, blending: AdditiveBlending, depthWrite: false, opacity: 0.32 }),
+    new SpriteMaterial({ map: haloTexture, transparent: true, blending: AdditiveBlending, depthWrite: false, opacity: OUTER_HALO }),
   );
   const haloInner = new Sprite(haloInnerMat);
   haloInner.scale.setScalar(2.1);
@@ -582,7 +585,7 @@ export function createAstrolabe({ canvas, label = null, reducedMotion, onContext
     const breath = state.reduced ? 0 : Math.sin(clock * 1.05) * 0.07;
     coreUniforms.uPower.value = (0.98 + breath) * (0.3 + 0.7 * introCore);
     haloInnerMat.opacity = 0.95 * introCore;
-    haloOuterMat.opacity = (0.32 + breath * 0.6) * introCore;
+    haloOuterMat.opacity = (OUTER_HALO + breath * 0.5) * introCore;
     coreLight.intensity = 6 * introCore;
     gimbalA.rotation.set(clock * 0.42 + 0.6, clock * 0.31, 0.2);
     gimbalB.rotation.set(-clock * 0.27 + 1.4, 0.4, clock * 0.36);

@@ -64,6 +64,7 @@ export default function AggregatorCommissionCalculator() {
         {/* Tab Toggle */}
         <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginTop: "24px" }}>
           <button
+            className="pressable"
             type="button"
             onClick={() => setActiveTab("waterfall")}
             style={{
@@ -75,12 +76,13 @@ export default function AggregatorCommissionCalculator() {
               border: "1px solid var(--color-whiskey-sour)",
               backgroundColor: activeTab === "waterfall" ? "var(--color-whiskey-sour)" : "transparent",
               color: activeTab === "waterfall" ? "#fbf8f3" : "var(--color-text-primary)",
-              transition: "all 0.15s ease",
+              transition: "background-color 150ms ease, color 150ms ease, var(--press-transition)",
             }}
           >
             Mode 1: Single Order Settlement Waterfall
           </button>
           <button
+            className="pressable"
             type="button"
             onClick={() => setActiveTab("monthly")}
             style={{
@@ -92,7 +94,7 @@ export default function AggregatorCommissionCalculator() {
               border: "1px solid var(--color-whiskey-sour)",
               backgroundColor: activeTab === "monthly" ? "var(--color-whiskey-sour)" : "transparent",
               color: activeTab === "monthly" ? "#fbf8f3" : "var(--color-text-primary)",
-              transition: "all 0.15s ease",
+              transition: "background-color 150ms ease, color 150ms ease, var(--press-transition)",
             }}
           >
             Mode 2: Monthly Storefront Volume Auditor
@@ -435,7 +437,8 @@ export default function AggregatorCommissionCalculator() {
               <p className={styles.formulaNote}>
                 Each rupee of sales moved from an aggregator to a direct channel (dine-in or your own pickup) keeps
                 the deduction you would otherwise have paid, minus your own payment cost. Fixed costs of serving
-                guests directly (for example your KNOMI plan) are not included, so treat the result as an estimate.
+                guests directly (for example KNOMI&apos;s fee, which we share on a walkthrough call) are not
+                included, so treat the result as an estimate.
                 Your direct payment cost ({directPaymentPct.toFixed(1)}%) is set in Mode 1.
               </p>
             </div>

@@ -5,7 +5,8 @@ import Footer from '@/components/Footer';
 import PuneBreweryThroughputAuditor from './PuneBreweryThroughputAuditor';
 import ExperienceKnomiBox from '@/components/ExperienceKnomiBox';
 import styles from './PuneSolutions.module.css';
-import { GOAL, OG_IMAGE } from "@/content/site";
+import callout from '../../compare/Callout.module.css';
+import { GOAL, OG_IMAGE, worthHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'AI Restaurant Ordering System Pune (2026) | KNOMI',
@@ -104,7 +105,7 @@ export default function PuneRestaurantSelfOrderingPage() {
         name: 'Can KNOMI integrate with our existing restaurant billing software in Pune?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. KNOMI runs as an ordering, upselling and guest experience layer alongside your existing POS. On the Signature plan it integrates with the POS you already use (our Petpooja integration is already built; ask us about yours). Station KOTs print in your kitchen and bar, and your inventory, tax and cash reconciliation stay where they are.',
+          text: 'Yes. KNOMI runs as an ordering, upselling and guest experience layer alongside your existing POS. It can also integrate with the POS you already use (our Petpooja integration is already built; ask us about yours). Station KOTs print in your kitchen and bar, and your inventory, tax and cash reconciliation stay where they are.',
         },
       },
     ],
@@ -187,9 +188,9 @@ export default function PuneRestaurantSelfOrderingPage() {
 
         <div className={styles.contentWrapper}>
           {/* Answer-First AEO Block */}
-          <div className={styles.quickAnswerBox}>
-            <div className={styles.quickAnswerLabel}>Executive Operational Summary</div>
-            <p className={styles.quickAnswerText}>
+          <div className={`${callout.box} ${styles.quickAnswerBox}`}>
+            <div className={callout.label}>Executive Operational Summary</div>
+            <p className={callout.text}>
               A restaurant ordering system in Pune has two very local problems to solve: long server walks across sprawling garden restobars in Koregaon Park, and slow re-orders in loud Balewadi High Street brewpubs. KNOMI replaces paper menus with an illustrated QR menu on the guest&apos;s own phone, sends each order straight to the right kitchen or bar station, works alongside your existing POS and charges 0% commission.
             </p>
           </div>
@@ -404,7 +405,7 @@ export default function PuneRestaurantSelfOrderingPage() {
                     <td>Free or a small fee</td>
                     <td>Typically device cost plus a software fee</td>
                     <td>Varies: subscription and/or per-order fees</td>
-                    <td className={styles.knomiCol}>Signature, with self-ordering: ₹250 per table / month (Menu only: ₹149; Ecosystem: ₹500); 0% commission</td>
+                    <td className={styles.knomiCol}>Shared on a walkthrough call · 0% commission</td>
                   </tr>
                 </tbody>
               </table>
@@ -432,17 +433,17 @@ export default function PuneRestaurantSelfOrderingPage() {
                   <div className={styles.caseStudyMetricLabel}>Example Average Table Bill</div>
                 </div>
                 <div className={styles.caseStudyMetric}>
-                  <div className={styles.caseStudyMetricValue}>+25%</div>
-                  <div className={styles.caseStudyMetricLabel}>KNOMI&apos;s Target Lift (Not a Guarantee)</div>
+                  <div className={styles.caseStudyMetricValue}>1,800</div>
+                  <div className={styles.caseStudyMetricLabel}>Example Table Seatings a Month</div>
                 </div>
                 <div className={styles.caseStudyMetric}>
-                  <div className={styles.caseStudyMetricValue}>₹11,250</div>
-                  <div className={styles.caseStudyMetricLabel}>Signature for 45 Tables / Month</div>
+                  <div className={styles.caseStudyMetricValue}>₹27L</div>
+                  <div className={styles.caseStudyMetricLabel}>Revenue a Month on the Floor</div>
                 </div>
               </div>
 
               <p className={styles.paragraph} style={{ margin: 0, fontSize: '0.92rem', color: 'var(--color-text-secondary)' }}>
-                <em>The maths:</em> 1,800 seatings x ₹1,500 = ₹27,00,000 a month on the floor. At KNOMI&apos;s 25% target, that would be about ₹375 more per bill, for example another round or a woodfired pizza to share, or roughly ₹6.75 Lakhs a month, against a Signature cost of ₹11,250 and 0% commission. It is a target to measure against on your own tables, not a result we are quoting.
+                <em>The maths:</em> 1,800 seatings x ₹1,500 = ₹27,00,000 a month on the floor. Every rupee Knomi Host adds, say another round or a woodfired pizza to share, comes on top of that. To see what a lift would mean on your own numbers, try the <a href={worthHref}>calculator on our homepage</a>. KNOMI&apos;s fee is shared on a walkthrough call, and there is 0% commission.
               </p>
             </div>
 
@@ -454,7 +455,7 @@ export default function PuneRestaurantSelfOrderingPage() {
             </p>
             <ul className={styles.bulletList}>
               <li className={styles.bulletItem}>
-                <strong>Seamless Parallel Operation:</strong> KNOMI runs alongside the POS you already use. On the Signature plan it integrates with your existing POS; our Petpooja integration is already built, and we confirm the setup for other systems on a walkthrough.
+                <strong>Seamless Parallel Operation:</strong> KNOMI runs alongside the POS you already use. It can also integrate with your existing POS; our Petpooja integration is already built, and we confirm the setup for other systems on a walkthrough.
               </li>
               <li className={styles.bulletItem}>
                 <strong>No Proprietary Terminals:</strong> Guests order on their own phones, station tickets can print on standard network thermal printers, and the kitchen display and dashboard run in a web browser.

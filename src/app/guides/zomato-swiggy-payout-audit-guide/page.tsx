@@ -426,14 +426,13 @@ export default function AggregatorPayoutGuidePage() {
               wait for.
             </li>
             <li>
-              <strong>0% Commission:</strong> KNOMI charges one flat monthly fee per table: ₹149 on Menu (the
-              illustrated menu, without ordering), ₹250 on Signature (our recommended plan, with Knomi Host and guest
-              self-ordering) and ₹500 on Ecosystem (adding Knomi&apos;s own POS and the full Knomi Sense). Nothing is deducted from your dine-in sales,
-              and with no commission there is no GST on commission either.
+              <strong>0% Commission:</strong> Nothing is deducted from your dine-in sales, and with no commission
+              there is no GST on commission either. We share KNOMI&apos;s pricing on a short{" "}
+              <a href={bookHref} className={styles.inlineLink}>walkthrough call</a>, once we understand your restaurant.
             </li>
             <li>
-              <strong>Cleaner Reconciliation:</strong> Orders go straight to your kitchen display, and on the Signature
-              plan KNOMI integrates with the POS you already use, so dine-in orders sit in the same records you
+              <strong>Cleaner Reconciliation:</strong> Orders go straight to your kitchen display, and KNOMI
+              integrates with the POS you already use, so dine-in orders sit in the same records you
               reconcile every week.
             </li>
           </ul>
@@ -468,9 +467,9 @@ export default function AggregatorPayoutGuidePage() {
             <p>
               Keep orders from your own dining room off the weekly settlement cycle. KNOMI helps you grow every table:
               guests order directly from an illustrated menu while Knomi Host suggests the right pairing, with 0%
-              commission and one flat price per table, per month.
+              commission.
             </p>
-            <a href={bookHref} className={styles.ctaButton}>
+            <a href={bookHref} className={`${styles.ctaButton} pressable`}>
               Book a walkthrough &rarr;
             </a>
           </div>

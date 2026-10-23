@@ -404,9 +404,9 @@ export default function ServiceChargeGuidePage() {
           <div className={styles.ctaCard}>
             <h3>Replace Billing Friction With Revenue Guests Welcome</h3>
             <p>
-              Instead of a fee guests can refuse, let Knomi Host suggest the pairing they actually want, inside an illustrated menu themed to your restaurant. 0% commission and one flat price per table, per month: Menu ₹149, Signature ₹250 (our recommendation), or Ecosystem ₹500.
+              Instead of a fee guests can refuse, let Knomi Host suggest the pairing they actually want, inside an illustrated menu themed to your restaurant. 0% commission, and we share pricing on a short walkthrough call, once we understand your restaurant.
             </p>
-            <Link href={bookHref} className={styles.ctaButton}>
+            <Link href={bookHref} className={`${styles.ctaButton} pressable`}>
               Book a walkthrough
             </Link>
           </div>

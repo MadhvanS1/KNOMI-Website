@@ -1,23 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { pricing } from '@/content/site';
 import styles from './HyderabadSolutions.module.css';
 
 type HyderabadMarket = 'madhapurHitec' | 'jubileeHills' | 'gachibowli' | 'banjaraHills' | 'oldCityCharminar';
 
-// KNOMI Signature plan price per table per month (KNOMI Brain §2), read from the approved site copy.
-const SIGNATURE_PRICE_PER_TABLE = pricing.plans.find((p) => p.id === 'signature')?.priceMin ?? 250;
-
-// KNOMI's stated target for average-order lift. A target, not a past result or a guarantee.
-const KNOMI_TARGET_LIFT_PCT = 25;
+// The lift starts at 0%, so every figure comes from the owner. No KNOMI default or target.
+const START_LIFT_PCT = 0;
 
 export default function HyderabadVolumeThroughputAuditor() {
   const [activeTab, setActiveTab] = useState<'biryaniVolumeAuditor' | 'dakhniBasketModeler'>('biryaniVolumeAuditor');
 
   // Mode 1 State (all values are the user's own figures or assumptions)
   const [market, setMarket] = useState<HyderabadMarket>('madhapurHitec');
-  const [tableCount, setTableCount] = useState<number>(40);
   const [avgTableCheck, setAvgTableCheck] = useState<number>(1450);
   const [currentServers, setCurrentServers] = useState<number>(10);
   const [serverMonthlyCost, setServerMonthlyCost] = useState<number>(22000);
@@ -28,7 +23,7 @@ export default function HyderabadVolumeThroughputAuditor() {
   // Mode 2 State
   const [dailyCovers, setDailyCovers] = useState<number>(450);
   const [avgCoverSpend, setAvgCoverSpend] = useState<number>(550);
-  const [orderLiftPct, setOrderLiftPct] = useState<number>(KNOMI_TARGET_LIFT_PCT);
+  const [orderLiftPct, setOrderLiftPct] = useState<number>(START_LIFT_PCT);
   const [basketMarginPct, setBasketMarginPct] = useState<number>(65);
 
   // Mode 1: arithmetic on the user's inputs only
@@ -40,9 +35,7 @@ export default function HyderabadVolumeThroughputAuditor() {
     const extraMonthlyTurns = Math.round(extraTurnsPerWeek * 4.3);
     const monthlyTurnoverMargin = Math.round(extraMonthlyTurns * avgTableCheck * (grossMarginPct / 100));
 
-    const knomiMonthlyCost = tableCount * SIGNATURE_PRICE_PER_TABLE;
     const totalMonthlyEstimate = redirectedPayroll + monthlyTurnoverMargin;
-    const netOfKnomi = totalMonthlyEstimate - knomiMonthlyCost;
 
     return {
       currentLaborCost,
@@ -50,8 +43,7 @@ export default function HyderabadVolumeThroughputAuditor() {
       redirectedPayroll,
       extraMonthlyTurns,
       monthlyTurnoverMargin,
-      knomiMonthlyCost,
-      netOfKnomi,
+      totalMonthlyEstimate,
     };
   };
 
@@ -86,13 +78,13 @@ export default function HyderabadVolumeThroughputAuditor() {
 
       <div className={styles.tabButtons}>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'biryaniVolumeAuditor' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'biryaniVolumeAuditor' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('biryaniVolumeAuditor')}
         >
           Mode 1: Peak Rush Labor &amp; Table Turns
         </button>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'dakhniBasketModeler' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'dakhniBasketModeler' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('dakhniBasketModeler')}
         >
           Mode 2: Appetizer &amp; Dessert Order Lift
@@ -114,23 +106,18 @@ export default function HyderabadVolumeThroughputAuditor() {
                   const val = e.target.value as HyderabadMarket;
                   setMarket(val);
                   if (val === 'madhapurHitec') {
-                    setTableCount(40);
                     setAvgTableCheck(1350);
                     setCurrentServers(10);
                   } else if (val === 'jubileeHills') {
-                    setTableCount(56);
                     setAvgTableCheck(2400);
                     setCurrentServers(14);
                   } else if (val === 'gachibowli') {
-                    setTableCount(46);
                     setAvgTableCheck(1600);
                     setCurrentServers(11);
                   } else if (val === 'banjaraHills') {
-                    setTableCount(50);
                     setAvgTableCheck(2100);
                     setCurrentServers(12);
                   } else if (val === 'oldCityCharminar') {
-                    setTableCount(80);
                     setAvgTableCheck(1100);
                     setCurrentServers(18);
                   }
@@ -142,22 +129,6 @@ export default function HyderabadVolumeThroughputAuditor() {
                 <option value="banjaraHills">Banjara Hills (Multi-Cuisine Heritage Dining)</option>
                 <option value="oldCityCharminar">Charminar &amp; Abids (High-Volume Biryani Houses)</option>
               </select>
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label className={styles.inputLabel}>
-                <span>Active Dine-in Tables:</span>
-                <span className={styles.inputVal}>{tableCount} tables</span>
-              </label>
-              <input
-                type="range"
-                min={20}
-                max={90}
-                step={2}
-                value={tableCount}
-                onChange={(e) => setTableCount(Number(e.target.value))}
-                className={styles.rangeSlider}
-              />
             </div>
 
             <div className={styles.inputGroup}>
@@ -277,17 +248,13 @@ export default function HyderabadVolumeThroughputAuditor() {
                 <span className={styles.statLabel}>Margin from Extra Turns (estimate):</span>
                 <span className={styles.greenVal}>+₹{volumeResults.monthlyTurnoverMargin.toLocaleString('en-IN')}/mo</span>
               </div>
-              <div className={styles.statRow}>
-                <span className={styles.statLabel}>KNOMI Signature for {tableCount} Tables:</span>
-                <span className={styles.statVal}>₹{volumeResults.knomiMonthlyCost.toLocaleString('en-IN')}/mo</span>
-              </div>
               <div className={`${styles.statRow} ${styles.highlightRow}`}>
-                <span className={styles.statLabel}>Estimated Monthly Value, Net of KNOMI:</span>
-                <span className={styles.highlightVal}>₹{volumeResults.netOfKnomi.toLocaleString('en-IN')}/mo</span>
+                <span className={styles.statLabel}>Estimated Monthly Value:</span>
+                <span className={styles.highlightVal}>₹{volumeResults.totalMonthlyEstimate.toLocaleString('en-IN')}/mo</span>
               </div>
             </div>
             <p className={styles.calcNotice}>
-              Estimate only, built entirely from the figures and assumptions you entered. With self-ordering every table can order at once instead of waiting for a captain, but KNOMI does not promise staff reductions or extra turns; we measure what actually changes with you, on your own tables.
+              Figures are before KNOMI&apos;s fee, which we share on a walkthrough call. Estimate only, built entirely from the figures and assumptions you entered. With self-ordering every table can order at once instead of waiting for a captain, but KNOMI does not promise staff reductions or extra turns; we measure what actually changes with you, on your own tables.
             </p>
           </div>
         </div>
@@ -329,7 +296,7 @@ export default function HyderabadVolumeThroughputAuditor() {
 
             <div className={styles.inputGroup}>
               <label className={styles.inputLabel}>
-                <span>Average Order Lift to Model (default: KNOMI&apos;s target, not a guarantee):</span>
+                <span>Average Order Lift to Model (your assumption):</span>
                 <span className={styles.inputVal}>{orderLiftPct}%</span>
               </label>
               <input
@@ -386,7 +353,7 @@ export default function HyderabadVolumeThroughputAuditor() {
               </div>
             </div>
             <p className={styles.calcNotice}>
-              The {KNOMI_TARGET_LIFT_PCT}% default is KNOMI&apos;s target for average-order lift, not a guarantee or a past result. Knomi Host suggests pairings, such as Apollo Fish with the biryani or Double ka Meetha to finish; the real effect is something we measure with you on your own tables.
+              The lift starts at 0%: set your own assumption. It is not a KNOMI result or a guarantee. Knomi Host suggests pairings, such as Apollo Fish with the biryani or Double ka Meetha to finish; the real effect is something we measure with you on your own tables.
             </p>
           </div>
         </div>

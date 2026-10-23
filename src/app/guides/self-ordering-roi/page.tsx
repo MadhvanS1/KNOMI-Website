@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SectionHead from "@/components/ui/SectionHead";
 import RoiCalculator from "./RoiCalculator";
 import styles from "./SelfOrderingRoi.module.css";
 import { OG_IMAGE, bookHref } from "@/content/site";
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "What is the ROI of a self-ordering system for an Indian restaurant?",
-    a: "It depends on your floor, so model it with your own numbers. The return comes from two places: staff time (when guests place their own orders, servers spend less time taking orders and more time running food and looking after guests) and average order (a menu that suggests pairings at every table). Weigh those against the cost: KNOMI's Signature plan is ₹250 per table, per month, which is ₹5,000 a month for 20 tables, with 0% commission. We expect to lift your average order by about 25%, and in the trial we’ll show you the numbers from your own tables.",
+    a: "It depends on your floor, so model it with your own numbers. The return comes from two places: staff time (when guests place their own orders, servers spend less time taking orders and more time running food and looking after guests) and average order (a menu that suggests pairings at every table). Weigh those against what the system costs: KNOMI takes 0% commission, and we share pricing on a short walkthrough call, once we understand your restaurant. We expect to lift your average order by about 25%, and in the trial we’ll show you the numbers from your own tables.",
   },
   {
     q: "Does self-ordering completely replace human restaurant staff?",
@@ -60,7 +61,7 @@ const roiJsonLd = {
           "@type": "ListItem",
           position: 2,
           name: "Guides",
-          item: "https://www.knomi.in/#owners",
+          item: "https://www.knomi.in/guides",
         },
         {
           "@type": "ListItem",
@@ -133,7 +134,7 @@ export default function SelfOrderingRoiPage() {
             <nav className={styles.breadcrumb} aria-label="Breadcrumb">
               <Link href="/">Home</Link>
               <span>/</span>
-              <Link href="/#owners">Guides</Link>
+              <Link href="/guides">Guides</Link>
               <span>/</span>
               <span style={{ color: "var(--color-text-primary)" }}>
                 Self-Ordering ROI Calculator
@@ -180,14 +181,12 @@ export default function SelfOrderingRoiPage() {
         {/* Labor Economics Breakdown Section */}
         <section className={styles.mathSection}>
           <div className="container">
-            <div style={{ textAlign: "center" }}>
-              <p className="section-label">Operational Economics</p>
-              <h2 className="section-heading">How Self-Ordering Changes Restaurant Overhead</h2>
-              <p className="section-subheading">
-                What changes on the floor when guests in Bangalore, Mumbai or Delhi place their own
-                orders instead of waiting for an order-taker.
-              </p>
-            </div>
+            <SectionHead
+              className={styles.sectionHead}
+              eyebrow="Operational Economics"
+              titleLead="How Self-Ordering Changes Restaurant Overhead"
+              lead="What changes on the floor when guests in Bangalore, Mumbai or Delhi place their own orders instead of waiting for an order-taker."
+            />
 
             <div className={styles.mathGrid}>
               <div className={styles.mathCard}>
@@ -224,13 +223,12 @@ export default function SelfOrderingRoiPage() {
         {/* FAQ Section */}
         <section className={`section section--alt ${styles.faqSection}`}>
           <div className="container">
-            <div style={{ textAlign: "center" }}>
-              <p className="section-label">Common Inquiries</p>
-              <h2 className="section-heading">Frequently Asked Questions</h2>
-              <p className="section-subheading">
-                Key questions Indian restaurant operators ask before modernizing their dining rooms.
-              </p>
-            </div>
+            <SectionHead
+              className={styles.sectionHead}
+              eyebrow="Common Inquiries"
+              titleLead="Frequently Asked Questions"
+              lead="Key questions Indian restaurant operators ask before modernising their dining rooms."
+            />
 
             <div className={styles.faqGrid}>
               {faqs.map((faq, idx) => (

@@ -375,7 +375,7 @@ export default function LabourCostGuidePage() {
                   Use our interactive Self-Ordering ROI Calculator to estimate how the numbers could look
                   with your own table count, waiter salaries, and shift ratios.
                 </p>
-                <Link href="/guides/self-ordering-roi" className={styles.calcButton}>
+                <Link href="/guides/self-ordering-roi" className={`${styles.calcButton} pressable`}>
                   Open Interactive ROI Calculator →
                 </Link>
               </div>
@@ -410,14 +410,14 @@ export default function LabourCostGuidePage() {
                   to your kitchen display, alongside the POS you already use, at 0% commission.
                 </p>
                 <div className={styles.ctaActions}>
-                  <Link href="/#book" className={styles.primaryCta}>
+                  <Link href="/#book" className={`${styles.primaryCta} pressable`}>
                     Book a walkthrough
                   </Link>
                   <a
                     href={contact.whatsappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={styles.whatsappCta}
+                    className={`${styles.whatsappCta} pressable`}
                   >
                     Chat on WhatsApp
                   </a>

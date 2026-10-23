@@ -1,23 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { pricing } from '@/content/site';
 import styles from './PuneSolutions.module.css';
 
 type PuneMarket = 'koregaonPark' | 'balewadiBaner' | 'fcRoadDeccan' | 'vimanNagar' | 'hinjewadi';
 
-// KNOMI Signature plan price per table per month (KNOMI Brain §2), read from the approved site copy.
-const SIGNATURE_PRICE_PER_TABLE = pricing.plans.find((p) => p.id === 'signature')?.priceMin ?? 250;
-
-// KNOMI's stated target for average-order lift. A target, not a past result or a guarantee.
-const KNOMI_TARGET_LIFT_PCT = 25;
+// The lift starts at 0%, so every figure comes from the owner. No KNOMI default or target.
+const START_LIFT_PCT = 0;
 
 export default function PuneBreweryThroughputAuditor() {
   const [activeTab, setActiveTab] = useState<'outdoorTransitAuditor' | 'breweryUpsellModeler'>('outdoorTransitAuditor');
 
   // Mode 1 State (all values are the user's own figures or assumptions)
   const [market, setMarket] = useState<PuneMarket>('balewadiBaner');
-  const [tableCount, setTableCount] = useState<number>(40);
   const [transitRadius, setTransitRadius] = useState<number>(45); // metres from kitchen/bar pass to tables
   const [tripsPerTurn, setTripsPerTurn] = useState<number>(4);
   const [tripsReplaced, setTripsReplaced] = useState<number>(2);
@@ -29,7 +24,7 @@ export default function PuneBreweryThroughputAuditor() {
   // Mode 2 State
   const [dailyCovers, setDailyCovers] = useState<number>(380);
   const [avgDrinkSpend, setAvgDrinkSpend] = useState<number>(750);
-  const [orderLiftPct, setOrderLiftPct] = useState<number>(KNOMI_TARGET_LIFT_PCT);
+  const [orderLiftPct, setOrderLiftPct] = useState<number>(START_LIFT_PCT);
   const [basketMarginPct, setBasketMarginPct] = useState<number>(65);
 
   // Mode 1: walking-distance and payroll arithmetic on the user's inputs only
@@ -46,8 +41,6 @@ export default function PuneBreweryThroughputAuditor() {
     const effectiveWaitersFreed = Math.min(waitersFreed, currentWaiters);
     const redirectedPayroll = effectiveWaitersFreed * waiterMonthlyCost;
 
-    const knomiMonthlyCost = tableCount * SIGNATURE_PRICE_PER_TABLE;
-
     return {
       metersPerTableTurn,
       teamKmPerShift,
@@ -57,7 +50,6 @@ export default function PuneBreweryThroughputAuditor() {
       currentLaborCost,
       effectiveWaitersFreed,
       redirectedPayroll,
-      knomiMonthlyCost,
     };
   };
 
@@ -92,13 +84,13 @@ export default function PuneBreweryThroughputAuditor() {
 
       <div className={styles.tabButtons}>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'outdoorTransitAuditor' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'outdoorTransitAuditor' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('outdoorTransitAuditor')}
         >
           Mode 1: Outdoor Sprawl &amp; Server Footprint
         </button>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'breweryUpsellModeler' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'breweryUpsellModeler' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('breweryUpsellModeler')}
         >
           Mode 2: Craft Beer &amp; Basket Order Lift
@@ -137,22 +129,6 @@ export default function PuneBreweryThroughputAuditor() {
                 <option value="vimanNagar">Viman Nagar &amp; Nagar Road (Youth &amp; Campus Casual Dining)</option>
                 <option value="hinjewadi">Hinjewadi Phase 1 &amp; 2 (Tech Park Executive Lunch Rushes)</option>
               </select>
-            </div>
-
-            <div className={styles.inputGroup}>
-              <div className={styles.inputLabelRow}>
-                <span>Total Dining Tables</span>
-                <span className={styles.inputValueBadge}>{tableCount} Tables</span>
-              </div>
-              <input
-                type="range"
-                min="15"
-                max="80"
-                step="5"
-                value={tableCount}
-                onChange={(e) => setTableCount(Number(e.target.value))}
-                className={styles.rangeSlider}
-              />
             </div>
 
             <div className={styles.inputGroup}>
@@ -305,15 +281,8 @@ export default function PuneBreweryThroughputAuditor() {
               </span>
             </div>
 
-            <div className={styles.metricRow}>
-              <span className={styles.metricLabel}>KNOMI Signature for {tableCount} Tables</span>
-              <span className={styles.metricValue}>
-                ₹{transitResults.knomiMonthlyCost.toLocaleString('en-IN')} / mo
-              </span>
-            </div>
-
             <span className={styles.highlightSubtext}>
-              KNOMI does not promise staff reductions or a set number of minutes saved. We measure what actually changes with you, on your own tables.
+              KNOMI does not promise staff reductions or a set number of minutes saved. We measure what actually changes with you, on your own tables. Figures are before KNOMI&apos;s fee, which we share on a walkthrough call.
             </span>
           </div>
         </div>
@@ -354,7 +323,7 @@ export default function PuneBreweryThroughputAuditor() {
 
             <div className={styles.inputGroup}>
               <div className={styles.inputLabelRow}>
-                <span>Average Order Lift to Model (default: KNOMI&apos;s target, not a guarantee)</span>
+                <span>Average Order Lift to Model (your assumption)</span>
                 <span className={styles.inputValueBadge}>{orderLiftPct}%</span>
               </div>
               <input
@@ -418,7 +387,7 @@ export default function PuneBreweryThroughputAuditor() {
             </div>
 
             <span className={styles.highlightSubtext}>
-              The {KNOMI_TARGET_LIFT_PCT}% default is KNOMI&apos;s target for average-order lift, not a guarantee or a past result. Knomi Host suggests pairings, such as fries with the next pint; the real effect is something we measure with you on your own tables.
+              The lift starts at 0%: set your own assumption. It is not a KNOMI result or a guarantee. Knomi Host suggests pairings, such as fries with the next pint; the real effect is something we measure with you on your own tables.
             </span>
           </div>
         </div>

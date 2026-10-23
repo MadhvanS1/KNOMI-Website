@@ -1,23 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { pricing } from '@/content/site';
 import styles from './ChennaiSolutions.module.css';
 
 type ChennaiMarket = 'tNagar' | 'mylaporeTriplicane' | 'omrCorridor' | 'annaNagar' | 'nungambakkamAlwarpet';
 
-// KNOMI Signature plan price per table per month (KNOMI Brain §2), read from the approved site copy.
-const SIGNATURE_PRICE_PER_TABLE = pricing.plans.find((p) => p.id === 'signature')?.priceMin ?? 250;
-
-// KNOMI's stated target for average-order lift. A target, not a past result or a guarantee.
-const KNOMI_TARGET_LIFT_PCT = 25;
+// The lift starts at 0%, so every figure comes from the owner. No KNOMI default or target.
+const START_LIFT_PCT = 0;
 
 export default function ChennaiTiffinThroughputAuditor() {
   const [activeTab, setActiveTab] = useState<'tiffinTurnoverAuditor' | 'degreeCoffeeBasketModeler'>('tiffinTurnoverAuditor');
 
   // Mode 1 State (all values are the user's own figures or assumptions)
   const [market, setMarket] = useState<ChennaiMarket>('tNagar');
-  const [tableCount, setTableCount] = useState<number>(35);
   const [currentWaiters, setCurrentWaiters] = useState<number>(8);
   const [avgTableCheck, setAvgTableCheck] = useState<number>(650);
   const [waiterMonthlyCost, setWaiterMonthlyCost] = useState<number>(21000);
@@ -28,7 +23,7 @@ export default function ChennaiTiffinThroughputAuditor() {
   // Mode 2 State
   const [dailyCovers, setDailyCovers] = useState<number>(550);
   const [avgFoodSpend, setAvgFoodSpend] = useState<number>(320);
-  const [orderLiftPct, setOrderLiftPct] = useState<number>(KNOMI_TARGET_LIFT_PCT);
+  const [orderLiftPct, setOrderLiftPct] = useState<number>(START_LIFT_PCT);
   const [basketMarginPct, setBasketMarginPct] = useState<number>(65);
 
   // Mode 1: arithmetic on the user's inputs only
@@ -40,8 +35,7 @@ export default function ChennaiTiffinThroughputAuditor() {
     const extraMonthlyTurns = Math.round(extraTurnsPerWeek * 4.3);
     const monthlyTurnoverMargin = Math.round(extraMonthlyTurns * avgTableCheck * (grossMarginPct / 100));
 
-    const knomiMonthlyCost = tableCount * SIGNATURE_PRICE_PER_TABLE;
-    const netOfKnomi = redirectedPayroll + monthlyTurnoverMargin - knomiMonthlyCost;
+    const totalMonthlyEstimate = redirectedPayroll + monthlyTurnoverMargin;
 
     return {
       currentLaborCost,
@@ -49,8 +43,7 @@ export default function ChennaiTiffinThroughputAuditor() {
       redirectedPayroll,
       extraMonthlyTurns,
       monthlyTurnoverMargin,
-      knomiMonthlyCost,
-      netOfKnomi,
+      totalMonthlyEstimate,
     };
   };
 
@@ -85,13 +78,13 @@ export default function ChennaiTiffinThroughputAuditor() {
 
       <div className={styles.tabButtons}>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'tiffinTurnoverAuditor' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'tiffinTurnoverAuditor' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('tiffinTurnoverAuditor')}
         >
           Mode 1: Tiffin Floor Labor &amp; Table Turns
         </button>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'degreeCoffeeBasketModeler' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'degreeCoffeeBasketModeler' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('degreeCoffeeBasketModeler')}
         >
           Mode 2: Degree Coffee &amp; Sweet Order Lift
@@ -113,19 +106,14 @@ export default function ChennaiTiffinThroughputAuditor() {
                   setMarket(m);
                   if (m === 'tNagar') {
                     setAvgTableCheck(650);
-                    setTableCount(35);
                   } else if (m === 'mylaporeTriplicane') {
                     setAvgTableCheck(400);
-                    setTableCount(25);
                   } else if (m === 'omrCorridor') {
                     setAvgTableCheck(950);
-                    setTableCount(45);
                   } else if (m === 'annaNagar') {
                     setAvgTableCheck(1200);
-                    setTableCount(40);
                   } else if (m === 'nungambakkamAlwarpet') {
                     setAvgTableCheck(1850);
-                    setTableCount(35);
                   }
                 }}
               >
@@ -135,22 +123,6 @@ export default function ChennaiTiffinThroughputAuditor() {
                 <option value="annaNagar">Anna Nagar &amp; Kilpauk (Upscale Family Dining &amp; Cafes)</option>
                 <option value="nungambakkamAlwarpet">Nungambakkam &amp; Alwarpet (Fine Dining &amp; Craft Restobars)</option>
               </select>
-            </div>
-
-            <div className={styles.inputGroup}>
-              <div className={styles.inputLabelRow}>
-                <span>Total Dining Tables</span>
-                <span className={styles.inputValueBadge}>{tableCount} Tables</span>
-              </div>
-              <input
-                type="range"
-                min="15"
-                max="80"
-                step="5"
-                value={tableCount}
-                onChange={(e) => setTableCount(Number(e.target.value))}
-                className={styles.rangeSlider}
-              />
             </div>
 
             <div className={styles.inputGroup}>
@@ -252,12 +224,12 @@ export default function ChennaiTiffinThroughputAuditor() {
 
           <div className={styles.resultsPanel}>
             <div className={styles.highlightRow}>
-              <span className={styles.highlightLabel}>Estimated Monthly Value, Net of KNOMI</span>
+              <span className={styles.highlightLabel}>Estimated Monthly Value</span>
               <span className={styles.highlightValue}>
-                ₹{turnoverResults.netOfKnomi.toLocaleString('en-IN')}
+                ₹{turnoverResults.totalMonthlyEstimate.toLocaleString('en-IN')}
               </span>
               <span className={styles.highlightSubtext}>
-                Estimate from your own figures and assumptions, not a promise
+                Figures are before KNOMI&apos;s fee, which we share on a walkthrough call. An estimate from your own figures and assumptions, not a promise.
               </span>
             </div>
 
@@ -279,13 +251,6 @@ export default function ChennaiTiffinThroughputAuditor() {
               <span className={styles.metricLabel}>Margin from {turnoverResults.extraMonthlyTurns} Extra Turns / Month (estimate)</span>
               <span className={styles.metricValue}>
                 +₹{turnoverResults.monthlyTurnoverMargin.toLocaleString('en-IN')} / mo
-              </span>
-            </div>
-
-            <div className={styles.metricRow}>
-              <span className={styles.metricLabel}>KNOMI Signature for {tableCount} Tables</span>
-              <span className={styles.metricValue}>
-                ₹{turnoverResults.knomiMonthlyCost.toLocaleString('en-IN')} / mo
               </span>
             </div>
 
@@ -331,7 +296,7 @@ export default function ChennaiTiffinThroughputAuditor() {
 
             <div className={styles.inputGroup}>
               <div className={styles.inputLabelRow}>
-                <span>Average Order Lift to Model (default: KNOMI&apos;s target, not a guarantee)</span>
+                <span>Average Order Lift to Model (your assumption)</span>
                 <span className={styles.inputValueBadge}>{orderLiftPct}%</span>
               </div>
               <input
@@ -395,7 +360,7 @@ export default function ChennaiTiffinThroughputAuditor() {
             </div>
 
             <span className={styles.highlightSubtext}>
-              The {KNOMI_TARGET_LIFT_PCT}% default is KNOMI&apos;s target for average-order lift, not a guarantee or a past result. Knomi Host suggests pairings, such as a degree filter coffee with the dosa; the real effect is something we measure with you on your own tables.
+              The lift starts at 0%: set your own assumption. It is not a KNOMI result or a guarantee. Knomi Host suggests pairings, such as a degree filter coffee with the dosa; the real effect is something we measure with you on your own tables.
             </span>
           </div>
         </div>

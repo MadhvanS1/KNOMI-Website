@@ -2,26 +2,22 @@
 
 import React, { useState } from "react";
 import styles from "./PetpoojaMigrationAuditor.module.css";
-import { GOAL, pricing } from "@/content/site";
+import { GOAL } from "@/content/site";
 
 type TabMode = "roi" | "coexistence";
 type ScenarioKey = "status_quo" | "rip_replace" | "coexistence";
 
-const signaturePlan = pricing.plans.find((plan) => plan.id === "signature");
-const SIGNATURE_PRICE = signaturePlan ? signaturePlan.priceMin : 250;
-
-// KNOMI's stated goal (KNOMI Brain §1, §5): around +25% on the average order.
-// A target to be measured in the trial, not a past result.
-const KNOMI_TARGET_LIFT = 0.25;
+// The lift is the owner's own assumption and starts at 0%: no KNOMI default or target.
+const START_LIFT_PCT = 0;
 
 export default function PetpoojaMigrationAuditor() {
   const [activeTab, setActiveTab] = useState<TabMode>("roi");
   const [selectedScenario, setSelectedScenario] = useState<ScenarioKey>("coexistence");
 
   // Mode 1: Estimate inputs (the user's own figures)
-  const [tableCount, setTableCount] = useState<number>(20);
   const [monthlyCovers, setMonthlyCovers] = useState<number>(1200);
   const [avgCheck, setAvgCheck] = useState<number>(1400);
+  const [liftPct, setLiftPct] = useState<number>(START_LIFT_PCT);
 
   // Currency Formatter
   const formatCurrency = (val: number) => {
@@ -32,10 +28,10 @@ export default function PetpoojaMigrationAuditor() {
     }).format(val);
   };
 
-  // Mode 1 Computations (arithmetic on the inputs, at KNOMI's +25% target)
-  const monthlyKnomiFee = tableCount * SIGNATURE_PRICE;
-  const avgCheckAtTarget = Math.round(avgCheck * (1 + KNOMI_TARGET_LIFT));
-  const monthlyExtraRevenueAtTarget = Math.round(monthlyCovers * avgCheck * KNOMI_TARGET_LIFT);
+  // Mode 1 Computations (arithmetic on the inputs, at the owner's own lift)
+  const avgCheckWithLift = Math.round(avgCheck * (1 + liftPct / 100));
+  const monthlyExtraRevenue = Math.round(monthlyCovers * avgCheck * (liftPct / 100));
+  const annualExtraRevenue = monthlyExtraRevenue * 12;
 
   return (
     <div className={styles.auditorContainer}>
@@ -49,14 +45,14 @@ export default function PetpoojaMigrationAuditor() {
       <div className={styles.tabGroup}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === "roi" ? styles.tabBtnActive : ""}`}
+          className={`${styles.tabBtn} pressable ${activeTab === "roi" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("roi")}
         >
-          1. Table Intelligence ROI Calculator
+          1. What a Higher Average Order Could Be Worth
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === "coexistence" ? styles.tabBtnActive : ""}`}
+          className={`${styles.tabBtn} pressable ${activeTab === "coexistence" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("coexistence")}
         >
           2. Co-Existence Architecture Guide
@@ -66,23 +62,6 @@ export default function PetpoojaMigrationAuditor() {
       {activeTab === "roi" ? (
         <>
           <div className={styles.controlsGrid}>
-            <div className={styles.controlCard}>
-              <div className={styles.controlLabelGroup}>
-                <span className={styles.controlLabel}>Dine-In Tables</span>
-                <span className={styles.controlValue}>{tableCount} Tables</span>
-              </div>
-              <input
-                type="range"
-                min="10"
-                max="60"
-                step="2"
-                value={tableCount}
-                onChange={(e) => setTableCount(Number(e.target.value))}
-                className={styles.sliderInput}
-              />
-              <span className={styles.controlHint}>Floor dining tables in active service</span>
-            </div>
-
             <div className={styles.controlCard}>
               <div className={styles.controlLabelGroup}>
                 <span className={styles.controlLabel}>Monthly Bills</span>
@@ -117,51 +96,59 @@ export default function PetpoojaMigrationAuditor() {
               <span className={styles.controlHint}>Average food and beverage bill subtotal</span>
             </div>
 
-            <div className={styles.controlCard}>
+            <div className={`${styles.controlCard} ${styles.controlCardWide}`}>
               <div className={styles.controlLabelGroup}>
-                <span className={styles.controlLabel}>Average-Order Lift</span>
-                <span className={styles.controlValue}>+25%</span>
+                <span className={styles.controlLabel}>Average-Order Lift (your assumption)</span>
+                <span className={styles.controlValue}>+{liftPct}%</span>
               </div>
-              <span className={styles.controlHint}>
-                KNOMI&apos;s target (not a guarantee). It hasn&apos;t been measured on a live restaurant yet.
-              </span>
+              <input
+                type="range"
+                min="0"
+                max="40"
+                step="1"
+                value={liftPct}
+                aria-label="Average-order lift, your assumption"
+                onChange={(e) => setLiftPct(Number(e.target.value))}
+                className={styles.sliderInput}
+              />
+              <span className={styles.controlHint}>Starts at 0%: set your own estimate. Not a KNOMI result or guarantee.</span>
             </div>
           </div>
 
           <div className={styles.resultsSection}>
             <div className={styles.resultsGrid}>
               <div className={styles.resultCard}>
-                <div className={styles.resultValue}>{formatCurrency(avgCheckAtTarget)}</div>
+                <div className={styles.resultValue}>{formatCurrency(avgCheckWithLift)}</div>
                 <div className={styles.resultLabel}>
-                  Average Bill at the +25% Target (estimate)
+                  Average Bill at a {liftPct}% Lift (estimate)
                 </div>
               </div>
 
               <div className={styles.resultCard}>
-                <div className={styles.resultValue}>{formatCurrency(monthlyExtraRevenueAtTarget)}</div>
+                <div className={styles.resultValue}>{formatCurrency(monthlyExtraRevenue)}</div>
                 <div className={styles.resultLabel}>
-                  Extra Monthly Revenue at the Target (estimate)
+                  Extra Monthly Revenue (estimate)
                 </div>
               </div>
 
               <div className={styles.resultCard}>
-                <div className={styles.resultValue}>{formatCurrency(monthlyKnomiFee)}</div>
+                <div className={styles.resultValue}>{formatCurrency(annualExtraRevenue)}</div>
                 <div className={styles.resultLabel}>
-                  KNOMI Signature for {tableCount} Tables, per Month (0% commission)
+                  Extra Yearly Revenue (estimate)
                 </div>
               </div>
             </div>
 
             <div className={styles.bottomLineBanner}>
               <div>
-                <div className={styles.bannerTitle}>What the Target Would Mean for You</div>
+                <div className={styles.bannerTitle}>What Your Lift Would Mean</div>
                 <p className={styles.bannerSubtitle}>
-                  {GOAL} This is an estimate on your inputs, not a forecast.
+                  {GOAL} This is an estimate on your inputs, not a forecast. Figures are before KNOMI&apos;s fee, which we share on a walkthrough call.
                 </p>
               </div>
               <div>
-                <div className={styles.bannerNumber}>{formatCurrency(monthlyExtraRevenueAtTarget)}</div>
-                <span className={styles.bannerSuffix}>extra revenue a month at the target (estimate)</span>
+                <div className={styles.bannerNumber}>{formatCurrency(monthlyExtraRevenue)}</div>
+                <span className={styles.bannerSuffix}>extra revenue a month at your {liftPct}% lift (estimate)</span>
               </div>
             </div>
           </div>
@@ -170,7 +157,7 @@ export default function PetpoojaMigrationAuditor() {
         <>
           <div className={styles.archGrid}>
             <div
-              className={`${styles.archCard} ${selectedScenario === "status_quo" ? styles.archCardSelected : ""}`}
+              className={`${styles.archCard} pressable ${selectedScenario === "status_quo" ? styles.archCardSelected : ""}`}
               onClick={() => setSelectedScenario("status_quo")}
             >
               <span className={`${styles.archTag} ${styles.tagDanger}`}>Option A: Till Only</span>
@@ -186,7 +173,7 @@ export default function PetpoojaMigrationAuditor() {
             </div>
 
             <div
-              className={`${styles.archCard} ${selectedScenario === "rip_replace" ? styles.archCardSelected : ""}`}
+              className={`${styles.archCard} pressable ${selectedScenario === "rip_replace" ? styles.archCardSelected : ""}`}
               onClick={() => setSelectedScenario("rip_replace")}
             >
               <span className={`${styles.archTag} ${styles.tagWarning}`}>Option B: Rip &amp; Replace</span>
@@ -202,7 +189,7 @@ export default function PetpoojaMigrationAuditor() {
             </div>
 
             <div
-              className={`${styles.archCard} ${selectedScenario === "coexistence" ? styles.archCardSelected : ""}`}
+              className={`${styles.archCard} pressable ${selectedScenario === "coexistence" ? styles.archCardSelected : ""}`}
               onClick={() => setSelectedScenario("coexistence")}
             >
               <span className={`${styles.archTag} ${styles.tagSuccess}`}>Option C: Our Recommendation</span>
@@ -213,7 +200,7 @@ export default function PetpoojaMigrationAuditor() {
               <ul className={styles.archFeatureList}>
                 <li className={styles.archFeatureItem}>✓ No POS migration; billing stays as it is</li>
                 <li className={styles.archFeatureItem}>✓ Illustrated menu opens in the browser, no app or login</li>
-                <li className={styles.archFeatureItem}>✓ Knomi Compass shows dishes viewed but not ordered (Ecosystem plan)</li>
+                <li className={styles.archFeatureItem}>✓ Knomi Compass shows dishes viewed but not ordered</li>
               </ul>
             </div>
           </div>
@@ -241,7 +228,7 @@ export default function PetpoojaMigrationAuditor() {
               <>
                 <div className={styles.archDetailTitle}>The Modern Co-Existence Strategy</div>
                 <p className={styles.archDetailText}>
-                  Keep what already works. Petpooja stays at the counter for daily cash reconciliation, Tally exports and GST filing. KNOMI QR stands go on the tables: guests open an illustrated menu with no app and no login, Knomi Host suggests pairings, and guests confirm their order with a phone number. Orders go to your kitchen display and, on the Signature plan (₹{SIGNATURE_PRICE} per table, per month), into Petpooja. Signature includes the essentials of Knomi Sense; on the Ecosystem plan, the full Knomi Sense and Knomi Compass add menu insights to your dashboard.
+                  Keep what already works. Petpooja stays at the counter for daily cash reconciliation, Tally exports and GST filing. KNOMI QR stands go on the tables: guests open an illustrated menu with no app and no login, Knomi Host suggests pairings, and guests confirm their order with a phone number. Orders go to your kitchen display and into Petpooja, and Knomi Compass, powered by Knomi Sense, adds menu insights to your dashboard.
                 </p>
               </>
             )}

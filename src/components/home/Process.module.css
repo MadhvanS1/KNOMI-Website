@@ -58,7 +58,7 @@
   display: block;
 }
 
-/* A hollow stop that fills with russet when the line arrives. */
+/* A hollow stop that fills with russet when the line arrives: a short fade from 90%. */
 .stop {
   position: absolute;
   z-index: 1;
@@ -74,7 +74,11 @@
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent);
-  transform: scale(0);
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 200ms var(--ease-out),
+    transform 240ms var(--ease-out);
 }
 
 .track {
@@ -115,7 +119,17 @@
   inset: 0;
   background: var(--accent);
   clip-path: inherit;
-  transform: scale(0);
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 200ms var(--ease-out),
+    transform 240ms var(--ease-out);
+}
+
+.stopFill[data-on],
+.capFill[data-on] {
+  opacity: 1;
+  transform: none;
 }
 
 .body {
@@ -279,6 +293,7 @@
   .seg,
   .stopFill,
   .capFill {
+    opacity: 1 !important;
     transform: none !important;
   }
 }

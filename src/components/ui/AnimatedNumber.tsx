@@ -1,7 +1,8 @@
 "use client";
 
 import { animate, useReducedMotion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { EASE_OUT } from "./Reveal";
 
 const inr = new Intl.NumberFormat("en-IN");
 
@@ -14,35 +15,39 @@ type AnimatedNumberProps = {
   className?: string;
 };
 
-/** Rolls smoothly from its previous value to `value`, formatted the Indian way (2,50,000). */
-export default function AnimatedNumber({ value, prefix = "", suffix = "", duration = 0.8, className }: AnimatedNumberProps) {
+/** Rolls smoothly from its previous value to `value`, formatted the Indian way (2,50,000).
+ *  A change mid-roll carries on from the figure on screen, so a dragged slider never jumps.
+ *  Reduced motion: the new figure is set at once. */
+export default function AnimatedNumber({ value, prefix = "", suffix = "", duration = 0.6, className }: AnimatedNumberProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const from = useRef(value);
+  // The number currently on screen (mid-roll, it sits between two targets).
+  const shown = useRef(value);
+  // React renders the first figure (server HTML and hydration agree); the effect owns it after that.
+  const [first] = useState(() => `${prefix}${inr.format(Math.round(value))}${suffix}`);
   const reduce = useReducedMotion();
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
     const render = (n: number) => {
+      shown.current = n;
       node.textContent = `${prefix}${inr.format(Math.round(n))}${suffix}`;
     };
-    if (reduce) {
+    if (reduce || shown.current === value) {
       render(value);
-      from.current = value;
       return;
     }
-    const controls = animate(from.current, value, {
+    const controls = animate(shown.current, value, {
       duration,
-      ease: [0.22, 1, 0.36, 1],
+      ease: EASE_OUT,
       onUpdate: render,
     });
-    from.current = value;
     return () => controls.stop();
   }, [value, prefix, suffix, duration, reduce]);
 
   return (
     <span ref={ref} className={className} style={{ fontVariantNumeric: "tabular-nums" }}>
-      {`${prefix}${inr.format(value)}${suffix}`}
+      {first}
     </span>
   );
 }

@@ -19,6 +19,24 @@ section.section {
   min-width: 0;
 }
 
+/* "Who it's for" keeps its label exactly as it was (the leading rule, size, weight and
+   tracking) while the site-wide .eyebrow was simplified elsewhere. */
+.headCol :global(.eyebrow) {
+  gap: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.2em;
+}
+
+.headCol :global(.eyebrow)::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
 .sticky {
   position: sticky;
   top: calc(var(--nav-h) + 44px);
@@ -57,24 +75,25 @@ section.section {
 .archFill {
   fill: var(--surface);
   opacity: 0;
-  transition: opacity 520ms var(--ease-out);
+  transition: opacity 260ms var(--ease-out);
 }
 
 .archLit {
   stroke: var(--accent);
   opacity: 0;
-  transition: opacity 420ms var(--ease-out);
+  transition: opacity 220ms var(--ease-out);
 }
 
+/* Interaction answers within 0.3s; the star settles from 90%, never from nothing. */
 .archStar {
   fill: var(--accent-soft);
   opacity: 0;
-  transform: scale(0.3) rotate(-45deg);
+  transform: scale(0.9) rotate(-45deg);
   transform-box: fill-box;
   transform-origin: center;
   transition:
-    opacity 380ms var(--ease-out),
-    transform 560ms var(--ease-out);
+    opacity 200ms var(--ease-out),
+    transform 280ms var(--ease-out);
 }
 
 .archFill[data-on="true"],
@@ -154,8 +173,8 @@ section.section {
   transform: scaleX(0.92);
   transform-origin: left center;
   transition:
-    opacity 480ms var(--ease-out),
-    transform 720ms var(--ease-out);
+    opacity 200ms var(--ease-out),
+    transform 280ms var(--ease-out);
 }
 
 .index {
@@ -165,7 +184,7 @@ section.section {
   letter-spacing: 0.14em;
   color: var(--fg-3);
   font-variant-numeric: tabular-nums;
-  transition: color var(--dur) var(--ease-out);
+  transition: color 200ms var(--ease-out);
 }
 
 .copy {
@@ -176,7 +195,7 @@ section.section {
   font-size: var(--t);
   line-height: 1.05;
   letter-spacing: -0.018em;
-  transition: transform 420ms var(--ease-out);
+  transition: transform 260ms var(--ease-out);
 }
 
 .body {
@@ -201,10 +220,10 @@ section.section {
   height: 12px;
   background: var(--accent);
   opacity: 0;
-  transform: scale(0.4) rotate(-45deg);
+  transform: scale(0.9) rotate(-45deg);
   transition:
-    opacity 360ms var(--ease-out),
-    transform 520ms var(--ease-out);
+    opacity 200ms var(--ease-out),
+    transform 280ms var(--ease-out);
 }
 
 /* Active: the row currently being read, or hovered. */
@@ -217,7 +236,7 @@ section.section {
   transform: none;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .row:hover::before {
     opacity: 1;
     transform: none;

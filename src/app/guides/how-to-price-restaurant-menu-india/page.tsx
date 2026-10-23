@@ -523,7 +523,7 @@ export default function MenuPricingGuidePage() {
               illustrated menu gives every dish its own page, and Knomi Host suggests the pairing as
               guests order. {GOAL}
             </p>
-            <Link href="/#book" className={styles.calcBtn}>
+            <Link href="/#book" className={`${styles.calcBtn} pressable`}>
               Book a walkthrough
             </Link>
           </div>

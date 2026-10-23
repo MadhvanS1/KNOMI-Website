@@ -9,13 +9,12 @@ import {
   useScroll,
   useTransform,
   type MotionValue,
-  type Variants,
 } from "framer-motion";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import HostArt from "@/components/ui/HostArt";
 import PhoneFrame from "@/components/ui/PhoneFrame";
 import SectionHead from "@/components/ui/SectionHead";
-import { EASE_OUT, Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import { hero, hostChapter, hostScreens } from "@/content/site";
 import styles from "./HostChapter.module.css";
 
@@ -26,15 +25,12 @@ import styles from "./HostChapter.module.css";
  * 2. "Host at work": the six real KNOMI menu screens he lives in. On desktop the
  *    reel is pinned and glides sideways as the reader scrolls; elsewhere (and with
  *    reduced motion) it is a swipeable, snapping row.
- * 3. What he does, in three quiet columns.
  */
 
-const { dressed, behaviours } = hostChapter;
+const { dressed } = hostChapter;
 const HOST_NAME = hero.hostBubble.name;
 const SCREENS = hostScreens;
 const TOTAL = SCREENS.length;
-const ROMAN = ["i", "ii", "iii", "iv", "v", "vi"];
-const pad = (n: number) => String(n).padStart(2, "0");
 
 /* His greeting, as on the menu's first screen: "Hey there!" set large, the question below. */
 const GREETING = (SCREENS.find((s) => s.id === "greet") ?? SCREENS[0]).line;
@@ -46,7 +42,6 @@ const HELLO_WORDS = HELLO.split(" ");
 const ASK_WORDS = ASK ? ASK.split(" ") : [];
 
 const SKYLINE = "/images/illustrations/skyline-cafe.webp";
-const EASE_POP: [number, number, number, number] = [0.34, 1.45, 0.64, 1];
 
 /* ---------- Media preferences (hydration-safe: the server value renders first) ---------- */
 
@@ -147,139 +142,111 @@ function Arrow() {
   );
 }
 
+/** One word of his greeting; `n` is its place in the sentence, for the CSS stagger. */
+function Word({ text, n }: { text: string; n: number }) {
+  return (
+    <>
+      <span className={styles.word} style={{ "--w": n } as CSSProperties}>
+        {text}
+      </span>{" "}
+    </>
+  );
+}
+
 /* ---------- 1. Host in his niche ---------- */
 
+/*
+ * The entrance is CSS (HostChapter.module.css, "Entrance"), driven by the shared reveal
+ * script: everything renders visible, and only while that script is live does the niche
+ * wait unseen. Two cues: the niche itself ([data-in] as it nears the screen) brings in
+ * the alcove and its lamp; the cue near the sill brings Host up to lean on it and say
+ * hello, so he rises where he can be seen rather than below the fold.
+ */
 function Niche() {
-  const reduce = useReduced();
   const ref = useRef<HTMLDivElement>(null);
   // Idle motion (breathing, the lamp's sway) only runs while he is on screen.
   const awake = useInView(ref, { margin: "0px 0px -8% 0px" });
 
-  const tr = (duration: number, delay = 0, ease: [number, number, number, number] = EASE_OUT) =>
-    reduce ? { duration: 0 } : { duration, delay, ease };
-
-  const v = {
-    alcove: { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: tr(1.15) } },
-    glow: { hidden: { opacity: 0 }, show: { opacity: 1, transition: tr(1.8, 0.35) } },
-    skyline: { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: tr(1.5, 0.4) } },
-    arch: {
-      hidden: { clipPath: "inset(100% 0% 0% 0%)" },
-      show: { clipPath: "inset(0% 0% 0% 0%)", transition: tr(1.5, 0.3) },
-    },
-    lamp: { hidden: { opacity: 0, y: -18 }, show: { opacity: 1, y: 0, transition: tr(1.3, 0.5) } },
-    rise: { hidden: { y: "62%" }, show: { y: "0%", transition: tr(1.3, 0.6) } },
-    contact: { hidden: { opacity: 0, scaleX: 0.6 }, show: { opacity: 1, scaleX: 1, transition: tr(1.1, 0.95) } },
-    plaque: { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: tr(1, 0.9) } },
-    ticks: {
-      hidden: { opacity: 0, scale: 0.4, rotate: -14 },
-      show: { opacity: 1, scale: 1, rotate: 0, transition: tr(0.8, 1.55, EASE_POP) },
-    },
-    heart: { hidden: { opacity: 0, scale: 0.3 }, show: { opacity: 1, scale: 1, transition: tr(0.8, 1.75, EASE_POP) } },
-    bubble: {
-      hidden: { opacity: 0, scale: 0.84, y: 10 },
-      show: { opacity: 1, scale: 1, y: 0, transition: tr(0.95, 1.3, EASE_POP) },
-    },
-  } satisfies Record<string, Variants>;
-
-  // His words arrive one by one, as if he were saying them.
-  const word: Variants = {
-    hidden: { opacity: 0, y: 7 },
-    show: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: reduce ? { duration: 0 } : { duration: 0.7, delay: 1.55 + i * 0.075, ease: EASE_OUT },
-    }),
-  };
-
   return (
-    <motion.div
+    <div
       ref={ref}
       className={styles.niche}
       data-awake={awake}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.35 }}
+      data-reveal="watch"
+      data-motion-safe=""
+      suppressHydrationWarning
     >
-      <span className={`ornament ${styles.starA}`} aria-hidden="true" />
-      <span className={`ornament ${styles.starB}`} aria-hidden="true" />
-
       <div className={styles.stage}>
+        <span className={styles.cue} data-reveal="watch" aria-hidden="true" suppressHydrationWarning />
+
         {/* The alcove: back wall, lamplight, a sketch of the town, a brass hairline arch. */}
-        <motion.div className={styles.alcove} variants={v.alcove} aria-hidden="true">
-          <motion.span className={styles.glow} variants={v.glow} />
-          <motion.span className={styles.skyline} variants={v.skyline}>
+        <div className={styles.alcove} aria-hidden="true">
+          <span className={styles.glow} />
+          <span className={styles.skyline}>
             <Image src={SKYLINE} alt="" fill sizes="440px" className={styles.skylineImg} />
-          </motion.span>
+          </span>
           <span className={styles.shade} />
-          <motion.span className={styles.innerArch} variants={v.arch} />
-          <motion.span className={styles.lamp} variants={v.lamp}>
+          <span className={styles.innerArch} />
+          <span className={styles.lamp}>
             <span className={styles.lampSway}>
               <Lantern />
             </span>
-          </motion.span>
-        </motion.div>
+          </span>
+        </div>
 
         {/* The sill he leans on (drawn), with his name plate on its face. */}
         <div className={styles.sill} aria-hidden="true">
           <span className={styles.sillTop} />
           <span className={styles.sillFront} />
         </div>
-        <motion.p className={styles.plaque} variants={v.plaque} aria-hidden="true">
+        <p className={styles.plaque} aria-hidden="true">
           <span className={styles.screw} />
           <span className={styles.plaqueName}>{HOST_NAME}</span>
           <span className={styles.screw} />
-        </motion.p>
+        </p>
 
         {/* Host, rising from behind the sill to rest his arms on it. */}
         <div className={styles.figureClip}>
-          <motion.span className={styles.contact} variants={v.contact} aria-hidden="true" />
-          <motion.div className={styles.figure} variants={v.rise}>
+          <span className={styles.contact} aria-hidden="true" />
+          <div className={styles.figure}>
             <span className={styles.breathe}>
               <HostArt pose="think" size="100%" className={styles.hostArt} />
             </span>
-          </motion.div>
+          </div>
         </div>
 
-        <motion.span className={styles.ticks} variants={v.ticks} aria-hidden="true">
+        <span className={styles.ticks} aria-hidden="true">
           <Ticks />
-        </motion.span>
-        <motion.span className={styles.heartSpot} variants={v.heart} aria-hidden="true">
+        </span>
+        <span className={styles.heartSpot} aria-hidden="true">
           <span className={styles.heart}>
             <Heart />
           </span>
-        </motion.span>
+        </span>
 
         {/* What he says, in his handwriting. */}
         <div className={styles.bubbleSpot}>
-          <motion.div className={styles.bubble} variants={v.bubble}>
+          <div className={styles.bubble}>
             <Tail />
             <p className={styles.say}>
               <span className="sr-only">{GREETING}</span>
               <span className={styles.sayHello} aria-hidden="true">
                 {HELLO_WORDS.map((w, i) => (
-                  <span key={`h${i}`}>
-                    <motion.span className={styles.word} variants={word} custom={i}>
-                      {w}
-                    </motion.span>{" "}
-                  </span>
+                  <Word key={`h${i}`} text={w} n={i} />
                 ))}
               </span>
               {ASK_WORDS.length > 0 && (
                 <span className={styles.sayAsk} aria-hidden="true">
                   {ASK_WORDS.map((w, i) => (
-                    <span key={`a${i}`}>
-                      <motion.span className={styles.word} variants={word} custom={HELLO_WORDS.length + i + 1}>
-                        {w}
-                      </motion.span>{" "}
-                    </span>
+                    <Word key={`a${i}`} text={w} n={HELLO_WORDS.length + i + 1} />
                   ))}
                 </span>
               )}
             </p>
-          </motion.div>
+          </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -308,11 +275,6 @@ function focusAt(g: Geo, shift: number) {
   const p = g.dist > 0 ? Math.min(1, Math.max(0, -shift / g.dist)) : 0;
   return first + p * (last - first);
 }
-
-const slideReveal: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 1.1, ease: EASE_OUT } },
-};
 
 function Slide({
   item,
@@ -344,7 +306,8 @@ function Slide({
 
   return (
     <motion.li ref={setRef} className={styles.slide} style={{ rotate, y, scale }}>
-      <motion.figure className={styles.shot} variants={slideReveal}>
+      {/* Rises in turn with the rest of the reel (data-reveal="group" on the rail). */}
+      <figure className={styles.shot} data-reveal-item="" style={{ "--i": index } as CSSProperties}>
         <PhoneFrame
           src={item.src}
           alt={item.alt}
@@ -352,15 +315,10 @@ function Slide({
           className={styles.phone}
         />
         <figcaption className={styles.caption}>
-          <span className={styles.verb}>
-            <span className={styles.verbNum} aria-hidden="true">
-              {pad(index + 1)}
-            </span>
-            {item.verb}
-          </span>{" "}
+          <span className={styles.verb}>{item.verb}</span>{" "}
           <span className={styles.line}>“{item.line}”</span>
         </figcaption>
-      </motion.figure>
+      </figure>
     </motion.li>
   );
 }
@@ -486,33 +444,30 @@ function HostAtWork() {
       <div className={styles.sticky}>
         <div ref={viewportRef} className={styles.viewport}>
           <motion.div ref={trackRef} className={styles.track} style={{ x }}>
-            <Reveal className={styles.workHead} amount={0.4}>
+            {/* Visible from the first frame: the pinned stage never scrolls in empty. */}
+            <div className={styles.workHead}>
               <div className={styles.peekLedge}>
                 <span className={styles.peek}>
                   <HostArt pose="peek" size="100%" decorative />
                 </span>
               </div>
-              <p className={styles.workEyebrow}>In the KNOMI menu</p>
-              <h3 className={styles.workTitle}>
-                Host <em>at work</em>
-              </h3>
+              <h3 className={styles.workTitle}>Host at work</h3>
               <p className={styles.workHint} aria-hidden="true">
                 <span className={styles.hintPinned}>Keep scrolling</span>
                 <span className={styles.hintRail}>Swipe through</span>
                 <Arrow />
               </p>
-            </Reveal>
+            </div>
 
-            <motion.ol
+            <ol
               ref={railRef}
               className={styles.rail}
               aria-label="Knomi Host in six real KNOMI menu screens"
               // Focusable only when it scrolls itself (swipe mode), so keyboards can move it.
               tabIndex={pinned ? undefined : 0}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.11, delayChildren: 0.1 } } }}
+              data-reveal="group"
+              style={{ "--reveal-stagger": "0.06s" } as CSSProperties}
+              suppressHydrationWarning
             >
               {SCREENS.map((item, i) => (
                 <Slide
@@ -526,14 +481,14 @@ function HostAtWork() {
                   }}
                 />
               ))}
-            </motion.ol>
+            </ol>
           </motion.div>
         </div>
 
-        {/* Pinned reel: a thin progress line. */}
+        {/* Pinned reel: where you are, and a thin progress line. */}
         <div className={`wrap ${styles.meter}`} aria-hidden="true">
           <span className={styles.count}>
-            <span className={styles.countNow}>{pad(active + 1)}</span> / {pad(TOTAL)}
+            <span className={styles.countNow}>{active + 1}</span> of {TOTAL}
           </span>
           <span className={styles.bar}>
             <motion.span className={styles.fill} style={{ scaleX: scrollYProgress }} />
@@ -567,12 +522,12 @@ export default function HostChapter() {
         <div className={styles.intro}>
           <div className={styles.head}>
             <SectionHead
-              numeral={hostChapter.numeral}
               eyebrow={hostChapter.eyebrow}
               titleLead={hostChapter.titleLead}
               titleAccent={hostChapter.titleAccent}
               lead={hostChapter.lead}
               breakBeforeAccent
+              words
             />
           </div>
 
@@ -580,7 +535,7 @@ export default function HostChapter() {
             <Niche />
           </div>
 
-          <Reveal className={styles.dressed} delay={0.3} amount={0.5}>
+          <Reveal className={styles.dressed} delay={0.15}>
             <p className={styles.dressedText}>
               <span className={styles.dressedTitle}>{dressed.title}.</span> {dressed.body}
             </p>
@@ -589,20 +544,6 @@ export default function HostChapter() {
       </div>
 
       <HostAtWork />
-
-      <div className="wrap">
-        <Stagger as="ul" className={styles.behaviours} stagger={0.12} amount={0.3}>
-          {behaviours.map((b, i) => (
-            <StaggerItem as="li" key={b.title} className={styles.behaviour}>
-              <span className={styles.bNum} aria-hidden="true">
-                {ROMAN[i]}
-              </span>
-              <h3 className={styles.bTitle}>{b.title}</h3>
-              <p className={styles.bBody}>{b.body}</p>
-            </StaggerItem>
-          ))}
-        </Stagger>
-      </div>
     </section>
   );
 }

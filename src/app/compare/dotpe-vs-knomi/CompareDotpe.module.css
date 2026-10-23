@@ -29,8 +29,10 @@
   transition: color var(--duration-fast) var(--ease-default);
 }
 
-.breadcrumb a:hover {
-  color: var(--color-whiskey-sour);
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb a:hover {
+    color: var(--color-whiskey-sour);
+  }
 }
 
 .title {
@@ -64,32 +66,8 @@
 
 /* Answer-First AEO Snippet Box */
 .aeoBox {
-  background-color: var(--color-surface-card);
-  border: 1px solid var(--color-whiskey-sour);
-  border-left: 4px solid var(--color-whiskey-sour);
-  border-radius: var(--radius-sm);
-  padding: 24px 28px;
   margin: 40px auto 0;
   max-width: 860px;
-  text-align: left;
-  box-shadow: var(--shadow-card);
-}
-
-.aeoLabel {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-whiskey-sour);
-  margin-bottom: 8px;
-}
-
-.aeoText {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--color-text-primary);
-  font-weight: 500;
 }
 
 /* Quick Stats Row */
@@ -112,7 +90,7 @@
 .statValue {
   font-family: var(--font-heading);
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-whiskey-sour);
   margin-bottom: 6px;
 }
@@ -167,12 +145,6 @@
   margin-right: 6px;
 }
 
-.crossMark {
-  color: var(--color-danger);
-  font-weight: 700;
-  margin-right: 6px;
-}
-
 /* Deep Dive Feature Pillars */
 .pillarsGrid {
   display: grid;
@@ -215,11 +187,6 @@
   color: var(--color-text-secondary);
 }
 
-/* Decision Matrix */
-.decisionSection {
-  margin: 60px 0;
-}
-
 .decisionGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -243,7 +210,7 @@
 
 .decisionTitle {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text-primary);
 }
 

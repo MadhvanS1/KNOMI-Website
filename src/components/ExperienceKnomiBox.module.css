@@ -1,68 +1,53 @@
-/* Experience KNOMI CTA Box Component */
+/* Closing call to action on guide, compare and city pages, in the homepage's style: a paper
+   card, the serif at its one loaded weight, and the shared ink button (.btn). The doubled
+   class names hold their own against the pages' article styles (.contentBody h2, p, a). */
 .ctaBox {
-  background: linear-gradient(135deg, rgba(133, 97, 58, 0.12) 0%, var(--color-surface-card) 100%);
-  border: 1px solid var(--color-whiskey-sour);
-  border-radius: 16px;
-  padding: 48px 32px;
-  text-align: center;
-  margin: 56px 0 24px;
-  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 48px 0 24px;
+  padding: clamp(28px, 4vw, 44px);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background-color: var(--surface);
 }
 
-.ctaTitle {
-  font-size: 2.2rem;
-  font-family: var(--font-playfair, serif);
-  color: var(--color-text-primary);
-  margin-bottom: 16px;
-  font-weight: 700;
-  line-height: 1.25;
+.ctaBox .ctaTitle {
+  margin: 0 0 12px;
+  font-family: var(--font-serif);
+  font-size: var(--fs-h3);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  text-wrap: balance;
 }
 
-.ctaText {
-  font-size: 1.05rem;
-  color: var(--color-text-secondary);
-  max-width: 680px;
-  margin: 0 auto 28px;
-  line-height: 1.65;
+.ctaBox .ctaText {
+  max-width: 36em;
+  margin: 0 0 24px;
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--fg-2);
 }
 
-.ctaButton {
-  display: inline-block;
-  background: var(--color-whiskey-sour);
-  color: #fbf8f3 !important;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 14px 32px;
-  border-radius: 8px;
-  text-decoration: none !important;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+.ctaBox .ctaButton {
+  color: var(--btn-fg);
+  text-decoration: none;
 }
 
-.ctaButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(133, 97, 58, 0.35);
-  color: #fbf8f3 !important;
-  text-decoration: none !important;
+@media (hover: hover) and (pointer: fine) {
+  .ctaBox .ctaButton:hover {
+    color: var(--btn-hover-fg);
+  }
 }
 
 @media (max-width: 640px) {
   .ctaBox {
-    padding: 32px 20px;
     margin: 40px 0 20px;
   }
 
-  .ctaTitle {
-    font-size: 1.65rem;
-  }
-
-  .ctaText {
-    font-size: 0.95rem;
-    margin-bottom: 24px;
-  }
-
-  .ctaButton {
-    padding: 12px 24px;
-    font-size: 0.95rem;
+  .ctaBox .ctaButton {
     width: 100%;
   }
 }

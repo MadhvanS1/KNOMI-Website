@@ -4,10 +4,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PetpoojaTcoCalculator from "./PetpoojaTcoCalculator";
 import styles from "./PetpoojaPricing.module.css";
-import { OG_IMAGE, pricing } from "@/content/site";
-
-const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
+import callout from "../Callout.module.css";
+import { OG_IMAGE, bookHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Petpooja Pricing: The Real Cost, Add-On Modules & Total TCO (2026) | KNOMI",
@@ -86,7 +84,7 @@ const articleJsonLd = {
         },
       },
       "datePublished": "2026-09-06T04:00:00+05:30",
-      "dateModified": "2026-10-11T12:00:00+05:30",
+      "dateModified": "2026-10-16T12:00:00+05:30",
     },
     {
       "@type": "FAQPage",
@@ -159,9 +157,9 @@ export default function PetpoojaPricingPage() {
             </p>
 
             {/* Answer-First AEO Snippet Box */}
-            <div className={styles.aeoBox}>
-              <span className={styles.aeoLabel}>Direct Pricing Summary (AEO Answer)</span>
-              <p className={styles.aeoText}>
+            <div className={`${callout.box} ${styles.aeoBox}`}>
+              <span className={callout.label}>Direct Pricing Summary (AEO Answer)</span>
+              <p className={callout.text}>
                 Petpooja uses quote-on-request pricing with no public rupee rates. Software directories such as SaaSworthy and Techjockey report an entry-level licence of roughly ₹10,000 for Year 1 per outlet and ₹7,500 for annual renewals. Table QR Ordering, Kitchen Display Systems (KDS), Captain Apps and SMS CRM are sold as add-on modules, so your real annual software spend depends on which modules you add, plus 18% GST.
               </p>
             </div>
@@ -182,7 +180,7 @@ export default function PetpoojaPricingPage() {
               </div>
               <div className={styles.metricCard}>
                 <div className={styles.metricValue}>0%</div>
-                <div className={styles.metricLabel}>KNOMI Commission: flat ₹{signaturePlan.priceMin} per table, per month on Signature</div>
+                <div className={styles.metricLabel}>KNOMI Commission on dine-in orders: what your guests order is yours</div>
               </div>
             </div>
           </div>
@@ -265,9 +263,9 @@ export default function PetpoojaPricingPage() {
             </li>
           </ul>
 
-          <div className={styles.calloutBox}>
-            <div className={styles.calloutTitle}>A Genuine Advantage: Per-Outlet Licensing</div>
-            <p className={styles.calloutText}>
+          <div className={`${callout.box} ${styles.calloutBox}`}>
+            <div className={callout.title}>A Genuine Advantage: Per-Outlet Licensing</div>
+            <p className={callout.text}>
               One operational advantage operators report with Petpooja is licensing per outlet rather than per terminal. Where some systems charge for each additional till, a Petpooja licence is reported to cover multiple billing screens (for example, the front counter, a first-floor bar and a delivery desk) under one store subscription. Confirm this in your quote.
             </p>
           </div>
@@ -335,7 +333,7 @@ export default function PetpoojaPricingPage() {
           {/* Interactive Calculator Component */}
           <h2>4. Calculate Your Total Cost of Ownership (TCO)</h2>
           <p>
-            Use the calculator below to estimate your annual Petpooja software cost from your own quote, or to see what KNOMI would cost alongside it. Results are estimates.
+            Use the calculator below to estimate your annual Petpooja software cost from your own quote, or to see what adding KNOMI alongside it could be worth at your sales. Results are estimates.
           </p>
 
           <PetpoojaTcoCalculator />
@@ -384,11 +382,11 @@ export default function PetpoojaPricingPage() {
               <strong>Consider KNOMI Instead of a POS QR Add-On:</strong> A billing-first QR module lists your menu. KNOMI is built to sell it: an illustrated menu themed to your restaurant that guests open with no app and no login.
             </li>
             <li>
-              <strong>Deploy KNOMI on Tables:</strong> Knomi Host suggests the pairing at the moment a guest chooses, orders go to your kitchen display, and on the Signature plan KNOMI integrates with Petpooja so orders flow into it. On the Ecosystem plan, Knomi Compass, powered by Knomi Sense, shows the dishes guests look at but don&apos;t order.
+              <strong>Deploy KNOMI on Tables:</strong> Knomi Host suggests the pairing at the moment a guest chooses, orders go to your kitchen display, and KNOMI integrates with Petpooja so orders flow into it. Knomi Compass, powered by Knomi Sense, shows the dishes guests look at but don&apos;t order.
             </li>
           </ul>
           <p>
-            KNOMI takes 0% commission and charges a flat fee instead: {PRICE_LADDER}. On Signature, a 10-table restaurant pays about ₹{(10 * signaturePlan.priceMin).toLocaleString("en-IN")} a month.
+            KNOMI takes 0% commission on your orders. We share pricing on a short <Link href={bookHref} className={styles.inlineLink}>walkthrough call</Link>, once we understand your restaurant, and you can <Link href="/#worth" className={styles.inlineLink}>see what upselling could be worth</Link> on your own numbers first.
           </p>
 
           {/* Author Bio Box */}
@@ -418,9 +416,9 @@ export default function PetpoojaPricingPage() {
           <div className={styles.ctaCard}>
             <h3>Looking for a Menu That Sells, Alongside Petpooja?</h3>
             <p>
-              Keep Petpooja for billing and put KNOMI on your tables: an illustrated menu, Knomi Host suggesting pairings, and orders that flow into Petpooja on the Signature plan (₹{signaturePlan.priceMin} per table, per month, 0% commission).
+              Keep Petpooja for billing and put KNOMI on your tables: an illustrated menu, Knomi Host suggesting pairings, and orders that flow into Petpooja, with 0% commission.
             </p>
-            <Link href="/compare/petpooja-alternatives" className={styles.ctaButton}>
+            <Link href="/compare/petpooja-alternatives" className={`${styles.ctaButton} pressable`}>
               Compare Petpooja vs KNOMI
             </Link>
           </div>

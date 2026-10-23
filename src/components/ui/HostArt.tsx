@@ -12,6 +12,9 @@ const ART_SIZE: Record<string, [number, number]> = {
   "/images/host/pay.webp": [476, 390],
 };
 
+/** His warmest portrait, shown for any pose without a cut-out of its own, so he is always the real chef. */
+const FALLBACK_ART = "/images/host/think.webp";
+
 /** A `sizes` value is only meaningful for a plain length; anything else falls back to a safe guess. */
 const PLAIN_LENGTH = /^\d+(\.\d+)?(px|vw|rem|em)$/;
 
@@ -39,8 +42,8 @@ type HostArtProps = {
 
 /**
  * Knomi Host, the chef character from the KNOMI menu. Shows his transparent cut-out for
- * `pose` (see `hostArt` in site.ts). He is never framed: no circle, badge or background.
- * The monogram medallion below is only a last-resort stand-in for a pose without art.
+ * `pose` (see `hostArt` in site.ts). He is never framed: no circle, badge or background,
+ * and a pose without art of its own shows his portrait rather than any stand-in.
  */
 export default function HostArt({
   pose,
@@ -53,9 +56,9 @@ export default function HostArt({
   idle = false,
   sizes,
 }: HostArtProps) {
-  const src = hostArt[pose];
+  const src = hostArt[pose] ?? FALLBACK_ART;
   const a11y = decorative ? { "aria-hidden": true } : { role: "img", "aria-label": "Knomi Host" };
-  const dims = src ? ART_SIZE[src] : undefined;
+  const dims = ART_SIZE[src];
   const ratio = fit === "art" && dims ? `${dims[0]} / ${dims[1]}` : "1 / 1";
   const hint = sizes ?? (PLAIN_LENGTH.test(size) ? `(max-width: 768px) 40vw, ${size}` : "(max-width: 768px) 40vw, 320px");
 
@@ -67,17 +70,7 @@ export default function HostArt({
       data-align={align}
       {...a11y}
     >
-      {src ? (
-        <Image src={src} alt="" fill sizes={hint} priority={priority} className={styles.art} draggable={false} />
-      ) : (
-        <span className={styles.medallion}>
-          <svg className={styles.hat} viewBox="0 0 48 32" aria-hidden="true">
-            <path d="M12 26h24v-6c4.5-1 7-4.6 7-8.4 0-4.8-4-8.6-8.8-8.6-1.6 0-3.1.4-4.4 1.2A10 10 0 0 0 24 2a10 10 0 0 0-5.8 2.2A8.6 8.6 0 0 0 13.8 3C9 3 5 6.8 5 11.6 5 15.4 7.5 19 12 20Z" />
-            <path d="M14 22h20" />
-          </svg>
-          <span className={styles.k}>K</span>
-        </span>
-      )}
+      <Image src={src} alt="" fill sizes={hint} priority={priority} className={styles.art} draggable={false} />
     </span>
   );
 }

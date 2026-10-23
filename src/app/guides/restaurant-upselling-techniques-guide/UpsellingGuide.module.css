@@ -26,8 +26,10 @@
   transition: color 0.15s ease;
 }
 
-.breadcrumb a:hover {
-  color: var(--color-whiskey-sour);
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb a:hover {
+    color: var(--color-whiskey-sour);
+  }
 }
 
 .title {
@@ -36,7 +38,7 @@
   margin-bottom: 20px;
   color: var(--color-text-primary);
   font-family: var(--font-playfair, serif);
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .postMeta {
@@ -46,9 +48,8 @@
   gap: 16px;
   font-size: 0.875rem;
   color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-weight: 500;
   margin-bottom: 24px;
 }
 
@@ -62,23 +63,13 @@
 
 /* Quick Answer Box */
 .quickAnswerBox {
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border-strong);
-  border-left: 4px solid var(--color-whiskey-sour);
-  border-radius: 8px;
-  padding: 24px;
+  composes: callout from "../GuideKit.module.css";
   margin: 40px auto;
   max-width: 840px;
 }
 
 .quickAnswerBadge {
-  display: inline-block;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  color: var(--color-whiskey-sour);
-  margin-bottom: 8px;
+  composes: calloutLabel from "../GuideKit.module.css";
 }
 
 .quickAnswerText {
@@ -139,25 +130,21 @@
   text-underline-offset: 3px;
 }
 
-.contentBody p a:hover,
-.contentBody li a:hover {
-  color: var(--color-honey-garlic);
+@media (hover: hover) and (pointer: fine) {
+  .contentBody p a:hover,
+  .contentBody li a:hover {
+    color: var(--color-honey-garlic);
+  }
 }
 
 /* Callout Box */
 .calloutBox {
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border-strong);
-  border-radius: 8px;
-  padding: 24px;
+  composes: callout from "../GuideKit.module.css";
   margin: 32px 0;
 }
 
 .calloutTitle {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: 8px;
+  composes: calloutTitle from "../GuideKit.module.css";
 }
 
 /* Comparison Table */
@@ -191,8 +178,10 @@
   vertical-align: top;
 }
 
-.comparisonTable tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+@media (hover: hover) and (pointer: fine) {
+  .comparisonTable tr:hover {
+    background: var(--color-surface-hover);
+  }
 }
 
 /* Strategy Cards */
@@ -240,7 +229,7 @@
   border-radius: 12px;
   padding: 36px 32px;
   margin: 50px 0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-soft);
 }
 
 .calcHeader {
@@ -250,7 +239,7 @@
 
 .calcTitle {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text-primary);
   margin-bottom: 8px;
 }
@@ -277,12 +266,14 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, var(--press-transition);
 }
 
-.tabBtn:hover {
-  border-color: var(--color-whiskey-sour);
-  color: var(--color-text-primary);
+@media (hover: hover) and (pointer: fine) {
+  .tabBtn:hover {
+    border-color: var(--color-whiskey-sour);
+    color: var(--color-text-primary);
+  }
 }
 
 .activeTabBtn {
@@ -347,7 +338,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--line);
   font-size: 0.925rem;
 }
 
@@ -437,7 +428,7 @@
 
 /* CTA Banner */
 .ctaBanner {
-  background: linear-gradient(135deg, rgba(165, 127, 76, 0.15) 0%, rgba(28, 20, 17, 0.9) 100%);
+  background: var(--linen);
   border: 1px solid var(--color-whiskey-sour);
   border-radius: 12px;
   padding: 40px;
@@ -447,7 +438,7 @@
 
 .ctaTitle {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text-primary);
   font-family: var(--font-playfair, serif);
   margin-bottom: 12px;
@@ -469,14 +460,16 @@
   text-decoration: none !important;
   padding: 14px 28px;
   border-radius: 8px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 150ms var(--ease-out), box-shadow 150ms var(--ease-out), var(--press-transition);
 }
 
-.ctaButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(133, 97, 58, 0.35);
-  color: #fbf8f3 !important;
-  text-decoration: none !important;
+@media (hover: hover) and (pointer: fine) {
+  .ctaButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(133, 97, 58, 0.35);
+    color: #fbf8f3 !important;
+    text-decoration: none !important;
+  }
 }
 
 @media (max-width: 768px) {

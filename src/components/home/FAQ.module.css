@@ -5,7 +5,6 @@
 .layout {
   --q-size: clamp(1.1875rem, 1.06rem + 0.5vw, 1.4375rem);
   --q-lh: 1.3;
-  --idx-w: 2.75rem;
   --icon: 38px;
   --col-gap: 14px;
   display: grid;
@@ -32,8 +31,12 @@
 
 /* ---------- Questions ---------- */
 
-.list {
+.listWrap {
   grid-area: list;
+  min-width: 0;
+}
+
+.list {
   list-style: none;
   border-bottom: 1px solid var(--line);
 }
@@ -57,7 +60,7 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: var(--idx-w) minmax(0, 1fr) var(--icon);
+  grid-template-columns: minmax(0, 1fr) var(--icon);
   column-gap: var(--col-gap);
   align-items: start;
   width: 100%;
@@ -80,21 +83,12 @@
     transparent 92%
   );
   opacity: 0;
-  transition: opacity 500ms var(--ease-out);
+  transition: opacity 200ms var(--ease-out);
 }
 
 .trigger:focus-visible {
   outline-offset: 2px;
   border-radius: var(--r-xs);
-}
-
-.idx {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.0625rem;
-  line-height: calc(var(--q-size) * var(--q-lh));
-  color: var(--accent-soft);
-  transition: color var(--dur) var(--ease-out);
 }
 
 .qText {
@@ -103,7 +97,7 @@
   line-height: var(--q-lh);
   letter-spacing: -0.006em;
   text-wrap: pretty;
-  transition: transform 400ms var(--ease-out);
+  transition: transform 200ms var(--ease-out);
 }
 
 /* Plus that turns into a minus: the upright bar lies down. */
@@ -117,9 +111,15 @@
   border-radius: 50%;
   color: var(--fg);
   transition:
-    background-color 400ms var(--ease-out),
-    border-color 400ms var(--ease-out),
-    color 400ms var(--ease-out);
+    background-color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    var(--press-transition);
+}
+
+/* Press feedback on the round button, not the whole row: a wide row shrinking reads as a jolt. */
+.trigger:active .icon {
+  scale: 0.92;
 }
 
 .bar {
@@ -131,7 +131,7 @@
   margin: -0.75px 0 0 -6px;
   border-radius: 1px;
   background: currentColor;
-  transition: transform 400ms var(--ease-out);
+  transition: transform 220ms var(--ease-out);
 }
 
 .barV {
@@ -148,11 +148,7 @@
   transform: rotate(180deg);
 }
 
-.row[data-open="true"] .idx {
-  color: var(--accent);
-}
-
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .trigger:hover::before {
     opacity: 1;
   }
@@ -161,22 +157,38 @@
     transform: translateX(4px);
   }
 
-  .trigger:hover .idx {
-    color: var(--accent);
-  }
-
   .trigger:hover .icon {
     border-color: var(--fg);
   }
 }
 
+/* Closed answers stay in the HTML but out of the layout. Opening fades and lowers the
+   answer into place in 0.25s; closing fades it out in 0.15s, where the browser can
+   transition `display` (elsewhere it closes at once). Height is never animated. */
 .panel {
-  overflow: hidden;
+  display: none;
+  opacity: 0;
+  transition-property: opacity, display;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+  transition-behavior: allow-discrete;
+}
+
+.row[data-open="true"] .panel {
+  display: block;
+  opacity: 1;
+  animation: answerIn 250ms var(--ease-out);
+}
+
+@keyframes answerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
 }
 
 .answer {
-  padding: 0 calc(var(--icon) + var(--col-gap)) clamp(1.25rem, 1rem + 0.8vw, 1.75rem)
-    calc(var(--idx-w) + var(--col-gap));
+  padding: 0 calc(var(--icon) + var(--col-gap)) clamp(1.25rem, 1rem + 0.8vw, 1.75rem) 0;
 }
 
 .answer p {
@@ -193,7 +205,7 @@
   --inset: 7px;
   position: relative;
   max-width: 360px;
-  padding: 60px clamp(22px, 2.2vw, 30px) 18px;
+  padding: 48px clamp(22px, 2.2vw, 30px) 18px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius:
@@ -214,13 +226,6 @@
     calc(var(--r-lg) - var(--inset)) calc(var(--r-lg) - var(--inset));
   opacity: 0.45;
   pointer-events: none;
-}
-
-.asideStar {
-  position: absolute;
-  top: 26px;
-  left: 50%;
-  margin-left: -5px;
 }
 
 .asideTitle {
@@ -253,7 +258,7 @@
   font-size: var(--fs-small);
   font-weight: 500;
   color: var(--fg);
-  transition: color var(--dur) var(--ease-out);
+  transition: color 200ms var(--ease-out);
 }
 
 .asideIcon {
@@ -266,9 +271,14 @@
   border-radius: 50%;
   color: var(--fg-2);
   transition:
-    background-color var(--dur) var(--ease-out),
-    border-color var(--dur) var(--ease-out),
-    color var(--dur) var(--ease-out);
+    background-color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    var(--press-transition);
+}
+
+.asideLink:active .asideIcon {
+  scale: 0.92;
 }
 
 .asideLabel {
@@ -280,19 +290,16 @@
   flex-shrink: 0;
   color: var(--fg-3);
   transition:
-    transform var(--dur) var(--ease-out),
-    color var(--dur) var(--ease-out);
+    transform 200ms var(--ease-out),
+    color 200ms var(--ease-out);
 }
 
 .asideLink:focus-visible {
   outline-offset: 0;
 }
 
-@media (hover: hover) {
-  .asideLink:hover {
-    color: var(--accent);
-  }
-
+/* Hover darkens to ink; russet is kept for the page's few real accents. */
+@media (hover: hover) and (pointer: fine) {
   .asideLink:hover .asideIcon {
     background: var(--fg);
     border-color: var(--fg);
@@ -301,17 +308,25 @@
 
   .asideLink:hover .asideArrow {
     transform: translate(2px, -2px);
-    color: var(--accent);
+    color: var(--fg);
   }
 }
 
 /* ---------- Responsive ---------- */
 
+/* Phones: no "Still curious?" note. The phone number and WhatsApp follow straight after,
+   under the booking form, so the page says it once. */
 @media (max-width: 559.98px) {
   .layout {
-    --idx-w: 1.75rem;
     --icon: 34px;
     --col-gap: 10px;
+    grid-template-areas:
+      "head"
+      "list";
+  }
+
+  .asideWrap {
+    display: none;
   }
 
   .answer {
@@ -320,12 +335,6 @@
 
   .aside {
     margin-inline: auto;
-  }
-}
-
-@media (min-width: 560px) and (max-width: 1023.98px) {
-  .layout {
-    --idx-w: 2.5rem;
   }
 }
 
@@ -347,6 +356,33 @@
   .head,
   .asideWrap {
     grid-area: auto;
+  }
+}
+
+/* Reduced motion: answers and the plus sign change in place with a short fade; nothing
+   slides. (The section's own fades are kept: see data-motion-safe in globals.css.) */
+@media (prefers-reduced-motion: reduce) {
+  .row[data-open="true"] .panel {
+    animation-name: answerFade;
+  }
+
+  .bar {
+    transition: none;
+  }
+
+  .trigger:hover .qText {
+    transform: none;
+  }
+
+  .trigger:active .icon {
+    scale: none;
+    opacity: 0.82;
+  }
+}
+
+@keyframes answerFade {
+  from {
+    opacity: 0;
   }
 }
 

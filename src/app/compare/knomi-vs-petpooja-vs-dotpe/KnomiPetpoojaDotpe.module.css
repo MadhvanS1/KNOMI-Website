@@ -29,8 +29,10 @@
   transition: color var(--duration-fast) var(--ease-default);
 }
 
-.breadcrumb a:hover {
-  color: var(--color-whiskey-sour);
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb a:hover {
+    color: var(--color-whiskey-sour);
+  }
 }
 
 .title {
@@ -38,7 +40,7 @@
   line-height: 1.2;
   margin-bottom: 20px;
   color: var(--color-text-primary);
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .subtitle {
@@ -65,40 +67,15 @@
 
 /* Answer-First AEO Snippet Box */
 .aeoBox {
-  background-color: var(--color-surface-card);
-  border: 1px solid var(--color-whiskey-sour);
-  border-left: 5px solid var(--color-whiskey-sour);
-  border-radius: var(--radius-sm);
-  padding: 26px 30px;
   margin: 40px auto 0;
   max-width: 880px;
-  text-align: left;
-  box-shadow: var(--shadow-card);
-}
-
-.aeoLabel {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-whiskey-sour);
-  margin-bottom: 8px;
 }
 
 .aeoHeading {
   font-size: 1.25rem;
   color: var(--color-text-primary);
   margin-bottom: 12px;
-  font-weight: 600;
-}
-
-.aeoText {
-  font-size: 1rem;
-  line-height: 1.75;
-  color: var(--color-text-secondary);
-  margin: 0;
-  max-width: 100%;
+  font-weight: 400;
 }
 
 /* Content Sections */
@@ -177,12 +154,14 @@
   color: var(--color-text-primary);
 }
 
-.matrixTable tr:hover td {
-  background-color: var(--color-surface-hover);
-}
+@media (hover: hover) and (pointer: fine) {
+  .matrixTable tr:hover td {
+    background-color: var(--color-surface-hover);
+  }
 
-.matrixTable tr:hover td.highlightCol {
-  background-color: rgba(133, 97, 58, 0.09);
+  .matrixTable tr:hover td.highlightCol {
+    background-color: rgba(133, 97, 58, 0.09);
+  }
 }
 
 .featureName {
@@ -236,20 +215,22 @@
   background: linear-gradient(180deg, rgba(133, 97, 58, 0.04) 0%, var(--color-surface-card) 30%);
 }
 
+/* A small printed tab on the card's top edge, not a floating pill. */
 .recommendedTag {
   position: absolute;
-  top: -14px;
+  top: -12px;
   left: 50%;
-  transform: translateX(-50%);
-  background: var(--color-whiskey-sour);
-  color: #fbf8f3;
-  font-size: 0.75rem;
-  font-weight: 700;
+  translate: -50% 0;
+  padding: 3px 10px 2px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-xs);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 4px 14px;
-  border-radius: 9999px;
-  box-shadow: 0 2px 8px rgba(133, 97, 58, 0.4);
+  white-space: nowrap;
+  color: var(--fg-2);
 }
 
 .platformName {
@@ -356,7 +337,7 @@
   font-size: 1.75rem;
   font-family: var(--font-heading);
   color: var(--color-text-primary);
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 6px;
 }
 
@@ -384,7 +365,7 @@
 
 .decisionHeader {
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text-primary);
   margin-bottom: 12px;
   display: flex;
@@ -420,7 +401,7 @@
 
 .faqQuestion {
   font-size: 1.0625rem;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--color-text-primary);
   margin-bottom: 10px;
 }

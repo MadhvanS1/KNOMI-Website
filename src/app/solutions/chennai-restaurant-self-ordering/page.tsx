@@ -5,7 +5,8 @@ import Footer from '@/components/Footer';
 import ChennaiTiffinThroughputAuditor from './ChennaiTiffinThroughputAuditor';
 import ExperienceKnomiBox from '@/components/ExperienceKnomiBox';
 import styles from './ChennaiSolutions.module.css';
-import { GOAL, OG_IMAGE } from "@/content/site";
+import callout from '../../compare/Callout.module.css';
+import { GOAL, OG_IMAGE, worthHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'AI Restaurant Ordering System Chennai (2026) | KNOMI',
@@ -104,7 +105,7 @@ export default function ChennaiRestaurantSelfOrderingPage() {
         name: 'Does KNOMI disrupt our existing restaurant billing software in Chennai?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'No. KNOMI runs as an ordering, upselling and guest experience layer alongside the billing system you already use. On the Signature plan it integrates with your existing POS (our Petpooja integration is already built; ask us about yours). Day-end reconciliation, GST reports and inventory stay where they are.',
+          text: 'No. KNOMI runs as an ordering, upselling and guest experience layer alongside the billing system you already use. It can also integrate with your existing POS (our Petpooja integration is already built; ask us about yours). Day-end reconciliation, GST reports and inventory stay where they are.',
         },
       },
     ],
@@ -187,9 +188,9 @@ export default function ChennaiRestaurantSelfOrderingPage() {
 
         <div className={styles.contentWrapper}>
           {/* Answer-First AEO Block */}
-          <div className={styles.quickAnswerBox}>
-            <div className={styles.quickAnswerLabel}>Executive Operational Summary</div>
-            <p className={styles.quickAnswerText}>
+          <div className={`${callout.box} ${styles.quickAnswerBox}`}>
+            <div className={callout.label}>Executive Operational Summary</div>
+            <p className={callout.text}>
               A restaurant ordering system in Chennai has two distinct jobs: keeping up with the fast morning tiffin rush in Mylapore and T. Nagar, and handling large corporate groups in the OMR tech corridor. KNOMI gives every table an illustrated QR menu with no app or login, splits each order into tickets for the tawa, steam and coffee stations, lets groups share one table order with the bill on their phone, works alongside your existing POS and charges 0% commission.
             </p>
           </div>
@@ -401,7 +402,7 @@ export default function ChennaiRestaurantSelfOrderingPage() {
                     <td>Free or a small fee</td>
                     <td>Typically device cost plus a software fee</td>
                     <td>Varies: subscription and/or per-order fees</td>
-                    <td className={styles.knomiCol}>Signature, with self-ordering: ₹250 per table / month (Menu only: ₹149; Ecosystem: ₹500); 0% commission</td>
+                    <td className={styles.knomiCol}>Shared on a walkthrough call · 0% commission</td>
                   </tr>
                 </tbody>
               </table>
@@ -429,17 +430,17 @@ export default function ChennaiRestaurantSelfOrderingPage() {
                   <div className={styles.caseStudyMetricLabel}>Example Average Table Bill</div>
                 </div>
                 <div className={styles.caseStudyMetric}>
-                  <div className={styles.caseStudyMetricValue}>+25%</div>
-                  <div className={styles.caseStudyMetricLabel}>KNOMI&apos;s Target Lift (Not a Guarantee)</div>
+                  <div className={styles.caseStudyMetricValue}>6,000</div>
+                  <div className={styles.caseStudyMetricLabel}>Example Table Seatings a Month</div>
                 </div>
                 <div className={styles.caseStudyMetric}>
-                  <div className={styles.caseStudyMetricValue}>₹10,000</div>
-                  <div className={styles.caseStudyMetricLabel}>Signature for 40 Tables / Month</div>
+                  <div className={styles.caseStudyMetricValue}>₹39L</div>
+                  <div className={styles.caseStudyMetricLabel}>Revenue a Month on the Floor</div>
                 </div>
               </div>
 
               <p className={styles.paragraph} style={{ margin: 0, fontSize: '0.92rem', color: 'var(--color-text-secondary)' }}>
-                <em>The maths:</em> 6,000 seatings x ₹650 = ₹39,00,000 a month on the floor. At KNOMI&apos;s 25% target, that would be about ₹160 more per bill, for example a filter coffee and a sweet, or roughly ₹9.75 Lakhs a month, against a Signature cost of ₹10,000 and 0% commission. It is a target to measure against on your own tables, not a result we are quoting.
+                <em>The maths:</em> 6,000 seatings x ₹650 = ₹39,00,000 a month on the floor. Every rupee Knomi Host adds, say a filter coffee and a sweet, comes on top of that. To see what a lift would mean on your own numbers, try the <a href={worthHref}>calculator on our homepage</a>. KNOMI&apos;s fee is shared on a walkthrough call, and there is 0% commission.
               </p>
             </div>
 
@@ -451,7 +452,7 @@ export default function ChennaiRestaurantSelfOrderingPage() {
             </p>
             <ul className={styles.bulletList}>
               <li className={styles.bulletItem}>
-                <strong>Seamless Co-Existence:</strong> KNOMI runs alongside the POS and billing system you already use. On the Signature plan it integrates with your existing POS; our Petpooja integration is already built, and we confirm the setup for other systems on a walkthrough.
+                <strong>Seamless Co-Existence:</strong> KNOMI runs alongside the POS and billing system you already use. It can also integrate with your existing POS; our Petpooja integration is already built, and we confirm the setup for other systems on a walkthrough.
               </li>
               <li className={styles.bulletItem}>
                 <strong>Direct Kitchen &amp; Counter Printing:</strong> Orders can print on network thermal KOT printers at your tawa, steam and coffee stations as soon as they are confirmed.

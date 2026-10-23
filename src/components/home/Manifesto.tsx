@@ -1,19 +1,20 @@
 "use client";
 
 import { Fragment, useRef, useSyncExternalStore, type ReactNode } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { chapters, manifesto } from "@/content/site";
 import { ArrowRight } from "@/components/ui/Icons";
-import { EASE_OUT, Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
+import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import styles from "./Manifesto.module.css";
 
 /* ---------------------------------------------------------------------------
    Manifesto — the statement reads itself as you scroll.
    Each word warms from a faint pencil grey to full ink across the section;
-   two phrases settle into the italic accent, like a hand underlining them.
+   two phrases are set in italic, like a hand underlining them. Below it, the
+   three chapters, as a printed table of contents that also navigates.
    --------------------------------------------------------------------------- */
 
-/** Phrases set in the italic accent, matched word-by-word (punctuation and case ignored). */
+/** Phrases set in italic, matched word-by-word (punctuation and case ignored). */
 const HIGHLIGHTS: string[][] = [
   ["best", "server"],
   ["suggest", "next"],
@@ -55,12 +56,20 @@ function tokenise(text: string): Token[] {
 
 const TOKENS = tokenise(manifesto.text);
 
-/** False on the server and during hydration, true afterwards — keeps the first client render identical to the HTML. */
-const subscribeNoop = () => () => {};
-function useHydrated() {
+/* Reduced-motion preference, hydration-safe: false on the server and during
+   hydration (matching the HTML), the real preference straight after. */
+const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribeReduced(onChange: () => void) {
+  const query = window.matchMedia(REDUCED_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function usePrefersReducedMotion() {
   return useSyncExternalStore(
-    subscribeNoop,
-    () => true,
+    subscribeReduced,
+    () => window.matchMedia(REDUCED_QUERY).matches,
     () => false,
   );
 }
@@ -94,9 +103,7 @@ function renderToken(token: Token) {
 
 export default function Manifesto() {
   const textRef = useRef<HTMLHeadingElement>(null);
-  const reduce = useReducedMotion();
-  const hydrated = useHydrated();
-  const still = hydrated && reduce === true;
+  const still = usePrefersReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: textRef,
@@ -107,19 +114,10 @@ export default function Manifesto() {
 
   return (
     <section id="story" className={`section ${styles.section}`}>
-      <motion.span
-        aria-hidden="true"
-        className={styles.thread}
-        initial={{ scaleY: 0 }}
-        whileInView={{ scaleY: 1 }}
-        viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-        transition={{ duration: 1.2, ease: EASE_OUT }}
-      />
-
       <div className="wrap">
         <div className={styles.inner}>
-          <Reveal y={12} amount={0.8}>
-            <p className={`eyebrow ${styles.eyebrow}`}>{manifesto.eyebrow}</p>
+          <Reveal as="p" className="eyebrow" y={10}>
+            {manifesto.eyebrow}
           </Reveal>
 
           <h2 ref={textRef} className={styles.statement}>
@@ -144,13 +142,14 @@ export default function Manifesto() {
             </span>
           </h2>
 
+          {/* The chapter index doubles as navigation to the three chapters below. */}
           <nav aria-label="Chapters" className={styles.chaptersNav}>
-            <Stagger as="ul" className={styles.chapters} stagger={0.12} amount={0.4}>
+            <Stagger as="ul" className={styles.chapters}>
               {chapters.map((chapter) => (
                 <StaggerItem as="li" key={chapter.numeral} className={styles.item}>
-                  <a href={chapter.href} className={styles.chapter}>
+                  <a href={chapter.href} className={`pressable ${styles.chapter}`}>
                     <span className={styles.numeral} aria-hidden="true">
-                      <span className={styles.numeralText}>{chapter.numeral}</span>
+                      {chapter.numeral}
                     </span>
                     <span className={`leader ${styles.leader}`} aria-hidden="true" />
                     <span className={styles.arrow} aria-hidden="true">

@@ -86,14 +86,14 @@ export default function PetpoojaFitmentAuditor() {
       <div className={styles.tabGroup}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === "fitment" ? styles.tabBtnActive : ""}`}
+          className={`${styles.tabBtn} pressable ${activeTab === "fitment" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("fitment")}
         >
           1. Venue Format &amp; Bottleneck Scorecard
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === "timeline" ? styles.tabBtnActive : ""}`}
+          className={`${styles.tabBtn} pressable ${activeTab === "timeline" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("timeline")}
         >
           2. Peak-Hour Order Flow (Illustrative)

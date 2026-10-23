@@ -3,12 +3,13 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import styles from "../legal/LegalPage.module.css";
+import callout from "../compare/Callout.module.css";
 import { OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Terms of Service | KNOMI Restaurant SaaS Agreement",
   description:
-    "KNOMI Terms of Service. Review our SaaS subscription terms, flat per-table pricing with 0% commission on orders, trial terms, and our 99.9% uptime target.",
+    "KNOMI Terms of Service. Review our SaaS subscription terms, 0% commission on orders, trial terms, and our 99.9% uptime target.",
   alternates: {
     canonical: "/terms",
   },
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     images: [OG_IMAGE],
     title: "Terms of Service | KNOMI Restaurant Platform",
     description:
-      "Official SaaS terms for KNOMI: flat per-table pricing, 0% commission on orders, and how billing, uptime and support work.",
+      "Official SaaS terms for KNOMI: 0% commission on orders, and how subscriptions, billing, uptime and support work.",
     url: "https://www.knomi.in/terms",
     siteName: "KNOMI",
     type: "website",
@@ -72,20 +73,20 @@ export default function TermsPage() {
               intelligence and self-ordering platform.
             </p>
             <p className={styles.effectiveMeta}>
-              Effective Date: September 1, 2026 | Last Updated: September 6, 2026
+              Effective Date: September 1, 2026 | Last Updated: October 16, 2026
             </p>
           </header>
 
           {/* Legal Navigation Tabs */}
           <nav className={styles.legalNav} aria-label="Legal Documents Navigation">
             <span className={styles.navLabel}>Compliance Docs:</span>
-            <Link href="/privacy" className={styles.navTab}>
+            <Link href="/privacy" className={`${styles.navTab} pressable`}>
               Privacy Policy
             </Link>
-            <Link href="/terms" className={`${styles.navTab} ${styles.navTabActive}`}>
+            <Link href="/terms" className={`${styles.navTab} ${styles.navTabActive} pressable`}>
               Terms of Service
             </Link>
-            <Link href="/refund-policy" className={styles.navTab}>
+            <Link href="/refund-policy" className={`${styles.navTab} pressable`}>
               Cancellation &amp; Refund Policy
             </Link>
           </nav>
@@ -116,14 +117,13 @@ export default function TermsPage() {
                 Depending on your plan, the service comprises Knomi Canvas (an illustrated QR digital menu themed to your
                 restaurant), Knomi Host in-menu recommendations, contactless dine-in ordering, Knomi Pulse end-of-meal guest
                 check-ins with manager alerts, Knomi Dash (a live orders dashboard and Kitchen Display System (KDS) real-time
-                dispatch), integration with your existing POS, and Knomi Sense, the guest experience infrastructure behind
-                them (its essentials on the Signature plan; on the Ecosystem plan, the full Knomi Sense, Knomi Compass
-                behavioral menu insights and Knomi&apos;s own POS).
+                dispatch), integration with your existing POS or Knomi&apos;s own POS, Knomi Compass behavioral menu
+                insights, and Knomi Sense, the guest experience infrastructure behind them.
               </p>
               <p className={styles.paragraph}>
                 Subject to timely payment of applicable subscription dues and compliance with this Agreement, KNOMI grants
                 you a non-exclusive, non-transferable, revocable, worldwide license to access and operate the software
-                for your designated restaurant outlet(s) and table counts.
+                for your designated restaurant outlet(s), as set out in your written subscription terms.
               </p>
             </section>
 
@@ -134,12 +134,12 @@ export default function TermsPage() {
                 KNOMI operates on a pure, transparent subscription software model. We do not take a percentage cut
                 from your dining room revenue:
               </p>
-              <div className={styles.callout}>
-                <div className={styles.calloutTitle}>Zero Commission on Dine-In Orders</div>
-                <p className={styles.calloutText}>
+              <div className={`${callout.box} ${styles.callout}`}>
+                <div className={callout.title}>Zero Commission on Dine-In Orders</div>
+                <p className={callout.text}>
                   KNOMI charges 0% commission on all food and beverage orders processed through our digital menus.
-                  Your subscription is a flat fee per table, per month, set by your plan and table count, so it does not
-                  change whether your restaurant bills ₹50,000 or ₹50,00,000 in monthly dine-in orders. Guest payments
+                  Your subscription fee is agreed with you in writing, and it does not change whether your restaurant
+                  bills ₹50,000 or ₹50,00,000 in monthly dine-in orders. Guest payments
                   route directly into your own merchant POS terminal or payment settlement account.
                 </p>
               </div>
@@ -172,12 +172,12 @@ export default function TermsPage() {
             <section className={styles.section}>
               <h2 className={styles.sectionHeading}>5. Subscription Billing, GST Invoicing, and Payment Terms</h2>
               <p className={styles.paragraph}>
-                Subscription pricing is denominated in Indian Rupees (INR), charged per table, per month according to your
-                plan (current plans and prices are listed on our{" "}
-                <Link href="/#pricing" style={{ color: "var(--color-whiskey-sour)", textDecoration: "underline" }}>
-                  pricing page
+                Subscription pricing is denominated in Indian Rupees (INR), set according to your plan and confirmed with
+                you in writing (we share current pricing on a short{" "}
+                <Link href="/#book" style={{ color: "var(--color-whiskey-sour)", textDecoration: "underline" }}>
+                  walkthrough call
                 </Link>
-                ), and billed on a recurring monthly or prepaid annual schedule based on your active plan tier and table volume:
+                ), and billed on a recurring monthly or prepaid annual schedule:
               </p>
               <ul className={styles.list}>
                 <li className={styles.listItem}>

@@ -5,7 +5,8 @@ import Footer from '@/components/Footer';
 import DelhiThroughputAuditor from './DelhiThroughputAuditor';
 import ExperienceKnomiBox from '@/components/ExperienceKnomiBox';
 import styles from './DelhiSolutions.module.css';
-import { GOAL, OG_IMAGE } from "@/content/site";
+import callout from '../../compare/Callout.module.css';
+import { GOAL, OG_IMAGE, worthHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'AI Restaurant Ordering System Delhi NCR (2026) | KNOMI',
@@ -104,7 +105,7 @@ export default function DelhiNcrRestaurantSelfOrderingPage() {
         name: 'Does KNOMI work with our existing billing software in Delhi NCR?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. KNOMI runs as an ordering and guest experience layer alongside the billing software you already use. On the Signature plan it integrates with your existing POS (our Petpooja integration is already built; ask us about yours). Your GST accounts, tax registers and inventory stay in your current system.',
+          text: 'Yes. KNOMI runs as an ordering and guest experience layer alongside the billing software you already use. It can also integrate with your existing POS (our Petpooja integration is already built; ask us about yours). Your GST accounts, tax registers and inventory stay in your current system.',
         },
       },
     ],
@@ -187,9 +188,9 @@ export default function DelhiNcrRestaurantSelfOrderingPage() {
 
         <div className={styles.contentWrapper}>
           {/* Answer-First AEO Block */}
-          <div className={styles.quickAnswerBox}>
-            <div className={styles.quickAnswerLabel}>Executive Operational Summary</div>
-            <p className={styles.quickAnswerText}>
+          <div className={`${callout.box} ${styles.quickAnswerBox}`}>
+            <div className={callout.label}>Executive Operational Summary</div>
+            <p className={callout.text}>
               A restaurant ordering system in Delhi NCR has two big jobs: working in loud Gurgaon Cyber Hub and Sector 29 taprooms where verbal orders get lost, and making every seat-hour count under the steep rents of Connaught Place and Khan Market. KNOMI puts an illustrated menu and ordering on the guest&apos;s own phone, splits each order into station tickets for the tandoor, bar and kitchen, shows the bill on the phone, works alongside your existing POS and charges 0% commission.
             </p>
           </div>
@@ -401,7 +402,7 @@ export default function DelhiNcrRestaurantSelfOrderingPage() {
                     <td>Free or a small fee</td>
                     <td>Typically device cost plus a software fee</td>
                     <td>Varies: subscription and/or per-order fees</td>
-                    <td className={styles.knomiCol}>Signature, with self-ordering: ₹250 per table / month (Menu only: ₹149; Ecosystem: ₹500); 0% commission</td>
+                    <td className={styles.knomiCol}>Shared on a walkthrough call · 0% commission</td>
                   </tr>
                 </tbody>
               </table>
@@ -429,17 +430,17 @@ export default function DelhiNcrRestaurantSelfOrderingPage() {
                   <div className={styles.caseStudyMetricLabel}>Example Average Table Bill</div>
                 </div>
                 <div className={styles.caseStudyMetric}>
-                  <div className={styles.caseStudyMetricValue}>+25%</div>
-                  <div className={styles.caseStudyMetricLabel}>KNOMI&apos;s Target Lift (Not a Guarantee)</div>
+                  <div className={styles.caseStudyMetricValue}>2,400</div>
+                  <div className={styles.caseStudyMetricLabel}>Example Table Seatings a Month</div>
                 </div>
                 <div className={styles.caseStudyMetric}>
-                  <div className={styles.caseStudyMetricValue}>₹15,000</div>
-                  <div className={styles.caseStudyMetricLabel}>Signature for 60 Tables / Month</div>
+                  <div className={styles.caseStudyMetricValue}>₹52.8L</div>
+                  <div className={styles.caseStudyMetricLabel}>Revenue a Month on the Floor</div>
                 </div>
               </div>
 
               <p className={styles.paragraph} style={{ margin: 0, fontSize: '0.92rem', color: 'var(--color-text-secondary)' }}>
-                <em>The maths:</em> 2,400 seatings x ₹2,200 = ₹52,80,000 a month on the floor. At KNOMI&apos;s 25% target, that would be about ₹550 more per bill, or roughly ₹13.2 Lakhs a month, against a Signature cost of ₹15,000 and 0% commission. It is a target to measure against on your own tables, not a result we are quoting.
+                <em>The maths:</em> 2,400 seatings x ₹2,200 = ₹52,80,000 a month on the floor. Every rupee Knomi Host adds, say kebabs with the beers or a dessert to finish, comes on top of that. To see what a lift would mean on your own numbers, try the <a href={worthHref}>calculator on our homepage</a>. KNOMI&apos;s fee is shared on a walkthrough call, and there is 0% commission.
               </p>
             </div>
 
@@ -451,7 +452,7 @@ export default function DelhiNcrRestaurantSelfOrderingPage() {
             </p>
             <ul className={styles.bulletList}>
               <li className={styles.bulletItem}>
-                <strong>Parallel POS Operation:</strong> KNOMI runs alongside the billing software you already use. On the Signature plan it integrates with your existing POS; our Petpooja integration is already built, and we confirm the setup for other systems on a walkthrough.
+                <strong>Parallel POS Operation:</strong> KNOMI runs alongside the billing software you already use. It can also integrate with your existing POS; our Petpooja integration is already built, and we confirm the setup for other systems on a walkthrough.
               </li>
               <li className={styles.bulletItem}>
                 <strong>Station Printer Dispatch:</strong> Table orders can print automatically on network thermal KOT printers at your tandoor, bar and kitchen passes as soon as they are confirmed.

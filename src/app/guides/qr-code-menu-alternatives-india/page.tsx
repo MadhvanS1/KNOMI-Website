@@ -337,7 +337,7 @@ export default function QrCodeMenuAlternativesPage() {
                   </span>
                 </div>
                 <div className={styles.altCostLine}>
-                  Pricing: Menu Rs 149, Signature Rs 250 (our recommended plan), Ecosystem Rs 500 per table, per month · 0% commission · no table hardware to buy
+                  Pricing: Shared on a walkthrough call · 0% commission · no table hardware to buy
                 </div>
                 <p>
                   KNOMI is guest experience infrastructure: the QR on your table opens an illustrated menu themed to your restaurant,
@@ -348,7 +348,7 @@ export default function QrCodeMenuAlternativesPage() {
                 <div className={styles.altProsCons}>
                   <strong>Strengths:</strong> No app download and no login to browse; every dish illustrated and themed to your room, with dietary information alongside; Knomi Host suggests pairings and remembers preferences; Knomi Pulse checks in before the bill and alerts your manager if something wasn&apos;t right; orders go straight to your kitchen display; works alongside your existing cashier till (Petpooja, Restroworks, SlickPOS or another); 0% commission.
                   <br />
-                  <strong>Weaknesses:</strong> Requires that diners have a functioning smartphone with a web browser (keep a printed menu for guests who prefer one); the full Knomi Sense and Knomi Compass menu insights are part of the Ecosystem plan only.
+                  <strong>Weaknesses:</strong> Requires that diners have a functioning smartphone with a web browser (keep a printed menu for guests who prefer one).
                 </div>
               </div>
             </div>
@@ -410,7 +410,7 @@ export default function QrCodeMenuAlternativesPage() {
                   <tr style={{ background: 'rgba(169, 71, 47,0.08)' }}>
                     <td><strong>KNOMI Frictionless Visual Web</strong></td>
                     <td><strong>No table hardware (Guest phones)</strong></td>
-                    <td><strong>Flat fee per table (0% commission)</strong></td>
+                    <td><strong>Shared on a walkthrough call · 0% commission</strong></td>
                     <td><strong>Fast (No wait to order)</strong></td>
                     <td><strong>Knomi Host pairing suggestions</strong></td>
                     <td><strong>Balanced Modern Hybrid</strong></td>
@@ -478,7 +478,7 @@ export default function QrCodeMenuAlternativesPage() {
                 Replace the PDF menu and skip the hardware tablets. KNOMI gives every table an illustrated menu
                 guests can order from and Knomi Host to suggest what goes with it, with no app, no login and 0% commission.
               </p>
-              <Link href="/guides/why-pdf-qr-menus-fail-restaurants" className={styles.ctaButton}>
+              <Link href="/guides/why-pdf-qr-menus-fail-restaurants" className={`${styles.ctaButton} pressable`}>
                 Read Why PDF Menus Fail &rarr;
               </Link>
             </div>

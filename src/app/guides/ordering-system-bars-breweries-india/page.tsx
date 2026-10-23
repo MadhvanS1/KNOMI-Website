@@ -508,7 +508,7 @@ export default function OrderingSystemBarsBreweriesPage() {
                 Let guests order the next round from their phone, send drinks to the bar and food to the kitchen, and let
                 Knomi Host suggest the bar snack that goes with it, all at 0% commission. {GOAL}
               </p>
-              <Link href={bookHref} className={styles.ctaButton}>
+              <Link href={bookHref} className={`${styles.ctaButton} pressable`}>
                 Book a walkthrough
               </Link>
             </div>

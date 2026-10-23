@@ -1,16 +1,37 @@
+/* The header sits on the page's own margins (the same lines as .wrap). At the top of the
+   page it is transparent; once the page scrolls, an opaque paper ground fades in beneath
+   it. Nothing is blurred and nothing changes width: only its ground fades, and the whole
+   header slides away while the visitor reads down the page. */
 .header {
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 120;
-  display: flex;
-  justify-content: center;
-  padding: 14px var(--gutter) 0;
   pointer-events: none;
-  transition: transform 600ms var(--ease-out);
+  transition: transform 240ms var(--ease-out);
 }
 
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  opacity: 0;
+  transition: opacity 200ms var(--ease-out);
+}
+
+.scrolled::before {
+  opacity: 1;
+}
+
+/* Leaves a little faster than it returns, and comes back for keyboard focus. */
 .hidden {
-  transform: translateY(calc(-100% - 20px));
+  transform: translateY(-100%);
+  transition-duration: 180ms;
+}
+
+.hidden:focus-within {
+  transform: none;
 }
 
 .bar {
@@ -19,42 +40,24 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  width: 100%;
-  max-width: var(--wrap);
-  height: 58px;
-  padding: 0 8px 0 18px;
-  border-radius: var(--r-pill);
-  border: 1px solid transparent;
-  background: transparent;
-  transition:
-    max-width 700ms var(--ease-out),
-    background-color 500ms var(--ease-out),
-    border-color 500ms var(--ease-out),
-    box-shadow 500ms var(--ease-out),
-    backdrop-filter 500ms var(--ease-out);
-}
-
-.scrolled .bar {
-  max-width: 1080px;
-  background-color: rgba(251, 248, 243, 0.78);
-  border-color: rgba(28, 20, 17, 0.08);
-  box-shadow: 0 1px 2px rgba(28, 20, 17, 0.04), 0 18px 40px -24px rgba(28, 20, 17, 0.28);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  backdrop-filter: blur(18px) saturate(1.4);
+  height: 72px;
+  max-width: calc(var(--wrap) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
 .logo {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  padding: 6px 2px;
+  padding-block: 6px;
 }
 
 .logoImg {
   width: auto;
   height: 19px;
   color: var(--ink);
-  transition: color 500ms var(--ease-out);
+  transition: color 250ms var(--ease-out);
 }
 
 .links {
@@ -75,12 +78,7 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--cocoa);
-  transition: color var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
-}
-
-.link:hover {
-  color: var(--ink);
-  background-color: rgba(28, 20, 17, 0.05);
+  transition: color 200ms ease, background-color 200ms ease;
 }
 
 /* Small brass dot marks the section you're reading */
@@ -92,9 +90,12 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--russet);
-  transform: translateX(-50%) scale(0);
-  transition: transform 400ms var(--ease-spring);
+  background: var(--brass);
+  opacity: 0;
+  transform: translateX(-50%) scale(0.9);
+  transition:
+    opacity 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
 }
 
 .active {
@@ -102,6 +103,7 @@
 }
 
 .active::after {
+  opacity: 1;
   transform: translateX(-50%) scale(1);
 }
 
@@ -114,6 +116,14 @@
 
 .cta {
   min-height: 42px;
+  transition:
+    color 200ms ease,
+    opacity 200ms var(--ease-out),
+    var(--press-transition);
+}
+
+.ctaShort {
+  display: none;
 }
 
 .toggle {
@@ -128,6 +138,11 @@
   font-weight: 600;
   color: var(--ink);
   background: rgba(251, 248, 243, 0.6);
+  transition:
+    color 250ms var(--ease-out),
+    border-color 250ms var(--ease-out),
+    background-color 250ms var(--ease-out),
+    var(--press-transition);
 }
 
 .toggleIcon {
@@ -146,7 +161,7 @@
   width: 100%;
   border-radius: 2px;
   background: currentColor;
-  transition: transform 400ms var(--ease-out);
+  transition: transform 200ms var(--ease-out);
 }
 
 .toggleOpen .toggleIcon span:first-child {
@@ -160,16 +175,13 @@
 .toggleOpen {
   color: var(--bone);
   border-color: rgba(244, 238, 229, 0.25);
-  background: transparent;
+  background-color: transparent;
 }
 
-/* While the dark menu card is open the bar dissolves into it. */
-.menuOpen .bar {
-  background-color: transparent;
-  border-color: transparent;
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
+/* While the dark menu sheet is open the bar dissolves into it; its colours turn as the
+   sheet arrives and turn back as it fades. */
+.menuOpen::before {
+  opacity: 0;
 }
 
 .menuOpen .logoImg {
@@ -181,6 +193,21 @@
   pointer-events: none;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--ink);
+    background-color: rgba(28, 20, 17, 0.05);
+  }
+
+  .overlayLink:hover .overlayLabel {
+    transform: translateX(6px);
+  }
+
+  .overlayContact a:hover {
+    color: var(--fg);
+  }
+}
+
 .skipTarget {
   position: absolute;
   top: 0;
@@ -189,7 +216,7 @@
   outline: none;
 }
 
-/* ---------- Full-screen menu card ---------- */
+/* ---------- Full-screen menu sheet (phones and tablets) ---------- */
 .overlay {
   position: fixed;
   inset: 0;
@@ -198,28 +225,16 @@
   overscroll-behavior: contain;
 }
 
+/* Starts on the same left edge as the logo above it. */
 .overlayInner {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  padding: calc(var(--nav-h) + 48px) var(--gutter) 40px;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.overlayEyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: var(--fs-eyebrow);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: var(--fg-3);
-  margin-bottom: 18px;
+  padding: calc(var(--nav-h) + 24px) var(--gutter) calc(32px + env(safe-area-inset-bottom, 0px));
 }
 
 .overlayLinks {
+  max-width: 640px;
   list-style: none;
   border-top: 1px solid var(--line);
 }
@@ -227,44 +242,34 @@
 .overlayLink {
   display: flex;
   align-items: baseline;
-  gap: 18px;
-  padding: 16px 0;
+  padding: 14px 0;
   border-bottom: 1px solid var(--line);
   color: var(--fg);
-}
-
-.overlayNumeral {
-  width: 2.2em;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.1rem;
-  color: var(--accent);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .overlayLabel {
   font-family: var(--font-serif);
-  font-size: clamp(2.1rem, 1.4rem + 3vw, 3.25rem);
+  font-size: clamp(2rem, 1.4rem + 3vw, 3.25rem);
   line-height: 1;
   letter-spacing: -0.015em;
-  transition: transform 500ms var(--ease-out), color var(--dur) var(--ease-out);
+  transition:
+    transform 200ms var(--ease-out),
+    opacity 120ms ease;
 }
 
-.overlayLink:hover .overlayLabel {
-  transform: translateX(8px);
-  color: var(--accent);
-}
-
-.overlayLeader {
-  flex: 1;
+/* Press: the row's label dims at once, so a tap is felt before the sheet fades. */
+.overlayLink:active .overlayLabel {
+  opacity: 0.6;
 }
 
 .overlayFoot {
   margin-top: auto;
-  padding-top: 40px;
+  padding-top: 32px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 24px;
+  gap: 20px;
 }
 
 .overlayContact {
@@ -275,7 +280,11 @@
   color: var(--fg-2);
 }
 
-.overlayContact a:hover {
+.overlayContact a {
+  transition: color 200ms ease;
+}
+
+.overlayContact a:active {
   color: var(--fg);
 }
 
@@ -301,21 +310,104 @@
   }
 }
 
-@media (max-width: 560px) {
-  .header {
-    padding-top: 10px;
-  }
-
+@media (max-width: 768px) {
   .bar {
-    height: 54px;
-    padding: 0 6px 0 14px;
+    height: 64px;
   }
+}
 
-  .cta {
-    display: none;
+/* Phones: "Book" in place of "Book a walkthrough", waiting out of sight until the visitor
+   is past the hero (which carries its own button). */
+@media (max-width: 560px) {
+  .bar {
+    height: 60px;
+    gap: 12px;
   }
 
   .logoImg {
     height: 17px;
+  }
+
+  .actions {
+    gap: 6px;
+  }
+
+  .cta {
+    min-height: 38px;
+    padding: 0 16px;
+    transition:
+      color 200ms ease,
+      opacity 240ms var(--ease-out),
+      transform 240ms var(--ease-out),
+      visibility 0s,
+      var(--press-transition);
+  }
+
+  .ctaFull,
+  .ctaArrow {
+    display: none;
+  }
+
+  .ctaShort {
+    display: inline;
+  }
+
+  .cta:not(.ctaShown) {
+    opacity: 0;
+    transform: scale(0.96);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 180ms var(--ease-out),
+      transform 180ms var(--ease-out),
+      visibility 0s linear 180ms;
+  }
+
+  .toggle {
+    height: 38px;
+    padding: 0 14px;
+  }
+}
+
+/* Reduced motion: the header (data-motion-safe) fades instead of sliding; the dot, the
+   "Book" button and the menu labels fade in place. */
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: opacity 200ms ease;
+  }
+
+  .hidden {
+    transform: none;
+    opacity: 0;
+    transition-duration: 150ms;
+  }
+
+  .hidden .bar {
+    pointer-events: none;
+  }
+
+  .hidden:focus-within {
+    opacity: 1;
+  }
+
+  .hidden:focus-within .bar {
+    pointer-events: auto;
+  }
+
+  .link::after,
+  .active::after {
+    transform: translateX(-50%);
+  }
+
+  .toggleIcon span {
+    transition: none;
+  }
+
+  .cta:not(.ctaShown) {
+    transform: none;
+  }
+
+  .overlayLabel {
+    transform: none !important;
   }
 }

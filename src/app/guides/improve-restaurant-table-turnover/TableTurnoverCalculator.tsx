@@ -112,14 +112,14 @@ export default function TableTurnoverCalculator() {
       <div className={styles.tabButtons}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'deadtime' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'deadtime' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('deadtime')}
         >
           1. Service Cycle Dead-Time Auditor
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'revpash' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'revpash' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('revpash')}
         >
           2. RevPASH & Rush Revenue Modeler
@@ -370,7 +370,7 @@ export default function TableTurnoverCalculator() {
                 className={styles.rangeSlider}
               />
               <span style={hintStyle}>
-                KNOMI&apos;s target is to lift average order by around 25% (a target, not a guarantee). Set your own figure here.
+                Your own assumption: set your own figure here.
               </span>
             </div>
           </div>

@@ -18,16 +18,16 @@ npm run build      # static site in ./out
 
 | Path | What |
 |---|---|
-| `src/content/site.ts` | All homepage copy, pricing, FAQ and contact details. Edit words here, not in components. |
+| `src/content/site.ts` | All homepage copy, FAQ and contact details. Edit words here, not in components. |
 | `src/app/globals.css` | The design system: colours, type scale, spacing, buttons and shared utilities. |
-| `src/components/home/` | Homepage sections (Hero, the three chapters, Pricing, FAQ, Booking, …). |
+| `src/components/home/` | Homepage sections (Hero, the three chapters, What it’s worth (upselling calculator), FAQ, Booking, …). |
 | `src/components/ui/` | Shared pieces: reveals, section header, phone frame, wordmark, icons. |
 | `src/app/guides`, `compare`, `solutions` | Long-form SEO pages and their calculators. |
 | `public/images/` | Menu screenshots, logos and the café sketch. |
 
 ## Copy rules
 
-Every claim on the site follows the **KNOMI Brain** (Drive › KNOMI HQ): no customer counts, results, testimonials or unsourced statistics until real data exists; the +25% average-order lift appears only as a target; pricing is ₹149 / ₹250 / ₹500–600 per table per month with 0% commission.
+Every claim on the site follows the **KNOMI Brain** (Drive › KNOMI HQ): no customer counts, results, testimonials or unsourced statistics until real data exists; the +25% average-order lift appears only as a target; KNOMI pricing is shared only on the walkthrough call: no KNOMI price, plan name or fee structure on the site; 0% commission may be stated.
 
 ## Environment
 

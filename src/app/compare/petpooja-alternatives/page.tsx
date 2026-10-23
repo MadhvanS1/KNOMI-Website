@@ -4,10 +4,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PetpoojaMigrationAuditor from "./PetpoojaMigrationAuditor";
 import styles from "./ComparePetpooja.module.css";
-import { OG_IMAGE, bookHref, pricing } from "@/content/site";
-
-const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
+import callout from "../Callout.module.css";
+import { OG_IMAGE, bookHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Petpooja Alternatives for Cafes & Restaurants (2026 Comparison) | KNOMI",
@@ -57,7 +55,7 @@ const comparisonMatrix = [
     feature: "Browsing & Demand Analytics",
     petpooja: "Sales reports built on billed items",
     dotpe: "Order and sales reporting",
-    knomi: "Knomi Compass, powered by Knomi Sense: dwell time and dishes viewed but not ordered (Ecosystem plan)",
+    knomi: "Knomi Compass, powered by Knomi Sense: dwell time and dishes viewed but not ordered",
   },
   {
     feature: "Menu Personalization",
@@ -75,7 +73,7 @@ const comparisonMatrix = [
     feature: "Pricing Model",
     petpooja: "Annual software licence + add-on module fees",
     dotpe: "Reported per-transaction fees + gateway charges",
-    knomi: `₹${menuPlan.priceMin} / ₹${signaturePlan.priceMin} / ₹${ecosystemPlan.priceMin} per table, per month; 0% commission`,
+    knomi: "Shared on a walkthrough call · 0% commission",
   },
 ];
 
@@ -86,7 +84,7 @@ const faqs = [
   },
   {
     q: "Can KNOMI work alongside our existing Petpooja POS setup?",
-    a: "Yes. You don't need to discard your billing setup. Put KNOMI on your dining tables for guest self-ordering, and keep Petpooja at the front desk for cashier reconciliation, inventory and GST. On the Signature plan, KNOMI integrates with Petpooja, so orders placed at the table flow into it.",
+    a: "Yes. You don't need to discard your billing setup. Put KNOMI on your dining tables for guest self-ordering, and keep Petpooja at the front desk for cashier reconciliation, inventory and GST. KNOMI integrates with Petpooja, so orders placed at the table flow into it.",
   },
   {
     q: "Do diners have to download an app to view the menu?",
@@ -98,11 +96,11 @@ const faqs = [
   },
   {
     q: "What makes Knomi Compass different from standard sales reports?",
-    a: "POS reports show what sold. Knomi Compass, powered by the full Knomi Sense on the Ecosystem plan, shows what almost sold. It measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix (Stars, Puzzles, Workhorses, Dogs), so you can spot dishes guests consider but skip.",
+    a: "POS reports show what sold. Knomi Compass, powered by Knomi Sense, shows what almost sold. It measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix (Stars, Puzzles, Workhorses, Dogs), so you can spot dishes guests consider but skip.",
   },
   {
     q: "Does switching from Petpooja mean losing my historical data?",
-    a: "No. With the co-existence setup, your accounting and historical data stay in Petpooja. KNOMI handles the menu, ordering and Knomi Host at the tables, and on the Signature plan pushes orders into Petpooja so billing stays in one place.",
+    a: "No. With the co-existence setup, your accounting and historical data stay in Petpooja. KNOMI handles the menu, ordering and Knomi Host at the tables, and pushes orders into Petpooja so billing stays in one place.",
   },
 ];
 
@@ -154,7 +152,7 @@ const comparisonJsonLd = {
         "@id": "https://www.knomi.in/compare/petpooja-alternatives",
       },
       "datePublished": "2026-09-05T18:00:00+05:30",
-      "dateModified": "2026-10-11T12:00:00+05:30",
+      "dateModified": "2026-10-16T12:00:00+05:30",
       "author": {
         "@type": "Person",
         "name": "Madhvan Sharma",
@@ -215,15 +213,15 @@ export default function PetpoojaAlternativesPage() {
             </div>
 
             {/* Answer-First AEO Snippet Box */}
-            <div className={styles.aeoBox}>
-              <span className={styles.aeoLabel}>The Quick Answer</span>
-              <p className={styles.aeoText}>
+            <div className={`${callout.box} ${styles.aeoBox}`}>
+              <span className={callout.label}>The Quick Answer</span>
+              <p className={callout.text}>
                 Looking for Petpooja alternatives? Petpooja is one of India&apos;s most widely used billing POS systems,
                 with wide third-party integrations. Cafes and casual dining restaurants usually start looking when the
                 problem is at the table, not the till: orders waiting on a free server, no visual self-ordering, and no
                 view of what guests browse. <strong>KNOMI is built for that side:</strong> an illustrated menu guests open
                 without an app or a login, Knomi Host suggesting pairings, orders straight to your kitchen display, and
-                integration with Petpooja on the Signature plan, so you don&apos;t have to replace your POS at all.
+                integration with Petpooja, so you don&apos;t have to replace your POS at all.
               </p>
             </div>
 
@@ -234,8 +232,8 @@ export default function PetpoojaAlternativesPage() {
                 <div className={styles.statLabel}>App Installs or Logins to Browse</div>
               </div>
               <div className={styles.statCard}>
-                <div className={styles.statValue}>₹{signaturePlan.priceMin}</div>
-                <div className={styles.statLabel}>Signature Plan, per Table / Month</div>
+                <div className={styles.statValue}>Host</div>
+                <div className={styles.statLabel}>Suggesting a Pairing at Every Table</div>
               </div>
               <div className={styles.statCard}>
                 <div className={styles.statValue}>0%</div>
@@ -356,7 +354,7 @@ export default function PetpoojaAlternativesPage() {
                 </div>
                 <p className={styles.pillarDesc}>
                   POS software tells you what guests bought; it can&apos;t see what they considered. Knomi Compass,
-                  powered by Knomi Sense on the Ecosystem plan, measures how long guests linger on each dish and how
+                  powered by Knomi Sense, measures how long guests linger on each dish and how
                   often a view turns into an order. Say 30 guests open your signature dessert in a week and only a
                   handful order it: Compass flags it, so you can look at the description, portion or price.
                 </p>
@@ -440,11 +438,11 @@ export default function PetpoojaAlternativesPage() {
                   </li>
                   <li className={styles.decisionItem}>
                     <span className={styles.checkMark}>✓</span>
-                    <span>You want to see which dishes guests consider but skip, with Knomi Compass on the Ecosystem plan.</span>
+                    <span>You want to see which dishes guests consider but skip, with Knomi Compass.</span>
                   </li>
                   <li className={styles.decisionItem}>
                     <span className={styles.checkMark}>✓</span>
-                    <span>You want 0% commission, no app and no login to browse, and flat pricing: {PRICE_LADDER}.</span>
+                    <span>You want 0% commission, and a menu guests can browse with no app and no login.</span>
                   </li>
                 </ul>
               </div>
@@ -483,8 +481,8 @@ export default function PetpoojaAlternativesPage() {
                 Ready to Upgrade Your Floor Economics?
               </h2>
               <p className={styles.ctaSub}>
-                See KNOMI on a menu like yours. Signature is ₹{signaturePlan.priceMin} per table, per month, with
-                0% commission and integration with the POS you already use.
+                See KNOMI on a menu like yours, with 0% commission and integration with the POS you already use.
+                We share pricing on the call, once we understand your restaurant.
               </p>
               <div className={styles.ctaActions}>
                 <a href={bookHref} className="btn btn--primary btn--large">

@@ -24,7 +24,7 @@
   place-items: center;
   border-radius: var(--r-arch);
   background: linear-gradient(180deg, var(--paper) 0%, var(--sand) 100%);
-  animation: doorIn 1.4s var(--ease-out) both;
+  animation: doorIn 0.9s var(--ease-out) backwards;
 }
 
 .doorway::before {
@@ -35,12 +35,11 @@
   border-radius: 999px 999px calc(var(--r-md) - 6px) calc(var(--r-md) - 6px);
 }
 
+/* The doorway rises into place: transform and opacity only. */
 @keyframes doorIn {
   from {
-    clip-path: inset(100% 0 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
+    opacity: 0;
+    transform: translateY(16px);
   }
 }
 
@@ -70,6 +69,12 @@
   align-items: center;
   gap: 16px 28px;
   margin-top: 8px;
+}
+
+.journal {
+  transition:
+    background-size var(--dur) var(--ease-out),
+    var(--press-transition);
 }
 
 @media (max-width: 860px) {

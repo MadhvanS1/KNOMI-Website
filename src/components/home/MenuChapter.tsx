@@ -1,47 +1,52 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import {
-  AnimatePresence,
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-  type Variants,
-} from "framer-motion";
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+} from "react";
+import { motion, useMotionValueEvent, useScroll, useTransform, type Variants } from "framer-motion";
 import SectionHead from "@/components/ui/SectionHead";
-import PhoneFrame from "@/components/ui/PhoneFrame";
+import PhoneFrame, { PhoneScreen, screenRatioOf } from "@/components/ui/PhoneFrame";
 import { EASE_OUT, Reveal } from "@/components/ui/Reveal";
 import { menuChapter } from "@/content/site";
 import styles from "./MenuChapter.module.css";
 
 const { steps } = menuChapter;
-type Step = (typeof steps)[number];
-const TOTAL = String(steps.length).padStart(2, "0");
+const LAST = steps.length - 1;
 const SKYLINE = "/images/illustrations/skyline-cafe.webp";
 
-// copy: illustrative status-bar clock inside the phone mock (UI label, not a claim)
-const STATUS_TIME = "9:41";
+/* One device for all three screens. It takes the tallest screenshot's shape, so each
+   screenshot shows whole inside it (PhoneScreen adds a status bar and a home-bar strip
+   around the shorter ones). Nothing is cropped. */
+const DEVICE_SRC = steps.reduce((tallest, s) => (screenRatioOf(s.image) < screenRatioOf(tallest) ? s.image : tallest), steps[0].image);
+const SCREEN_RATIO = screenRatioOf(DEVICE_SRC);
 
-/* Each screenshot gets a status bar in its own top colour, so the device's
-   camera island sits in the bar instead of over the menu's title.
-   (Sampled from the screenshots; unknown images fall back to cream.) */
-const SCREEN_TONE: Record<string, { bg: string; ink: string }> = {
-  "/images/menu-preview-dishnav.jpg": { bg: "#f8f0e6", ink: "var(--ink)" },
-  "/images/menu-preview-dishpage.webp": { bg: "#fbefe1", ink: "var(--ink)" },
-  "/images/menu-preview-orderlist.jpg": { bg: "#615c56", ink: "var(--paper)" },
-};
-const DEFAULT_TONE = { bg: "#f3ebdd", ink: "var(--ink)" };
-
-/* Inside the arch, the view pans along the street sketch as the chapter scrolls:
+/* Inside the arch, the view pans along the street sketch as the chapter moves on:
    arriving in the city on "Scan", at the café table by "Order". Values are the
    translateX of a strip 180% as wide as the arch, so -44% shows its right edge. */
 const DRIFT_END = -44;
+const driftAt = (i: number) => `${(DRIFT_END * i) / LAST}%`;
+
+/* A swipe on the phone (below desktop) changes step once it travels this far, or on a
+   quick flick: anything faster than this many px per ms, however short. */
+const SWIPE_PX = 40;
+const FLICK_SPEED = 0.11;
+const FLICK_MIN_PX = 12;
+/* How far the screen follows the finger: closely within the steps, damped past either end. */
+const FOLLOW = 0.6;
+const FOLLOW_PAST_END = 0.12;
 
 /*
- * Screen layers. All three shots stay mounted (so they are decoded before they
- * are needed); the incoming one settles in on top while the outgoing one holds
+ * Desktop screen layers. All three shots stay mounted (so they are decoded before
+ * they are needed); the incoming one settles in on top while the outgoing one holds
  * underneath and fades only once it is covered. No blank frame, no flicker.
  * Its scale/offset reset happens after it is invisible.
  */
@@ -51,25 +56,25 @@ const layerVariants: Variants = {
     scale: 1,
     y: 0,
     transition: {
-      opacity: { duration: 0.6, ease: [0.33, 1, 0.68, 1] },
-      default: { duration: 0.9, ease: EASE_OUT },
+      opacity: { duration: 0.3, ease: EASE_OUT },
+      default: { duration: 0.45, ease: EASE_OUT },
     },
   },
   off: {
     opacity: 0,
-    scale: 1.04,
-    y: 10,
+    scale: 1.03,
+    y: 8,
     transition: {
-      opacity: { duration: 0.4, delay: 0.45, ease: "easeOut" },
-      scale: { duration: 0, delay: 0.9 },
-      y: { duration: 0, delay: 0.9 },
+      opacity: { duration: 0.15, delay: 0.3, ease: EASE_OUT },
+      scale: { duration: 0, delay: 0.45 },
+      y: { duration: 0, delay: 0.45 },
     },
   },
 };
 
 const layerVariantsReduced: Variants = {
-  on: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
-  off: { opacity: 0, scale: 1, y: 0, transition: { duration: 0.3, delay: 0.3, ease: "easeOut" } },
+  on: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.25, ease: EASE_OUT } },
+  off: { opacity: 0, scale: 1, y: 0, transition: { duration: 0.15, delay: 0.25, ease: EASE_OUT } },
 };
 
 /*
@@ -105,46 +110,179 @@ function offsetWithin(el: HTMLElement, ancestor: HTMLElement): number | null {
   return node === ancestor ? y : null;
 }
 
-/** Phone screen contents: a status bar, then the menu screenshot below the camera island. */
-function Screen({ step, sizes }: { step: Step; sizes: string }) {
-  const tone = SCREEN_TONE[step.image] ?? DEFAULT_TONE;
-  return (
-    <div className={styles.scr} style={{ "--bar-bg": tone.bg, "--bar-ink": tone.ink } as CSSProperties}>
-      <span className={styles.statusBar} aria-hidden="true">
-        <span>{STATUS_TIME}</span>
-        <svg className={styles.statusIcons} viewBox="0 0 34 11" fill="none">
-          <rect x="0" y="7" width="2.6" height="4" rx="0.8" fill="currentColor" />
-          <rect x="4.2" y="5" width="2.6" height="6" rx="0.8" fill="currentColor" />
-          <rect x="8.4" y="2.6" width="2.6" height="8.4" rx="0.8" fill="currentColor" />
-          <rect x="12.6" y="0.4" width="2.6" height="10.6" rx="0.8" fill="currentColor" />
-          <rect x="19.5" y="0.9" width="12" height="9.2" rx="2.6" stroke="currentColor" strokeOpacity="0.45" />
-          <rect x="21" y="2.4" width="7.6" height="6.2" rx="1.4" fill="currentColor" />
-          <path d="M32.6 4.2v2.6" stroke="currentColor" strokeOpacity="0.45" strokeWidth="1.2" strokeLinecap="round" />
-        </svg>
-      </span>
-      <span className={styles.shot}>
-        <Image src={step.image} alt={step.alt} fill sizes={sizes} className={styles.shotImg} />
-      </span>
-    </div>
-  );
-}
+/* ---------------------------------------------------------------------
+   Below desktop: one phone in its doorway, and a Scan / Browse / Order
+   stepper (tabs, arrow keys, or a swipe across the phone).
+   --------------------------------------------------------------------- */
 
-/** A rolling micro-caps value for the stage caption. */
-function Ticker({ value, className }: { value: string; className?: string }) {
+const PHONE_SIZES = "(max-width: 639px) 60vw, 250px";
+
+function MenuStepper({ reduce }: { reduce: boolean }) {
+  const uid = useId();
+  const [active, setActive] = useState(0);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const viewerRef = useRef<HTMLDivElement>(null);
+  const drag = useRef<{ id: number; x: number; y: number; t: number; dx: number; horizontal: boolean | null } | null>(null);
+
+  const go = (i: number, focus = false) => {
+    const next = Math.min(LAST, Math.max(0, i));
+    setActive(next);
+    if (focus) tabRefs.current[next]?.focus();
+  };
+
+  /* Arrow keys move along the tabs (wrapping), Home and End jump to either end. */
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    let to: number;
+    if (e.key === "ArrowRight") to = active === LAST ? 0 : active + 1;
+    else if (e.key === "ArrowLeft") to = active === 0 ? LAST : active - 1;
+    else if (e.key === "Home") to = 0;
+    else if (e.key === "End") to = LAST;
+    else return;
+    e.preventDefault();
+    go(to, true);
+  };
+
+  /* While a finger drags sideways, the screen follows it closely (with resistance past
+     either end). The offset is written straight to the viewer, so React never re-renders
+     mid-drag; vertical drags are left to the page (touch-action: pan-y). */
+  const follow = (px: number | null) => {
+    const el = viewerRef.current;
+    if (!el) return;
+    if (px === null) {
+      el.removeAttribute("data-dragging");
+      el.style.removeProperty("--drag");
+    } else {
+      el.setAttribute("data-dragging", "");
+      el.style.setProperty("--drag", `${px.toFixed(1)}px`);
+    }
+  };
+
+  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
+    if (!e.isPrimary || (e.pointerType === "mouse" && e.button !== 0)) return;
+    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, t: e.timeStamp, dx: 0, horizontal: null };
+  };
+
+  const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    if (!d || d.id !== e.pointerId) return;
+    const dx = e.clientX - d.x;
+    const dy = e.clientY - d.y;
+    if (d.horizontal === null) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      d.horizontal = Math.abs(dx) > Math.abs(dy);
+      if (!d.horizontal) {
+        drag.current = null;
+        return;
+      }
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+    d.dx = dx;
+    if (reduce) return;
+    const pastEnd = (dx > 0 && active === 0) || (dx < 0 && active === LAST);
+    follow(dx * (pastEnd ? FOLLOW_PAST_END : FOLLOW));
+  };
+
+  const onPointerEnd = (e: PointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    drag.current = null;
+    follow(null);
+    if (!d || d.id !== e.pointerId || !d.horizontal || e.type === "pointercancel") return;
+    const dist = Math.abs(d.dx);
+    const speed = dist / Math.max(1, e.timeStamp - d.t);
+    if (dist >= SWIPE_PX || (dist >= FLICK_MIN_PX && speed >= FLICK_SPEED)) go(active + (d.dx < 0 ? 1 : -1));
+  };
+
+  const tabId = (i: number) => `${uid}-tab-${i}`;
+  const panelId = (i: number) => `${uid}-panel-${i}`;
+
   return (
-    <span className={`${styles.tick} ${className ?? ""}`}>
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.span
-          key={value}
-          className={styles.tickInner}
-          initial={{ y: "110%" }}
-          animate={{ y: "0%", transition: { duration: 0.45, ease: EASE_OUT } }}
-          exit={{ y: "-110%", transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } }}
-        >
-          {value}
-        </motion.span>
-      </AnimatePresence>
-    </span>
+    <div className={styles.stepper} data-motion-safe="">
+      <div
+        role="tablist"
+        aria-label={steps.map((s) => s.title).join(", ")}
+        className={styles.tabs}
+        style={{ "--active": active, "--count": steps.length } as CSSProperties}
+        onKeyDown={onKeyDown}
+      >
+        {steps.map((step, i) => (
+          <button
+            key={step.n}
+            ref={(el) => {
+              tabRefs.current[i] = el;
+            }}
+            type="button"
+            role="tab"
+            id={tabId(i)}
+            aria-selected={i === active}
+            aria-controls={panelId(i)}
+            tabIndex={i === active ? 0 : -1}
+            className={`pressable ${styles.tab}`}
+            onClick={() => go(i)}
+          >
+            <span className={styles.tabNum} aria-hidden="true">
+              {step.n}
+            </span>
+            {step.title}
+          </button>
+        ))}
+        <span className={styles.tabBar} aria-hidden="true" />
+      </div>
+
+      {/* Every panel shares one grid cell, so the block keeps its height as the text changes. */}
+      <div className={styles.panels}>
+        {steps.map((step, i) => (
+          <div
+            key={step.n}
+            role="tabpanel"
+            id={panelId(i)}
+            aria-labelledby={tabId(i)}
+            tabIndex={i === active ? 0 : undefined}
+            className={styles.panel}
+            data-on={i === active}
+          >
+            <p className={styles.panelBody}>{step.body}</p>
+          </div>
+        ))}
+      </div>
+
+      <figure
+        ref={viewerRef}
+        className={styles.viewer}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd}
+        onPointerCancel={onPointerEnd}
+      >
+        <div className={styles.arch} aria-hidden="true">
+          <div className={`${styles.skyline} ${styles.skylineStep}`} style={{ "--shift": driftAt(active) } as CSSProperties}>
+            <Image src={SKYLINE} alt="" width={854} height={360} sizes="560px" className={styles.skylineImg} />
+          </div>
+        </div>
+        <span className={styles.ground} aria-hidden="true" />
+        {/* The device sits in a box of its own width: its bezel is a % padding, which the
+            browser takes from the parent's width, so the parent must be the phone's width. */}
+        <div className={styles.viewerPhone}>
+          <PhoneFrame src={DEVICE_SRC} alt="" sizes={PHONE_SIZES}>
+            <div className={styles.layers}>
+              {steps.map((step, i) => {
+                const on = i === active;
+                return (
+                  <div
+                    key={step.image}
+                    className={styles.stepLayer}
+                    data-on={on}
+                    style={{ "--side": i < active ? -1 : i > active ? 1 : 0 } as CSSProperties}
+                    aria-hidden={!on}
+                  >
+                    <PhoneScreen src={step.image} alt={step.alt} sizes={PHONE_SIZES} screenRatio={SCREEN_RATIO} />
+                  </div>
+                );
+              })}
+            </div>
+          </PhoneFrame>
+        </div>
+      </figure>
+    </div>
   );
 }
 
@@ -195,7 +333,7 @@ export default function MenuChapter() {
           const y = offsetWithin(dot, list);
           if (y !== null && height > 0) marks.push(y / height);
         });
-        // Markers are hidden below the desktop breakpoint; there is no active state there.
+        // The scroll story is desktop-only (the list is hidden below it): no active state there.
         thresholds.current = marks.length === steps.length ? marks : [];
         sync(scrollYProgress.get());
       });
@@ -212,32 +350,30 @@ export default function MenuChapter() {
     };
   }, [scrollYProgress, sync]);
 
-  const current = steps[active];
-
   return (
     <section id="menu" className={`section ${styles.root}`}>
       <div className="wrap">
         <SectionHead
-          numeral={menuChapter.numeral}
           eyebrow={menuChapter.eyebrow}
           titleLead={menuChapter.titleLead}
           titleAccent={menuChapter.titleAccent}
           lead={menuChapter.lead}
+          words
         />
 
+        {/* Desktop: one phone that stays put while the story scrolls past it. */}
         <div className={styles.story}>
-          {/* Desktop: one phone that stays put while the story scrolls past it. */}
           <div className={styles.stageCol}>
             <div className={styles.stage}>
               <div className={styles.arch} aria-hidden="true">
-                <motion.div className={styles.skyline} style={{ x: reduce ? `${DRIFT_END / 2}%` : drift }}>
+                <motion.div className={styles.skyline} style={{ x: reduce ? driftAt(1) : drift }}>
                   <Image src={SKYLINE} alt="" width={854} height={360} sizes="800px" className={styles.skylineImg} />
                 </motion.div>
               </div>
               <span className={styles.ground} aria-hidden="true" />
 
               <div className={styles.stagePhone}>
-                <PhoneFrame src={steps[0].image} alt="" sizes="300px">
+                <PhoneFrame src={DEVICE_SRC} alt="" sizes="300px">
                   <div className={styles.layers}>
                     {steps.map((step, i) => {
                       const on = i === active;
@@ -251,20 +387,13 @@ export default function MenuChapter() {
                           style={{ zIndex: on ? 1 : 0 }}
                           aria-hidden={!on}
                         >
-                          <Screen step={step} sizes="300px" />
+                          <PhoneScreen src={step.image} alt={step.alt} sizes="300px" screenRatio={SCREEN_RATIO} />
                         </motion.div>
                       );
                     })}
                   </div>
                 </PhoneFrame>
               </div>
-
-              <p className={styles.caption} aria-hidden="true">
-                <Ticker value={current.n} className={styles.capNum} />
-                <span className={styles.capTotal}>/ {TOTAL}</span>
-                <span className={styles.capDash}>&mdash;</span>
-                <Ticker value={current.title} />
-              </p>
             </div>
           </div>
 
@@ -276,7 +405,7 @@ export default function MenuChapter() {
             <ol className={styles.steps} ref={listRef}>
               {steps.map((step, i) => (
                 <li key={step.n} className={`${styles.step} ${i === active ? styles.isActive : ""}`}>
-                  <Reveal className={styles.stepBody} amount={0.35}>
+                  <Reveal className={styles.stepBody}>
                     <span
                       ref={(el) => {
                         dotRefs.current[i] = el;
@@ -293,31 +422,16 @@ export default function MenuChapter() {
                       <p className={styles.body}>{step.body}</p>
                     </div>
                   </Reveal>
-
-                  {/* Mobile & tablet: each step carries its own phone. */}
-                  <Reveal as="figure" className={styles.figure} delay={0.12} amount={0.2}>
-                    <div className={styles.arch} aria-hidden="true">
-                      <div
-                        className={`${styles.skyline} ${styles.skylineStatic}`}
-                        style={{ "--shift": `${(DRIFT_END * i) / (steps.length - 1)}%` } as CSSProperties}
-                      >
-                        <Image src={SKYLINE} alt="" width={854} height={360} sizes="560px" className={styles.skylineImg} />
-                      </div>
-                    </div>
-                    <span className={styles.ground} aria-hidden="true" />
-                    <PhoneFrame src={step.image} alt="" sizes="(max-width: 699px) 64vw, 250px" className={styles.figPhone}>
-                      <div className={styles.layers}>
-                        <div className={styles.layer}>
-                          <Screen step={step} sizes="(max-width: 699px) 64vw, 250px" />
-                        </div>
-                      </div>
-                    </PhoneFrame>
-                  </Reveal>
                 </li>
               ))}
             </ol>
           </div>
         </div>
+
+        {/* Phones and tablets: one phone and a three-step stepper, instead of three phones. */}
+        <Reveal className={styles.stepperWrap}>
+          <MenuStepper reduce={reduce} />
+        </Reveal>
       </div>
     </section>
   );

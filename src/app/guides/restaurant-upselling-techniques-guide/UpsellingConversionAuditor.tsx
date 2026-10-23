@@ -166,13 +166,13 @@ export default function UpsellingConversionAuditor() {
 
       <div className={styles.tabButtons}>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'verbalVsVisual' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'verbalVsVisual' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('verbalVsVisual')}
         >
           Mode 1: Verbal Script vs Visual Simulator
         </button>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'basketModeler' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'basketModeler' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('basketModeler')}
         >
           Mode 2: Multi-Category Basket Modeler
@@ -500,8 +500,7 @@ export default function UpsellingConversionAuditor() {
                 </span>
               </div>
               <p style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)', margin: '8px 0 0' }}>
-                Estimate based on the attach rates you set, not a KNOMI result. KNOMI&apos;s own target is around +25%
-                on average order, which is a goal, not a guarantee.
+                Estimate based on the attach rates you set, not a KNOMI result.
               </p>
             </div>
           </div>

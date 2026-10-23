@@ -1,216 +1,238 @@
-.pageWrapper {
-  min-height: 100vh;
-  background-color: var(--color-warm-ivory);
-  color: var(--color-espresso);
-  padding-top: 100px;
-  padding-bottom: 80px;
+/* =====================================================================
+   Guides hub
+   Set like the index of a printed menu: a left-aligned head, a line of
+   topic links, then each topic as a course, its guides as ruled rows
+   (title, dotted leader, read time; a short summary under it). The close
+   is an invitation with Knomi Host peeking over its top edge.
+   ===================================================================== */
+
+.page {
+  padding-top: calc(var(--nav-h) + clamp(40px, 2rem + 3vw, 88px));
+  padding-bottom: clamp(64px, 3rem + 4vw, 120px);
 }
 
-.hero {
-  padding: 48px 0 40px;
-  text-align: center;
+/* ---------- Head ---------- */
+
+.head {
+  margin-bottom: clamp(24px, 1.2rem + 1.2vw, 36px);
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  background-color: rgba(169, 71, 47, 0.08);
-  border: 1px solid rgba(169, 71, 47, 0.2);
-  border-radius: 9999px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--color-terracotta);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 20px;
-}
-
-.title {
-  font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 700;
-  color: var(--color-burnt-coffee);
-  line-height: 1.2;
-  max-width: 860px;
-  margin: 0 auto 16px;
-}
-
-.subtitle {
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: var(--color-text-secondary);
-  max-width: 680px;
-  margin: 0 auto 36px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
-  margin-top: 24px;
-}
-
-.card {
+/* Topics, as plain text links: the quick way down a long page on a phone. */
+.jump {
   display: flex;
-  flex-direction: column;
-  background-color: #fbf8f3;
-  border: 1px solid rgba(28, 20, 17, 0.08);
-  border-radius: 16px;
-  padding: 32px;
-  text-decoration: none;
-  transition: transform var(--duration-normal) var(--ease-default),
-              box-shadow var(--duration-normal) var(--ease-default),
-              border-color var(--duration-normal) var(--ease-default);
-  box-shadow: 0 4px 16px rgba(28, 20, 17, 0.04);
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  padding-bottom: clamp(36px, 1.8rem + 2vw, 56px);
+  font-size: var(--fs-small);
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(28, 20, 17, 0.08);
-  border-color: rgba(169, 71, 47, 0.35);
-}
-
-.cardTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.categoryTag {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-terracotta);
-  background-color: rgba(169, 71, 47, 0.08);
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-
-.readTime {
-  font-size: 0.8125rem;
-  color: var(--color-text-tertiary);
+.jumpLink {
   font-weight: 500;
+  color: var(--fg-2);
 }
 
-.cardTitle {
-  font-family: var(--font-heading);
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: var(--color-burnt-coffee);
-  line-height: 1.35;
-  margin-bottom: 12px;
-  transition: color var(--duration-normal) var(--ease-default);
+/* ---------- A topic ---------- */
+
+.topic {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 16px;
+  padding-block: clamp(28px, 1.4rem + 1.6vw, 44px);
+  border-top: 1px solid var(--line-strong);
 }
 
-.card:hover .cardTitle {
-  color: var(--color-terracotta);
+.topicTitle {
+  font-size: var(--fs-h3);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  max-width: 14ch;
 }
 
-.cardSnippet {
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--color-text-secondary);
-  margin-bottom: 24px;
-  flex-grow: 1;
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.cardFooter {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 16px;
-  border-top: 1px solid rgba(28, 20, 17, 0.06);
+.item + .item {
+  border-top: 1px solid var(--line);
 }
 
-.authorMeta {
+/* The whole row is the link. Hover and press tint it like a page under a finger. */
+.row {
+  display: block;
+  margin-inline: -12px;
+  padding: 18px 12px 20px;
+  border-radius: var(--r-xs);
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 160ms ease;
+}
+
+.item:first-child .row {
+  padding-top: 6px;
+}
+
+.rowHead {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(24px, 1fr) auto;
+  align-items: end;
+  align-items: last baseline;
+}
+
+.rowTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.55rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  text-wrap: balance;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 160ms ease;
+}
+
+/* A dotted leader, like the line to a price on a menu. */
+.leader {
+  height: 1px;
+  margin: 0 12px 0.4em;
+  background-image: radial-gradient(circle, var(--fg-3) 1px, transparent 1.2px);
+  background-size: 7px 3px;
+  background-repeat: repeat-x;
+  background-position: center;
+  opacity: 0.6;
+}
+
+.rowTime {
+  font-size: var(--fs-micro);
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.rowSummary {
+  display: -webkit-box;
+  max-width: 64ch;
+  margin-top: 8px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--fg-2);
+}
+
+.rowBy {
+  display: block;
+  margin-top: 8px;
+  font-size: var(--fs-micro);
+  line-height: 1.4;
+  color: var(--fg-3);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover {
+    background-color: color-mix(in srgb, var(--linen) 55%, transparent);
+  }
+
+  .row:hover .rowTitle {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* Press feedback: the row darkens a shade under the finger (a full-width row doesn't shrink). */
+.row:active {
+  background-color: var(--linen);
+}
+
+/* ---------- The close ---------- */
+
+.close {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  margin-top: clamp(150px, 7rem + 4vw, 200px); /* room for Host above the edge */
+  padding: clamp(28px, 1.4rem + 2vw, 56px);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+
+/* He peeks over the top edge, hands resting on it. */
+.close .closeHost {
+  position: absolute;
+  right: clamp(20px, 6vw, 72px);
+  bottom: calc(100% - 7px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.closeTitle {
+  font-size: var(--fs-h3);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  max-width: 16ch;
+}
+
+.closeBody {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  align-items: flex-start;
+  gap: 22px;
 }
 
-.authorName {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--color-burnt-coffee);
-}
-
-.authorRole {
-  font-size: 0.75rem;
-  color: var(--color-text-tertiary);
-}
-
-.actionLink {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-terracotta);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: gap var(--duration-normal) var(--ease-default);
-}
-
-.card:hover .actionLink {
-  gap: 8px;
-}
-
-.ctaSection {
-  margin-top: 64px;
-  background: linear-gradient(135deg, var(--color-burnt-coffee) 0%, #1c1411 100%);
-  color: var(--color-champagne);
-  border-radius: 20px;
-  padding: 48px;
-  text-align: center;
-}
-
-.ctaTitle {
-  font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  color: var(--color-warm-ivory);
-  margin-bottom: 12px;
-}
-
-.ctaSubtitle {
-  font-size: 1.05rem;
-  color: rgba(234, 206, 170, 0.8);
-  max-width: 600px;
-  margin: 0 auto 28px;
+.closeText {
+  max-width: 52ch;
+  font-size: var(--fs-small);
   line-height: 1.6;
+  color: var(--fg-2);
 }
 
-.ctaBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-terracotta);
-  color: #fbf8f3;
-  padding: 14px 28px;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color var(--duration-normal) var(--ease-default),
-              transform var(--duration-normal) var(--ease-default);
-}
+/* ---------- Wide screens: each topic name stays beside its guides ---------- */
 
-.ctaBtn:hover {
-  background-color: #a9472f;
-  transform: translateY(-2px);
-}
-
-@media (max-width: 840px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+@media (min-width: 1024px) {
+  .topic {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    column-gap: clamp(48px, 5vw, 96px);
+    align-items: start;
   }
 
-  .card {
-    padding: 24px;
+  .topicTitle {
+    position: sticky;
+    top: calc(var(--nav-h) + 28px);
   }
 
-  .ctaSection {
-    padding: 32px 20px;
+  .item:first-child .row {
+    padding-top: 0;
+  }
+
+  .rowSummary {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .close {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    column-gap: clamp(48px, 5vw, 96px);
+    align-items: start;
+  }
+}
+
+/* Phones: the read time drops under the title, so long titles keep the full width. */
+@media (max-width: 559px) {
+  .rowHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .leader {
+    display: none;
+  }
+
+  .rowTime {
+    margin-top: 6px;
   }
 }

@@ -26,8 +26,10 @@
   transition: color 0.15s ease;
 }
 
-.breadcrumb a:hover {
-  color: var(--color-whiskey-sour);
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb a:hover {
+    color: var(--color-whiskey-sour);
+  }
 }
 
 .title {
@@ -36,7 +38,7 @@
   margin-bottom: 20px;
   color: var(--color-text-primary);
   font-family: var(--font-playfair, serif);
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .postMeta {
@@ -62,32 +64,8 @@
 
 /* Answer-First AEO Snippet Box */
 .aeoBox {
-  background-color: var(--color-surface-card);
-  border: 1px solid var(--color-whiskey-sour);
-  border-left: 5px solid var(--color-whiskey-sour);
-  border-radius: var(--radius-sm);
-  padding: 24px 28px;
   margin: 40px auto 0;
   max-width: 860px;
-  text-align: left;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
-}
-
-.aeoLabel {
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-honey-garlic);
-  display: block;
-  margin-bottom: 8px;
-}
-
-.aeoText {
-  font-size: 1.05rem;
-  line-height: 1.65;
-  color: var(--color-text-primary);
-  font-weight: 500;
 }
 
 /* Metrics Grid */
@@ -110,7 +88,7 @@
 
 .metricValue {
   font-size: 1.9rem;
-  font-weight: 800;
+  font-weight: 400;
   color: var(--color-whiskey-sour);
   margin-bottom: 8px;
   font-family: var(--font-playfair, serif);
@@ -166,32 +144,6 @@
 .articleBody strong {
   color: var(--color-text-primary);
   font-weight: 600;
-}
-
-/* Callout Box */
-.calloutBox {
-  background: rgba(133, 97, 58, 0.08);
-  border: 1px solid rgba(133, 97, 58, 0.3);
-  border-radius: 12px;
-  padding: 28px;
-  margin: 36px 0;
-}
-
-.calloutTitle {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-whiskey-sour);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.calloutText {
-  font-size: 1.05rem;
-  line-height: 1.75;
-  color: var(--color-text-secondary);
-  margin: 0;
 }
 
 /* Warning Box */
@@ -303,7 +255,7 @@
 
 .authorInfo h4 {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text-primary);
   margin: 0 0 4px;
 }
@@ -337,7 +289,7 @@
 
 .faqQuestion {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text-primary);
   margin-bottom: 10px;
 }
@@ -383,12 +335,14 @@
   border-radius: 8px;
   text-decoration: none;
   font-size: 1.05rem;
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  transition: transform 150ms var(--ease-out), background-color 150ms ease, var(--press-transition);
 }
 
-.ctaButton:hover {
-  background-color: var(--color-honey-garlic);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .ctaButton:hover {
+    background-color: var(--color-honey-garlic);
+    transform: translateY(-2px);
+  }
 }
 
 /* Interactive Calculator Styles */
@@ -437,12 +391,14 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, var(--press-transition);
 }
 
-.tabBtn:hover {
-  border-color: var(--color-whiskey-sour);
-  color: var(--color-text-primary);
+@media (hover: hover) and (pointer: fine) {
+  .tabBtn:hover {
+    border-color: var(--color-whiskey-sour);
+    color: var(--color-text-primary);
+  }
 }
 
 .tabBtnActive {
@@ -452,9 +408,11 @@
   text-decoration: none !important;
 }
 
-.tabBtnActive:hover {
-  background-color: var(--color-whiskey-sour);
-  color: #fbf8f3;
+@media (hover: hover) and (pointer: fine) {
+  .tabBtnActive:hover {
+    background-color: var(--color-whiskey-sour);
+    color: #fbf8f3;
+  }
 }
 
 /* Auditor Controls */
@@ -526,7 +484,7 @@
 
 .scoreVal {
   font-size: 2.2rem;
-  font-weight: 800;
+  font-weight: 400;
   font-family: var(--font-playfair, serif);
   margin-bottom: 4px;
 }
@@ -598,9 +556,9 @@
 
 .timePill {
   font-size: 0.8rem;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 20px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--r-xs);
 }
 
 .pillSlow {

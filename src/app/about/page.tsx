@@ -223,21 +223,18 @@ export default function AboutPage() {
             />
 
             <div className={styles.heroMeta}>
-              <Reveal immediate delay={0.55} y={18} className={styles.heroLeadWrap}>
+              <Reveal immediate delay={0.5} className={styles.heroLeadWrap}>
                 <p className={`lead ${styles.heroLead}`}>{HERO_COPY.lead}</p>
               </Reveal>
 
-              <Reveal immediate delay={0.7} y={14} className={styles.heroAside}>
-                <p className={styles.place}>
-                  <span className="ornament" aria-hidden="true" />
-                  {contact.city}
-                </p>
+              <Reveal immediate delay={0.6} y={14} className={styles.heroAside}>
+                <p className={styles.place}>{contact.city}</p>
                 <div className={styles.heroLinks}>
-                  <Link href="/#book" className={`link ${styles.heroLink}`}>
+                  <Link href="/#book" className={`link pressable ${styles.heroLink}`}>
                     {hero.primaryCta.label}
                     <ArrowRight className={styles.heroLinkIcon} />
                   </Link>
-                  <a href="#founders" className={`link ${styles.heroLink} ${styles.heroLinkQuiet}`}>
+                  <a href="#founders" className={`link pressable ${styles.heroLink} ${styles.heroLinkQuiet}`}>
                     {HERO_COPY.foundersLink}
                     <ArrowDown className={styles.heroLinkIconDown} />
                   </a>
@@ -274,26 +271,27 @@ export default function AboutPage() {
                 eyebrow={WHY_COPY.eyebrow}
                 titleLead={WHY_COPY.titleLead}
                 titleAccent={WHY_COPY.titleAccent}
+                accentStyle="plain"
                 breakBeforeAccent
               />
             </div>
 
             <div className={styles.letter}>
-              <Reveal amount={0.4}>
+              <Reveal>
                 <p className={styles.opening}>{WHY_COPY.opening}</p>
               </Reveal>
-              <Reveal amount={0.4} delay={0.05}>
+              <Reveal delay={0.05}>
                 <p className={styles.body}>{WHY_COPY.menu}</p>
               </Reveal>
-              <Reveal amount={0.5} delay={0.05}>
+              <Reveal delay={0.05}>
                 <p className={styles.pull}>
                   {WHY_COPY.pullLead} <em>{WHY_COPY.pullAccent}</em> {WHY_COPY.pullTail}
                 </p>
               </Reveal>
-              <Reveal amount={0.4} delay={0.05}>
+              <Reveal delay={0.05}>
                 <p className={styles.body}>{WHY_COPY.pos}</p>
               </Reveal>
-              <Reveal amount={0.6} delay={0.1}>
+              <Reveal delay={0.1}>
                 <p className={styles.signoff}>
                   <span className={styles.signName}>{WHY_COPY.signature}</span>
                   <span className={styles.signRole}>{WHY_COPY.signatureRole}</span>
@@ -310,17 +308,18 @@ export default function AboutPage() {
               eyebrow={BELIEFS_COPY.eyebrow}
               titleLead={BELIEFS_COPY.titleLead}
               titleAccent={BELIEFS_COPY.titleAccent}
+              accentStyle="plain"
               lead={BELIEFS_COPY.lead}
             />
 
             <ol className={styles.rules}>
               {PRINCIPLES.map((p) => (
-                <Reveal as="li" key={p.numeral} amount={0.35} className={styles.rule}>
+                <Reveal as="li" key={p.numeral} className={styles.rule}>
                   <span className={styles.ruleNum} aria-hidden="true">
                     <span className={styles.ruleNumText}>{p.numeral}</span>
                   </span>
                   <h3 className={styles.ruleTitle}>
-                    {p.lead} <em>{p.accent}</em>
+                    {p.lead} {p.accent}
                   </h3>
                   <p className={styles.ruleBody}>{p.body}</p>
                 </Reveal>
@@ -336,15 +335,15 @@ export default function AboutPage() {
               eyebrow={FOUNDERS_COPY.eyebrow}
               titleLead={FOUNDERS_COPY.titleLead}
               titleAccent={FOUNDERS_COPY.titleAccent}
+              accentStyle="plain"
               lead={FOUNDERS_COPY.lead}
             />
 
-            <Stagger className={styles.founders} stagger={0.14} amount={0.3}>
+            <Stagger className={styles.founders} stagger={0.06}>
               {FOUNDERS.map((f) => (
                 <StaggerItem as="article" key={f.name} className={styles.founder}>
                   <div className={styles.niche} aria-hidden="true">
                     <span className={styles.nicheRule} />
-                    <span className={`ornament ${styles.nicheStar}`} />
                     <span className={styles.monogram}>
                       {f.initials[0]}
                       <em>{f.initials[1]}</em>
@@ -364,7 +363,7 @@ export default function AboutPage() {
         {/* ---------- V. Closing: a dark doorway ---------- */}
         <section className={styles.closing}>
           <div className="wrap">
-            <Reveal y={40} amount={0.3} className={`theme-dark ${styles.band}`}>
+            <Reveal className={`theme-dark ${styles.band}`}>
               {/* A doorway in brass hairline with the tagline carved over it. */}
               <div className={styles.door} aria-hidden="true">
                 <svg className={styles.doorSvg} viewBox="0 0 640 700" fill="none">
@@ -384,6 +383,7 @@ export default function AboutPage() {
               <RevealTitle
                 lead={booking.titleLead}
                 accent={booking.titleAccent}
+                accentStyle="plain"
                 breakBeforeAccent
                 className={styles.bandTitle}
               />

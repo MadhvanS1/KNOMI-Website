@@ -1,11 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { bookHref, pricing } from "@/content/site";
+import { bookHref } from "@/content/site";
 import styles from "./BreakEvenGuide.module.css";
-
-// KNOMI Signature plan, per table per month (source: content/site.ts, KNOMI Brain §2).
-const SIGNATURE_PRICE = pricing.plans.find((plan) => plan.id === "signature")?.priceMin ?? 250;
 
 export default function BreakEvenCalculator() {
   const [fixedCosts, setFixedCosts] = useState<number>(440000);
@@ -13,9 +10,8 @@ export default function BreakEvenCalculator() {
   const [guestSpend, setGuestSpend] = useState<number>(650);
   const [desiredProfit, setDesiredProfit] = useState<number>(150000);
   const [openDays, setOpenDays] = useState<number>(30);
-  // What-if inputs: the user's own assumptions, not KNOMI results.
-  const [tables, setTables] = useState<number>(15);
-  const [spendLiftPct, setSpendLiftPct] = useState<number>(25);
+  // What-if input: the user's own assumption, not a KNOMI result. Starts modest.
+  const [spendLiftPct, setSpendLiftPct] = useState<number>(10);
 
   // Core Cost-Volume-Profit Math
   const contributionMarginRatio = (100 - variableCostPct) / 100;
@@ -28,13 +24,11 @@ export default function BreakEvenCalculator() {
   const dailyTargetSales = Math.round(targetSalesMonthly / openDays);
   const dailyTargetGuests = Math.ceil(dailyTargetSales / guestSpend);
 
-  // What-if scenario (estimate): add the KNOMI Signature fee to fixed costs, and apply the
-  // user's own assumed lift in average spend per guest. KNOMI's +25% is a target, not a guarantee.
-  const knomiMonthlyFee = tables * SIGNATURE_PRICE;
-  const scenarioFixedCosts = fixedCosts + knomiMonthlyFee;
-  const scenarioBreakEvenMonthly = Math.round(scenarioFixedCosts / contributionMarginRatio);
+  // What-if scenario (estimate): apply the user's own assumed lift in average spend per guest
+  // to the same break-even sales. Shown before KNOMI's fee, which is shared on the
+  // walkthrough call.
   const scenarioGuestSpend = guestSpend * (1 + spendLiftPct / 100);
-  const scenarioDailyGuests = Math.ceil(scenarioBreakEvenMonthly / openDays / scenarioGuestSpend);
+  const scenarioDailyGuests = Math.ceil(breakEvenSalesMonthly / openDays / scenarioGuestSpend);
 
   return (
     <div className={styles.calcContainer}>
@@ -179,39 +173,14 @@ export default function BreakEvenCalculator() {
 
           {/* What-if inputs: user assumptions */}
           <div>
-            <h3 className={styles.calcHeading}>What-If: Your KNOMI Assumptions</h3>
+            <h3 className={styles.calcHeading}>What-If: Your KNOMI Assumption</h3>
             <p className={styles.calcSub}>
-              Optional. Adds the KNOMI Signature fee (₹{SIGNATURE_PRICE} per table, per month) to your fixed costs
-              and applies the spend lift you choose. These are your assumptions, not KNOMI results.
+              Optional. Applies the spend lift you choose to your average spend per guest. This is your
+              assumption, not a KNOMI result.
             </p>
           </div>
 
-          {/* Slider 6: Tables (for the subscription fee) */}
-          <div className={styles.inputGroup}>
-            <div className={styles.inputHeader}>
-              <label htmlFor="input-tables" className={styles.inputLabel}>
-                Number of Tables (for the KNOMI Fee)
-              </label>
-              <span className={styles.inputValueBadge}>{tables} Tables</span>
-            </div>
-            <input
-              id="input-tables"
-              type="range"
-              min={4}
-              max={60}
-              step={1}
-              value={tables}
-              onChange={(e) => setTables(Number(e.target.value))}
-              className={styles.slider}
-            />
-            <div className={styles.sliderHints}>
-              <span>4 Tables</span>
-              <span>₹{knomiMonthlyFee.toLocaleString("en-IN")}/mo Fee</span>
-              <span>60 Tables</span>
-            </div>
-          </div>
-
-          {/* Slider 7: Assumed lift in average spend */}
+          {/* Slider 6: Assumed lift in average spend */}
           <div className={styles.inputGroup}>
             <div className={styles.inputHeader}>
               <label htmlFor="input-lift" className={styles.inputLabel}>
@@ -231,7 +200,7 @@ export default function BreakEvenCalculator() {
             />
             <div className={styles.sliderHints}>
               <span>0% (No Change)</span>
-              <span>25% (KNOMI&apos;s Target, Not a Guarantee)</span>
+              <span>Your own estimate</span>
               <span>40%</span>
             </div>
           </div>
@@ -287,15 +256,18 @@ export default function BreakEvenCalculator() {
               {/* What-if estimate with the user's assumptions */}
               <div className={styles.gainMetric}>
                 <span className={styles.metricName}>
-                  What-If Estimate (Incl. ₹{knomiMonthlyFee.toLocaleString("en-IN")}/mo KNOMI Fee):
+                  What-If Estimate (+{spendLiftPct}% Average Spend):
                 </span>
                 <div className={styles.metricVal}>
                   {scenarioDailyGuests} Guests/Day
                 </div>
                 <p style={{ fontSize: "0.85rem", color: "#2f5e3e", marginTop: "4px", marginBottom: 0 }}>
-                  Estimate: break-even sales of ₹{scenarioBreakEvenMonthly.toLocaleString("en-IN")}/month at
+                  Estimate: the same break-even sales of ₹{breakEvenSalesMonthly.toLocaleString("en-IN")}/month at
                   ₹{Math.round(scenarioGuestSpend).toLocaleString("en-IN")} average spend, versus {dailyGuestsNeeded} guests/day
-                  today. Based on your assumptions, not a guaranteed result.
+                  today. Based on your assumption, not a guaranteed result.
+                </p>
+                <p style={{ fontSize: "0.8rem", color: "var(--color-text-secondary)", marginTop: "4px", marginBottom: 0 }}>
+                  Figures are before KNOMI&apos;s fee, which we share on a walkthrough call.
                 </p>
               </div>
             </div>

@@ -3,14 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import styles from "./MarginGuide.module.css";
-import { bookHref, pricing } from "@/content/site";
-
-// Signature is the recommended plan (₹ per table, per month). Read from the approved pricing copy.
-const SIGNATURE_PRICE_PER_TABLE =
-  pricing.plans.find((plan) => plan.id === "signature")?.priceMin ?? 250;
-
-const formatSignedRupees = (value: number) =>
-  `${value < 0 ? "-" : "+"}₹${Math.abs(value).toLocaleString("en-IN")}`;
+import { bookHref } from "@/content/site";
 
 export default function MarginCalculator() {
   const [monthlySales, setMonthlySales] = useState<number>(1000000);
@@ -19,9 +12,8 @@ export default function MarginCalculator() {
   const [rentPct, setRentPct] = useState<number>(12);
   const [aggregatorSharePct, setAggregatorSharePct] = useState<number>(40);
   const [aggregatorCutPct, setAggregatorCutPct] = useState<number>(30);
-  // "What if" inputs: the user's own assumption and table count
+  // "What if" input: the user's own assumption
   const [dineInOrderLiftPct, setDineInOrderLiftPct] = useState<number>(10);
-  const [tableCount, setTableCount] = useState<number>(20);
 
   // Financial Math Calculations
   const primeCostPct = foodCostPct + laborCostPct;
@@ -41,14 +33,13 @@ export default function MarginCalculator() {
   const actualNetProfit = dineInNetProfit - aggregatorDeductionLoss;
   const actualNetMarginPct = ((actualNetProfit / monthlySales) * 100).toFixed(1);
 
-  // Scenario 3 (estimate): the user's assumed lift in dine-in average order, less the KNOMI Signature fee.
-  // Extra dine-in sales only add food cost; rent, labour and other overheads stay the same.
+  // Scenario 3 (estimate): the user's assumed lift in dine-in average order, before KNOMI's fee
+  // (shared on the walkthrough call). Extra dine-in sales only add food cost; rent, labour and
+  // other overheads stay the same.
   const dineInSales = monthlySales - aggregatorSalesVolume;
   const extraDineInSales = Math.round((dineInSales * dineInOrderLiftPct) / 100);
   const extraContribution = Math.round(extraDineInSales * (1 - foodCostPct / 100));
-  const knomiMonthlyFee = tableCount * SIGNATURE_PRICE_PER_TABLE;
-  const whatIfNetChange = extraContribution - knomiMonthlyFee;
-  const whatIfProfit = actualNetProfit + whatIfNetChange;
+  const whatIfProfit = actualNetProfit + extraContribution;
   const whatIfMarginPct = ((whatIfProfit / (monthlySales + extraDineInSales)) * 100).toFixed(1);
 
   return (
@@ -236,33 +227,8 @@ export default function MarginCalculator() {
             />
             <div className={styles.sliderHints}>
               <span>0%</span>
-              <span>KNOMI&apos;s target: ~25% (not a guarantee)</span>
+              <span>Your own estimate</span>
               <span>30%</span>
-            </div>
-          </div>
-
-          {/* Slider 8: Tables (for the KNOMI fee) */}
-          <div className={styles.inputGroup}>
-            <div className={styles.inputHeader}>
-              <label htmlFor="input-tables" className={styles.inputLabel}>
-                Number of Tables
-              </label>
-              <span className={styles.inputValueBadge}>{tableCount} tables</span>
-            </div>
-            <input
-              id="input-tables"
-              type="range"
-              min={4}
-              max={60}
-              step={1}
-              value={tableCount}
-              onChange={(e) => setTableCount(Number(e.target.value))}
-              className={styles.slider}
-            />
-            <div className={styles.sliderHints}>
-              <span>4</span>
-              <span>Used for the KNOMI Signature fee (₹{SIGNATURE_PRICE_PER_TABLE}/table/month)</span>
-              <span>60</span>
             </div>
           </div>
         </div>
@@ -316,7 +282,7 @@ export default function MarginCalculator() {
                 </div>
               </div>
 
-              {/* What-if with the user's assumed dine-in lift, net of the KNOMI fee */}
+              {/* What-if with the user's assumed dine-in lift, before KNOMI's fee */}
               <div className={styles.gainMetric}>
                 <span className={styles.metricName}>
                   What If: +{dineInOrderLiftPct}% Dine-In Average Order (Estimate)
@@ -325,9 +291,11 @@ export default function MarginCalculator() {
                   {whatIfMarginPct}% (₹{whatIfProfit.toLocaleString("en-IN")}/mo)
                 </div>
                 <p style={{ fontSize: "0.8rem", color: "#2f5e3e", marginTop: "4px", marginBottom: 0 }}>
-                  +₹{extraDineInSales.toLocaleString("en-IN")} in dine-in sales, or +₹{extraContribution.toLocaleString("en-IN")} after
-                  food cost, less ₹{knomiMonthlyFee.toLocaleString("en-IN")}/mo for KNOMI Signature ({tableCount} tables × ₹{SIGNATURE_PRICE_PER_TABLE}):
-                  a net change of {formatSignedRupees(whatIfNetChange)}/mo. An estimate from your inputs, not a promised result.
+                  +₹{extraDineInSales.toLocaleString("en-IN")} in dine-in sales, or +₹{extraContribution.toLocaleString("en-IN")}/mo after
+                  food cost. An estimate from your inputs, not a promised result.
+                </p>
+                <p style={{ fontSize: "0.8rem", color: "#2f5e3e", marginTop: "4px", marginBottom: 0 }}>
+                  Figures are before KNOMI&apos;s fee, which we share on a walkthrough call.
                 </p>
               </div>
             </div>

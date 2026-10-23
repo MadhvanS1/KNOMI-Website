@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import styles from "./PetpoojaPricing.module.css";
-import { GOAL, pricing } from "@/content/site";
+import { GOAL } from "@/content/site";
 
 interface AddonOption {
   id: string;
@@ -20,11 +20,8 @@ const EXAMPLE_ADDON_PRICE = 4000;
 const REPORTED_BASE_YEAR_ONE = 10000;
 const REPORTED_BASE_RENEWAL = 7500;
 
-const signaturePlan = pricing.plans.find((plan) => plan.id === "signature");
-const SIGNATURE_PRICE = signaturePlan ? signaturePlan.priceMin : 250;
-
-// KNOMI's stated goal: around +25% on the average order. A target, not a past result.
-const KNOMI_TARGET_LIFT = 0.25;
+// The lift in average order is the owner's own assumption and starts at 0%: no KNOMI default or target.
+const LIFT_OPTIONS = [0, 5, 10, 15, 20, 25, 30];
 
 const AVAILABLE_ADDONS: AddonOption[] = [
   {
@@ -71,7 +68,6 @@ const AVAILABLE_ADDONS: AddonOption[] = [
   },
 ];
 
-const TABLE_OPTIONS = [10, 15, 20, 30];
 const REVENUE_OPTIONS = [300000, 600000, 1200000, 2000000];
 
 const buttonStyle = (active: boolean): React.CSSProperties => ({
@@ -105,8 +101,8 @@ export default function PetpoojaTcoCalculator() {
   const [addonPrices, setAddonPrices] = useState<Record<string, number>>(() =>
     Object.fromEntries(AVAILABLE_ADDONS.map((addon) => [addon.id, EXAMPLE_ADDON_PRICE]))
   );
-  const [tablesPerOutlet, setTablesPerOutlet] = useState<number>(20);
   const [monthlyRevenue, setMonthlyRevenue] = useState<number>(1200000);
+  const [liftPct, setLiftPct] = useState<number>(0);
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat("en-IN", {
@@ -150,11 +146,11 @@ export default function PetpoojaTcoCalculator() {
 
   const hasQrOrdering = selectedAddons.includes("qr_ordering");
 
-  // Mode 2: co-existence estimate (arithmetic on the inputs, at KNOMI's +25% target)
-  const knomiAnnualFee = SIGNATURE_PRICE * tablesPerOutlet * 12 * outlets;
+  // Mode 2: co-existence estimate (arithmetic on the inputs, at the owner's own lift,
+  // before KNOMI's fee, which is shared on the walkthrough call)
   const petpoojaBaseRenewal = REPORTED_BASE_RENEWAL * outlets;
-  const coexistenceAnnualSoftware = knomiAnnualFee + petpoojaBaseRenewal;
-  const extraRevenueAtTarget = Math.round(monthlyRevenue * 12 * KNOMI_TARGET_LIFT * outlets);
+  const extraMonthlyRevenue = Math.round(monthlyRevenue * (liftPct / 100) * outlets);
+  const extraYearlyRevenue = extraMonthlyRevenue * 12;
 
   return (
     <div className={styles.calculatorSection}>
@@ -168,14 +164,14 @@ export default function PetpoojaTcoCalculator() {
       <div className={styles.tabGroup}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === "tco" ? styles.tabBtnActive : ""}`}
+          className={`${styles.tabBtn} pressable ${activeTab === "tco" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("tco")}
         >
           1. Petpooja Real Add-On &amp; TCO Breakdown
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === "coexistence" ? styles.tabBtnActive : ""}`}
+          className={`${styles.tabBtn} pressable ${activeTab === "coexistence" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("coexistence")}
         >
           2. Co-Existence: Petpooja Base + KNOMI
@@ -194,6 +190,7 @@ export default function PetpoojaTcoCalculator() {
                   <button
                     key={num}
                     type="button"
+                    className="pressable"
                     style={buttonStyle(outlets === num)}
                     onClick={() => setOutlets(num)}
                   >
@@ -210,6 +207,7 @@ export default function PetpoojaTcoCalculator() {
               <div style={{ display: "flex", gap: "8px" }}>
                 <button
                   type="button"
+                  className="pressable"
                   style={buttonStyle(isYearOne)}
                   onClick={() => setIsYearOne(true)}
                 >
@@ -217,6 +215,7 @@ export default function PetpoojaTcoCalculator() {
                 </button>
                 <button
                   type="button"
+                  className="pressable"
                   style={buttonStyle(!isYearOne)}
                   onClick={() => setIsYearOne(false)}
                 >
@@ -318,31 +317,15 @@ export default function PetpoojaTcoCalculator() {
       ) : (
         <div className={styles.summaryBox}>
           <div style={{ textAlign: "center", marginBottom: "24px" }}>
-            <h4 style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--color-text-primary)", marginBottom: "8px" }}>
+            <h4 style={{ fontSize: "1.25rem", color: "var(--color-text-primary)", marginBottom: "8px" }}>
               The Co-Existence Math: Keep Petpooja POS + Add KNOMI on the Tables
             </h4>
             <p style={{ fontSize: "0.95rem", color: "var(--color-text-secondary)", maxWidth: "680px", margin: "0 auto", lineHeight: 1.6 }}>
-              Keep Petpooja&apos;s base licence for cashier billing, GST and accounting, and put KNOMI on the tables for the guest-facing side: the illustrated menu, Knomi Host, ordering and the kitchen display. On the Signature plan, KNOMI orders flow into Petpooja.
+              Keep Petpooja&apos;s base licence for cashier billing, GST and accounting, and put KNOMI on the tables for the guest-facing side: the illustrated menu, Knomi Host, ordering and the kitchen display. KNOMI orders flow into Petpooja.
             </p>
           </div>
 
           <div style={{ display: "flex", justifyContent: "center", gap: "24px", marginBottom: "28px", flexWrap: "wrap" }}>
-            <div>
-              <label style={groupLabelStyle}>Tables per Outlet:</label>
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                {TABLE_OPTIONS.map((num) => (
-                  <button
-                    key={num}
-                    type="button"
-                    style={buttonStyle(tablesPerOutlet === num)}
-                    onClick={() => setTablesPerOutlet(num)}
-                  >
-                    {num} Tables
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div>
               <label style={groupLabelStyle}>Monthly Dine-In Sales per Outlet:</label>
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -350,10 +333,28 @@ export default function PetpoojaTcoCalculator() {
                   <button
                     key={amount}
                     type="button"
+                    className="pressable"
                     style={buttonStyle(monthlyRevenue === amount)}
                     onClick={() => setMonthlyRevenue(amount)}
                   >
                     ₹{amount / 100000}L
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label style={groupLabelStyle}>Lift in Average Order (your assumption):</label>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                {LIFT_OPTIONS.map((pct) => (
+                  <button
+                    key={pct}
+                    type="button"
+                    className="pressable"
+                    style={buttonStyle(liftPct === pct)}
+                    aria-pressed={liftPct === pct}
+                    onClick={() => setLiftPct(pct)}
+                  >
+                    {pct === 0 ? "None" : `+${pct}%`}
                   </button>
                 ))}
               </div>
@@ -363,19 +364,19 @@ export default function PetpoojaTcoCalculator() {
           <div className={styles.summaryGrid}>
             <div className={styles.summaryCard}>
               <div className={styles.summaryVal}>
-                {formatCurrency(knomiAnnualFee)}
+                {formatCurrency(petpoojaBaseRenewal)}
               </div>
               <div className={styles.summaryLabel}>
-                KNOMI Signature per Year (₹{SIGNATURE_PRICE} × {tablesPerOutlet} tables × 12 × {outlets} {outlets === 1 ? "outlet" : "outlets"})
+                Petpooja Reported Base Renewal per Year ({outlets} {outlets === 1 ? "outlet" : "outlets"}, before GST)
               </div>
             </div>
 
             <div className={styles.summaryCard}>
               <div className={`${styles.summaryVal} ${styles.summaryValSuccess}`}>
-                +{formatCurrency(extraRevenueAtTarget)}
+                +{formatCurrency(extraMonthlyRevenue)}
               </div>
               <div className={styles.summaryLabel}>
-                Extra Revenue per Year at KNOMI&apos;s +25% Target (not a guarantee; estimate)
+                Extra Revenue per Month at a {liftPct}% Lift (your assumption; estimate)
               </div>
             </div>
 
@@ -387,13 +388,13 @@ export default function PetpoojaTcoCalculator() {
 
           <div className={styles.tcoBanner}>
             <div>
-              <div className={styles.tcoTitle}>Co-Existence Software Cost per Year (estimate)</div>
+              <div className={styles.tcoTitle}>Extra Revenue per Year at Your Lift (estimate)</div>
               <p className={styles.tcoSub}>
-                Petpooja reported base renewal plus KNOMI Signature, before GST. {GOAL}
+                Arithmetic on your sales and outlets, not a forecast. Figures are before KNOMI&apos;s fee, which we share on a walkthrough call. {GOAL}
               </p>
             </div>
             <div className={styles.tcoNum}>
-              {formatCurrency(coexistenceAnnualSoftware)}
+              +{formatCurrency(extraYearlyRevenue)}
             </div>
           </div>
         </div>

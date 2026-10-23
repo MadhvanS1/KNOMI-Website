@@ -1,9 +1,8 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
 import { useId, useState, type KeyboardEvent } from "react";
 import { ArrowUpRight, Phone, WhatsApp } from "@/components/ui/Icons";
-import { EASE_OUT, Reveal } from "@/components/ui/Reveal";
+import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import SectionHead from "@/components/ui/SectionHead";
 import { contact, faqs } from "@/content/site";
 import styles from "./FAQ.module.css";
@@ -11,59 +10,21 @@ import styles from "./FAQ.module.css";
 /* ---------------------------------------------------------------------------
    FAQ — "Asked, and answered."
    Left: a sticky header with a small arched note for anyone still curious.
-   Right: the questions as a printed list, each numbered in roman numerals.
-   Every row is independent (several can be open at once); arrow keys, Home
-   and End move between questions.
+   Right: the questions as a printed list. The order carries no meaning, so
+   the rows are not numbered. Every row is independent (several can be open
+   at once); arrow keys, Home and End move between questions.
+   An answer opens in 0.25s and closes in 0.15s, by fading: its height is never
+   animated, so the rows below simply make room.
    --------------------------------------------------------------------------- */
 
 // copy: section header and aside (approved in the brief).
 const COPY = {
   eyebrow: "Questions",
-  titleLead: "Asked, and",
-  titleAccent: "answered.",
+  title: "Asked, and answered.",
   asideTitle: "Still curious?",
   whatsapp: "WhatsApp us",
   newTab: "(opens in a new tab)",
 } as const;
-
-const ROMAN: [number, string][] = [
-  [10, "X"],
-  [9, "IX"],
-  [5, "V"],
-  [4, "IV"],
-  [1, "I"],
-];
-
-const PANEL: Variants = {
-  open: {
-    height: "auto",
-    opacity: 1,
-    transition: {
-      height: { duration: 0.6, ease: EASE_OUT },
-      opacity: { duration: 0.45, delay: 0.12, ease: EASE_OUT },
-    },
-  },
-  closed: {
-    height: 0,
-    opacity: 0,
-    transition: {
-      height: { duration: 0.45, ease: EASE_OUT },
-      opacity: { duration: 0.2, ease: EASE_OUT },
-    },
-  },
-};
-
-function toRoman(n: number) {
-  let out = "";
-  let rest = n;
-  for (const [value, glyph] of ROMAN) {
-    while (rest >= value) {
-      out += glyph;
-      rest -= value;
-    }
-  }
-  return out;
-}
 
 /* Structured data from the same source as the visible answers, so the two can never drift. */
 const faqJsonLd = {
@@ -80,7 +41,7 @@ const TRIGGER = "[data-faq-trigger]";
 
 export default function FAQ() {
   // Roving focus between the question buttons (WAI-ARIA accordion pattern).
-  function onKeyDown(e: KeyboardEvent<HTMLUListElement>) {
+  function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     const target = e.target as HTMLElement;
     if (!target.matches(TRIGGER)) return;
     const triggers = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>(TRIGGER));
@@ -104,30 +65,29 @@ export default function FAQ() {
 
       <div className={`wrap ${styles.layout}`}>
         <div className={styles.side}>
-          <SectionHead
-            className={styles.head}
-            eyebrow={COPY.eyebrow}
-            titleLead={COPY.titleLead}
-            titleAccent={COPY.titleAccent}
-          />
-          <Reveal className={styles.asideWrap} y={20} delay={0.2} amount={0.4}>
+          <SectionHead className={styles.head} eyebrow={COPY.eyebrow} titleLead={COPY.title} />
+          <Reveal className={styles.asideWrap} delay={0.1}>
             <Aside />
           </Reveal>
         </div>
 
-        <ul className={styles.list} onKeyDown={onKeyDown}>
-          {faqs.map((f, i) => (
-            <Reveal key={f.q} as="li" className={styles.item} y={16} delay={Math.min(i, 6) * 0.05} amount={0.4}>
-              <Item q={f.q} a={f.a} index={i} />
-            </Reveal>
-          ))}
-        </ul>
+        {/* Keys bubble up from the question buttons to this wrapper. data-motion-safe: the
+            answers keep their short fades under reduced motion (FAQ.module.css drops the movement). */}
+        <div className={styles.listWrap} onKeyDown={onKeyDown} data-motion-safe="">
+          <Stagger as="ul" className={styles.list}>
+            {faqs.map((f) => (
+              <StaggerItem key={f.q} as="li" className={styles.item}>
+                <Item q={f.q} a={f.a} />
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
       </div>
     </section>
   );
 }
 
-function Item({ q, a, index }: { q: string; a: string; index: number }) {
+function Item({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   const uid = useId();
   const buttonId = `${uid}-q`;
@@ -145,9 +105,6 @@ function Item({ q, a, index }: { q: string; a: string; index: number }) {
           onClick={() => setOpen((v) => !v)}
           data-faq-trigger=""
         >
-          <span className={styles.idx} aria-hidden="true">
-            {toRoman(index + 1)}
-          </span>
           <span className={styles.qText}>{q}</span>
           <span className={styles.icon} aria-hidden="true">
             <span className={styles.bar} />
@@ -157,21 +114,12 @@ function Item({ q, a, index }: { q: string; a: string; index: number }) {
       </h3>
 
       {/* Always in the HTML (so answers are indexed and match the FAQ schema),
-          collapsed visually and kept out of focus order while closed. */}
-      <motion.div
-        id={panelId}
-        role="region"
-        aria-labelledby={buttonId}
-        className={styles.panel}
-        initial={false}
-        animate={open ? "open" : "closed"}
-        variants={PANEL}
-        inert={!open}
-      >
+          hidden by CSS and kept out of focus order while closed. */}
+      <div id={panelId} role="region" aria-labelledby={buttonId} className={styles.panel} inert={!open}>
         <div className={styles.answer}>
           <p>{a}</p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -179,7 +127,6 @@ function Item({ q, a, index }: { q: string; a: string; index: number }) {
 function Aside() {
   return (
     <aside className={styles.aside} aria-labelledby="faq-aside-title">
-      <span className={`ornament ${styles.asideStar}`} aria-hidden="true" />
       <p id="faq-aside-title" className={styles.asideTitle}>
         {COPY.asideTitle}
       </p>

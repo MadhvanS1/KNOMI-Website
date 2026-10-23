@@ -427,7 +427,7 @@ export default function FoodCostGuidePage() {
               Knomi Host, the host inside every KNOMI menu, suggests the pairing as guests order: the
               naan with the curry, a cooler with the biryani. {GOAL}
             </p>
-            <Link href="/#book" className={styles.calcBtn}>
+            <Link href="/#book" className={`${styles.calcBtn} pressable`}>
               Book a walkthrough
             </Link>
           </div>

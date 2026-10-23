@@ -1,69 +1,23 @@
 /* =====================================================================
    For owners — Knomi Dash, Pulse & Compass.
-   A bento of paper tiles laid on the bone page, each holding a small,
-   working model of the feature. One deep russet tile seals the set.
+   One large picture, the live ticket board, and beside it a plain ruled
+   list of the rest, like the back page of a printed menu. No tiles: the
+   board is the only framed thing, and Host's check-in the only cameo.
    ===================================================================== */
 
 .section {
   overflow: clip;
 }
 
-/* ---------- Grid ---------- */
-
-.grid {
-  --gap: clamp(14px, 0.55rem + 0.75vw, 20px);
+.layout {
+  --row-pad: clamp(18px, 1rem + 0.45vw, 24px);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--gap);
-  margin-top: clamp(2.25rem, 1.6rem + 2.4vw, 3.75rem);
+  row-gap: clamp(2rem, 1.5rem + 2vw, 3rem);
+  margin-top: clamp(2rem, 1.5rem + 2vw, 3.25rem);
 }
 
-/* ---------- Tile ---------- */
-
-.tile {
-  --pad: clamp(22px, 1.1rem + 0.9vw, 32px);
-  --stage-h: clamp(168px, 9.25rem + 2.2vw, 196px);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(22px, 1.1rem + 0.7vw, 30px);
-  min-width: 0;
-  padding: var(--pad);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  overflow: clip;
-  transition:
-    box-shadow var(--dur) var(--ease-out),
-    border-color var(--dur) var(--ease-out);
-}
-
-@media (hover: hover) {
-  .tile:hover {
-    box-shadow: var(--shadow-soft);
-    border-color: var(--line-strong);
-  }
-}
-
-.visual {
-  position: relative;
-  min-width: 0;
-}
-
-/* Stages share one height, so titles in a row line up along the same rule. */
-.copy {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* The plan tag sits under the title; on wide tiles it moves to a corner (see layout). */
-.titleRow {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-}
+/* ---------- Shared type ---------- */
 
 .title {
   font-size: var(--fs-h4);
@@ -78,61 +32,36 @@
   color: var(--fg-2);
 }
 
-/* "From Signature" — a brass hairline tag, like a chef's mark on a menu */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 26px;
-  padding: 3px 11px 3px 9px;
-  border: 1px solid var(--brass);
-  border-radius: var(--r-pill);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--fg-2);
-}
-
-.tagMark {
-  width: 7px;
-  height: 7px;
-  background: var(--brass);
-}
-
-/* The plate each small model sits on: a bone inset on the paper tile. */
-.stage {
-  position: relative;
-  height: var(--stage-h);
-  border-radius: var(--r-md);
-  background: var(--bg);
-  overflow: clip;
-}
-
 /* =====================================================================
-   I. Kitchen display
-   The copy leads; the screen is set into the tile and runs off its
-   bottom-right edge, as if the display carries on past the card.
+   The picture: Knomi Dash
+   It opens on the same hairline as the list, so both columns start on
+   one rule and their titles share a line.
    ===================================================================== */
 
-.tileKds .copy {
-  order: -1;
-  margin-top: 0;
+.dash {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 1rem + 0.6vw, 26px);
+  min-width: 0;
+  padding-top: var(--row-pad);
+  border-top: 1px solid var(--line-strong);
 }
 
-.tileKds .title {
-  max-width: 16ch;
+.dashCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dashTitle {
   font-size: var(--fs-h3);
   line-height: 1.05;
   letter-spacing: -0.016em;
 }
 
-.tileKds .visual {
-  flex: 1;
+.screen {
   display: flex;
-  min-height: 236px;
-  margin: 0 calc(var(--pad) * -1) calc(var(--pad) * -1) 0;
+  min-width: 0;
 }
 
 .kds {
@@ -142,10 +71,9 @@
   flex-direction: column;
   gap: 12px;
   min-width: 0;
-  padding: 12px;
-  border-radius: var(--r-md) 0 0 0;
+  padding: clamp(10px, 0.5rem + 0.5vw, 16px);
+  border-radius: var(--r-md);
   background: var(--bg);
-  box-shadow: inset 1px 1px 0 var(--line);
 }
 
 .kdsBar {
@@ -168,7 +96,7 @@
   color: var(--fg-2);
 }
 
-.pulse {
+.liveDot {
   position: relative;
   width: 6px;
   height: 6px;
@@ -176,7 +104,7 @@
   background: color-mix(in srgb, var(--olive) 70%, var(--bone));
 }
 
-.pulse::after {
+.liveDot::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -186,7 +114,7 @@
   animation: kdsPulse 2.2s var(--ease-out) infinite paused;
 }
 
-.kds[data-live] .pulse::after {
+.kds[data-live] .liveDot::after {
   animation-play-state: running;
 }
 
@@ -220,36 +148,17 @@
 
 .board {
   --ticket-h: 64px;
-  flex: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: auto repeat(4, var(--ticket-h)) minmax(8px, 1fr);
+  grid-template-rows: auto repeat(4, var(--ticket-h)) 2px;
   grid-auto-rows: var(--ticket-h);
   gap: 6px 5px;
 }
 
 .lane {
-  position: relative;
   grid-row: 1 / -1;
   border-radius: var(--r-sm);
   background: color-mix(in srgb, var(--fg) 4%, transparent);
-}
-
-/* Hover: the lanes catch a little light. */
-.lane::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--fg) 5%, transparent), transparent 70%);
-  opacity: 0;
-  transition: opacity var(--dur) var(--ease-out);
-}
-
-@media (hover: hover) {
-  .tile:hover .lane::after {
-    opacity: 1;
-  }
 }
 
 .lane[data-stage="0"],
@@ -458,254 +367,97 @@
   }
 }
 
+/* The board as the section's picture: set a size up, so it reads across the room. */
+@container (min-width: 640px) {
+  .board {
+    --ticket-h: 112px;
+    gap: 9px 8px;
+  }
+
+  .ticket {
+    font-size: 0.8125rem;
+    padding: 12px 13px 11px;
+  }
+
+  .ticketNote {
+    font-size: 0.875rem;
+  }
+
+  .lanePill,
+  .laneCount {
+    font-size: 0.75rem;
+  }
+
+  .kdsBar {
+    font-size: 0.75rem;
+  }
+}
+
 /* =====================================================================
-   II. Alongside your POS
+   The list: everything else behind the pass, one rule apart.
    ===================================================================== */
 
-.pos {
-  --arch-w: clamp(70px, 3.6rem + 1.4vw, 88px);
-  display: grid;
-  place-items: center;
-  padding-inline: clamp(18px, 7%, 48px);
+.list {
+  list-style: none;
+  min-width: 0;
+  border-bottom: 1px solid var(--line-strong);
 }
 
-.posRow {
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 380px;
-}
-
-.node {
-  flex: none;
+.item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  transition: transform 600ms var(--ease-out);
+  gap: 8px;
+  padding-block: var(--row-pad);
+  border-top: 1px solid var(--line-strong);
 }
 
-@media (hover: hover) {
-  .tile:hover .nodeStart {
-    transform: translateX(5px);
-  }
-
-  .tile:hover .nodeEnd {
-    transform: translateX(-5px);
-  }
-}
-
-.nodeArch {
-  display: grid;
-  place-items: center;
-  width: var(--arch-w);
-  height: calc(var(--arch-w) * 1.18);
-  border-radius: var(--r-arch);
-}
-
-.nodeArch svg {
-  width: 42%;
-  height: auto;
-  margin-top: 10%;
-}
-
-.nodePos {
-  background: var(--surface);
-  color: var(--fg-2);
-  box-shadow: inset 0 0 0 1px var(--line-strong);
-}
-
-.nodeKnomi {
-  color: var(--accent);
-  box-shadow: 0 16px 26px -16px color-mix(in srgb, var(--espresso) 80%, transparent);
-}
-
-.nodeLabel {
+.detail {
   display: flex;
-  align-items: center;
-  height: 12px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--fg-2);
-}
-
-.nodeMark {
-  width: auto;
-  height: 10px;
-  color: var(--fg);
-}
-
-/* The line sits on the arches' centre line. */
-.wire {
-  position: relative;
-  flex: 1;
-  min-width: 56px;
-  height: 10px;
-  margin-top: calc(var(--arch-w) * 0.59 - 5px);
-}
-
-.wire::before,
-.wire::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 7px;
-  height: 7px;
-  margin-top: -3.5px;
-  border-radius: 50%;
-  background: var(--bg);
-  box-shadow: inset 0 0 0 1px var(--line-strong);
-}
-
-.wire::before {
-  left: 3px;
-}
-
-.wire::after {
-  right: 3px;
-}
-
-.wireLine {
-  position: absolute;
-  top: 50%;
-  left: 14px;
-  right: 14px;
-  height: 2px;
-  margin-top: -1px;
-  background-image: radial-gradient(circle, var(--fg-3) 0.9px, transparent 1.3px);
-  background-size: 6px 2px;
-  background-repeat: repeat-x;
-  background-position: left center;
-  opacity: 0.75;
-}
-
-/* A runner spans the line; translating it by 100% carries its dot end to end. */
-.runner {
-  position: absolute;
-  inset: 0 14px;
-  animation: runOut 3.6s var(--ease-in-out) infinite paused;
-}
-
-.runnerIn {
-  animation-name: runIn;
-  animation-delay: -1.8s;
-}
-
-.pos[data-live] .runner {
-  animation-play-state: running;
-}
-
-.runnerDot {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
-  border-radius: 50%;
-  background: var(--terracotta);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--terracotta) 16%, transparent);
-}
-
-.runnerIn .runnerDot {
-  background: var(--brass);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brass) 18%, transparent);
-}
-
-@keyframes runOut {
-  0% {
-    transform: translateX(0);
-    opacity: 0;
-  }
-  7% {
-    opacity: 1;
-  }
-  43% {
-    opacity: 1;
-  }
-  50% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-
-@keyframes runIn {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  7% {
-    opacity: 1;
-  }
-  43% {
-    opacity: 1;
-  }
-  50% {
-    transform: translateX(0);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 0;
-  }
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
 }
 
 /* =====================================================================
-   III. Knomi Pulse
-   A paper check-in card with Host peeking over its top edge; the
+   Knomi Pulse: a paper check-in with Host peeking over its top edge; the
    manager's alert slides in over its corner. Steps live on data-step.
    ===================================================================== */
 
-/* The POS and Pulse tiles share a row on tablet, so they share a taller plate. */
-.tilePos,
-.tilePulse {
-  --stage-h: clamp(204px, 11.5rem + 1.6vw, 220px);
-}
-
-.pulseStage {
+.pulse {
+  --host-w: 76px;
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  /* Headroom for Host, who peeks over the card's top edge */
-  padding: 8px clamp(12px, 6%, 32px) 14px;
-  container-type: inline-size;
+  max-width: 400px;
 }
 
 .checkin {
-  --host-w: 80px;
   position: relative;
+  /* Headroom for Host, who peeks over the card's top edge */
   margin-top: calc(var(--host-w) * 0.86);
 }
 
-/* Host peeks over the card's top edge, his hands resting on it, as he does over a dish's
-   title in the menu. His box is his cut-out's own shape, so its floor is his flat edge. */
+/* His box is his cut-out's own shape, so its floor is his flat edge: his hands rest
+   on the card. Nothing of him shows below the edge, so he can rise from behind it. */
 .pulseHost {
   position: absolute;
   z-index: 2;
-  right: clamp(10px, 7%, 26px);
+  right: clamp(14px, 9%, 32px);
   bottom: calc(100% - var(--host-w) * 0.035);
   width: var(--host-w);
   line-height: 0;
-  /* Nothing of him shows below the edge, so he can rise from behind it */
   clip-path: inset(-60% -60% 0 -60%);
   pointer-events: none;
 }
 
+/* As the check-in comes into view he rises to peek, a beat after it arrives. Only while
+   the reveal script runs; without it (or if it stalls) he is simply there. */
 .pulseHost > * {
-  transition: transform 900ms var(--ease-out);
+  transition: transform 500ms var(--ease-out) 450ms;
 }
 
-@media (hover: hover) {
-  .tile:hover .pulseHost > * {
-    transform: translateY(-3px);
-  }
+:global(html.js[data-reveal-live]) .pulse:not([data-in]) .pulseHost > * {
+  transform: translateY(78%);
 }
 
 .checkinCard {
@@ -719,7 +471,7 @@
   background: var(--surface);
   box-shadow:
     0 0 0 1px var(--line),
-    var(--shadow-soft);
+    0 1px 2px rgba(28, 20, 17, 0.04);
 }
 
 .checkinAsk {
@@ -763,10 +515,10 @@
   background: color-mix(in srgb, var(--terracotta) 11%, var(--surface));
   box-shadow: inset 0 0 0 1px var(--terracotta);
   opacity: 0;
-  transform: scale(0.9);
+  transform: scale(0.92);
   transition:
-    opacity 500ms var(--ease-out),
-    transform 800ms var(--ease-spring);
+    opacity 220ms var(--ease-out),
+    transform 280ms var(--ease-out);
 }
 
 /* A single ring where the guest's finger landed. */
@@ -779,13 +531,13 @@
   pointer-events: none;
 }
 
-.pulseStage:not([data-step="0"]) .chipFill {
+.pulse:not([data-step="0"]) .chipFill {
   opacity: 1;
   transform: none;
 }
 
-.pulseStage:not([data-step="0"]) .chipTap {
-  animation: pulseTap 1s var(--ease-out) both;
+.pulse:not([data-step="0"]) .chipTap {
+  animation: pulseTap 600ms var(--ease-out) both;
 }
 
 @keyframes pulseTap {
@@ -821,13 +573,13 @@
     0 18px 30px -16px color-mix(in srgb, var(--espresso) 90%, transparent),
     0 2px 6px -2px color-mix(in srgb, var(--espresso) 40%, transparent);
   opacity: 0;
-  transform: translateY(14px) scale(0.96);
+  transform: translateY(10px) scale(0.96);
   transition:
-    opacity 650ms var(--ease-out),
-    transform 1000ms var(--ease-out);
+    opacity 240ms var(--ease-out),
+    transform 300ms var(--ease-out);
 }
 
-.pulseStage[data-step="2"] .alert {
+.pulse[data-step="2"] .alert {
   opacity: 1;
   transform: none;
 }
@@ -849,25 +601,22 @@
   transform-origin: 50% 18%;
 }
 
-.pulseStage[data-step="2"] .alertBell svg {
-  animation: pulseRing 1s var(--ease-out) 0.3s both;
+.pulse[data-step="2"] .alertBell svg {
+  animation: pulseRing 600ms var(--ease-out) 0.2s both;
 }
 
 @keyframes pulseRing {
   0% {
     transform: rotate(0deg);
   }
-  20% {
-    transform: rotate(-16deg);
+  25% {
+    transform: rotate(-14deg);
   }
-  40% {
-    transform: rotate(12deg);
+  50% {
+    transform: rotate(10deg);
   }
-  60% {
-    transform: rotate(-7deg);
-  }
-  80% {
-    transform: rotate(3deg);
+  75% {
+    transform: rotate(-4deg);
   }
   100% {
     transform: rotate(0deg);
@@ -883,9 +632,9 @@
   color: var(--fg-3);
 }
 
-/* On a narrow plate the answers wrap to two rows: Host and the card make a little room. */
-@container (max-width: 400px) {
-  .checkin {
+/* Narrow: the answers wrap to two rows, so Host and the card make a little room. */
+@container (max-width: 360px) {
+  .pulse {
     --host-w: 66px;
   }
 
@@ -905,528 +654,45 @@
 }
 
 /* =====================================================================
-   IV. 0% commission — the russet tile
+   Tablet: the board runs full width; below it, each row sets its title
+   beside its sentence, so the list reads as one designed column.
    ===================================================================== */
-
-.tile.tileCommission {
-  --surface: var(--russet);
-  --line: color-mix(in srgb, var(--bone) 14%, transparent);
-  --line-strong: color-mix(in srgb, var(--bone) 30%, transparent);
-  background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--terracotta) 38%, var(--russet)), var(--russet) 62%);
-}
-
-.zero {
-  display: grid;
-  place-items: center;
-  height: var(--stage-h);
-}
-
-.zeroFigure {
-  position: relative;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: flex-start;
-  font-family: var(--font-serif);
-  font-size: clamp(5rem, 3rem + 6vw, 9rem);
-  font-feature-settings: "lnum" 1;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: var(--fg);
-  transition: transform 600ms var(--ease-out);
-}
-
-.zeroDigit {
-  position: relative;
-}
-
-.zeroPct {
-  margin: 0.12em 0 0 0.03em;
-  font-size: 0.48em;
-  font-style: italic;
-  letter-spacing: 0;
-  color: var(--accent);
-}
-
-/* A hairline seal around the zero, with a dashed orbit and a brass star riding it. */
-.ring,
-.orbit {
-  position: absolute;
-  z-index: -1;
-  top: calc(50% - 0.56em + 0.04em);
-  left: calc(50% - 0.56em);
-  width: 1.12em;
-  height: 1.12em;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.ring {
-  border: 1px solid var(--line-strong);
-  transition: transform 700ms var(--ease-out);
-}
-
-.orbit {
-  top: calc(50% - 0.68em + 0.04em);
-  left: calc(50% - 0.68em);
-  width: 1.36em;
-  height: 1.36em;
-  border: 1px dashed var(--line);
-  animation: orbit 48s linear infinite paused;
-}
-
-.zero[data-live] .orbit {
-  animation-play-state: running;
-}
-
-.orbitStar {
-  position: absolute;
-  top: -5px;
-  left: calc(50% - 5px);
-  background: var(--brass-light);
-}
-
-@keyframes orbit {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (hover: hover) {
-  .tile:hover .zeroFigure {
-    transform: translateY(-3px);
-  }
-
-  .tile:hover .ring {
-    transform: scale(1.05);
-  }
-}
-
-/* =====================================================================
-   V. Menu updates
-   ===================================================================== */
-
-.updates {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  padding-inline: clamp(14px, 6%, 26px);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 26%, #000 74%, transparent 100%);
-}
-
-.menuGhost {
-  display: flex;
-  align-items: baseline;
-  padding-inline: 16px;
-  font-family: var(--font-serif);
-  font-size: 1.0625rem;
-  line-height: 1.2;
-  color: var(--fg-3);
-  white-space: nowrap;
-}
-
-.menuCard {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 13px 16px 12px;
-  border-radius: var(--r-sm);
-  background: var(--surface);
-  box-shadow:
-    0 0 0 1px var(--line),
-    var(--shadow-soft);
-  transition: transform 500ms var(--ease-out);
-}
-
-@media (hover: hover) {
-  .tile:hover .menuCard {
-    transform: translateY(-3px);
-  }
-}
-
-.menuRow {
-  display: flex;
-  align-items: baseline;
-  font-family: var(--font-serif);
-  font-size: 1.3125rem;
-  line-height: 1.15;
-  white-space: nowrap;
-  color: var(--fg);
-  transition: opacity 500ms var(--ease-out);
-}
-
-.updates[data-sold] .menuRow {
-  opacity: 0.42;
-}
-
-.menuDish {
-  position: relative;
-}
-
-.menuPrice {
-  font-feature-settings: "lnum" 1, "tnum" 1;
-}
-
-/* Crossed out by hand when the dish runs out */
-.strike {
-  position: absolute;
-  top: 58%;
-  left: -3px;
-  right: -3px;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 650ms var(--ease-out);
-}
-
-.updates[data-sold] .strike {
-  transform: scaleX(1);
-}
-
-.menuControl {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding-top: 11px;
-  border-top: 1px solid var(--line);
-}
-
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--fs-micro);
-  font-weight: 600;
-  color: var(--fg-2);
-}
-
-.statusDot {
-  position: relative;
-  flex: none;
-  width: 7px;
-  height: 7px;
-}
-
-.statusDot::before,
-.statusDot::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  transition: opacity 400ms var(--ease-out);
-}
-
-.statusDot::before {
-  background: var(--olive);
-}
-
-.statusDot::after {
-  background: var(--terracotta);
-  opacity: 0;
-}
-
-.updates[data-sold] .statusDot::before {
-  opacity: 0;
-}
-
-.updates[data-sold] .statusDot::after {
-  opacity: 1;
-}
-
-.statusLabels {
-  display: grid;
-  overflow: hidden;
-}
-
-.labelOn,
-.labelOff {
-  grid-area: 1 / 1;
-  white-space: nowrap;
-  transition:
-    opacity 400ms var(--ease-out),
-    transform 550ms var(--ease-out);
-}
-
-.labelOff {
-  opacity: 0;
-  transform: translateY(70%);
-}
-
-.updates[data-sold] .labelOn {
-  opacity: 0;
-  transform: translateY(-70%);
-}
-
-.updates[data-sold] .labelOff {
-  opacity: 1;
-  transform: none;
-}
-
-.switch {
-  position: relative;
-  flex: none;
-  width: 38px;
-  height: 22px;
-  border-radius: var(--r-pill);
-  background: var(--sand);
-}
-
-.switchOn {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: var(--olive);
-  transition: opacity 400ms var(--ease-out);
-}
-
-.updates[data-sold] .switchOn {
-  opacity: 0;
-}
-
-.knob {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--paper);
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 30%, transparent);
-  transform: translateX(16px);
-  transition: transform 480ms var(--ease-spring);
-}
-
-.updates[data-sold] .knob {
-  transform: translateX(0);
-}
-
-/* =====================================================================
-   VI. Knomi Sense
-   ===================================================================== */
-
-.sense {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 18px;
-  padding: 16px clamp(16px, 6%, 26px);
-}
-
-.senseGrid {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  align-items: center;
-  gap: 13px 16px;
-}
-
-.senseRow {
-  display: contents;
-}
-
-.senseDish {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--fs-micro);
-  white-space: nowrap;
-  color: var(--fg-2);
-}
-
-.senseRow[data-linger] .senseDish {
-  font-weight: 600;
-  color: var(--fg);
-}
-
-.senseMark {
-  width: 8px;
-  height: 8px;
-  background: var(--brass);
-  transition: transform 500ms var(--ease-out);
-}
-
-@media (hover: hover) {
-  .tile:hover .senseMark {
-    transform: rotate(90deg) scale(1.2);
-  }
-}
-
-.bars {
-  display: grid;
-  gap: 4px;
-}
-
-.track {
-  position: relative;
-  height: 6px;
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--fg) 6%, transparent);
-}
-
-.fill {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-}
-
-.fillLooked {
-  background: var(--brass-light);
-}
-
-.fillOrdered {
-  background: var(--russet);
-}
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 18px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--fg-3);
-}
-
-.legendItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.swatch {
-  width: 14px;
-  height: 4px;
-  border-radius: var(--r-pill);
-}
-
-/* =====================================================================
-   Layout — tablet: six columns, two tiles a row; the kitchen display
-   and Knomi Sense run full width.
-   ===================================================================== */
-
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-
-  .tile {
-    grid-column: span 3;
-  }
-
-  .tileKds,
-  .tileSense {
-    grid-column: 1 / -1;
-  }
-
-  /* Wide tile: the plan tag sits in the top-right corner, level with the title. */
-  .tileKds .tag {
-    position: absolute;
-    top: var(--pad);
-    right: var(--pad);
-  }
-}
 
 @media (min-width: 640px) and (max-width: 1023.98px) {
-  .tileSense {
+  .item {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    align-items: end;
-    column-gap: clamp(24px, 4vw, 44px);
-  }
-
-  .tileSense .copy {
-    margin-top: 0;
-    padding-bottom: 4px;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(24px, 4vw, 48px);
+    align-items: baseline;
   }
 }
 
 /* =====================================================================
-   Layout — desktop: twelve columns. The kitchen display holds the left
-   two rows; Compass takes the widest seat of the bottom row, and the
-   russet tile closes the bottom-right corner.
+   Desktop: the board holds the wider left column; the list stands
+   beside it, opening on the same rule.
    ===================================================================== */
 
 @media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-  }
-
-  .tileKds {
-    grid-column: 1 / span 7;
-    grid-row: 1 / span 2;
-  }
-
-  .tilePos {
-    grid-column: 8 / span 5;
-    grid-row: 1;
-  }
-
-  .tilePulse {
-    grid-column: 8 / span 5;
-    grid-row: 2;
-  }
-
-  .tileUpdates {
-    grid-column: 1 / span 4;
-    grid-row: 3;
-  }
-
-  .tileSense {
-    grid-column: 5 / span 5;
-    grid-row: 3;
-  }
-
-  .tileCommission {
-    grid-column: 10 / span 3;
-    grid-row: 3;
-  }
-
-  /* Compass's tag rides the top-right corner of its plate, so the three
-     tiles in the bottom row keep their copy to the same few lines. */
-  .tileSense .tag {
-    position: absolute;
-    top: calc(var(--pad) + 14px);
-    right: calc(var(--pad) + 14px);
-  }
-
-  .tileSense .sense {
-    justify-content: flex-end;
-    padding-top: 52px;
-    padding-bottom: 20px;
-  }
-
-  /* The bottom row shares one, slightly taller plate, so Compass's tag has room. */
-  .tileUpdates,
-  .tileSense,
-  .tileCommission {
-    --stage-h: clamp(200px, 10rem + 2.2vw, 216px);
+  .layout {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: clamp(40px, 4.5vw, 80px);
+    align-items: start;
   }
 }
 
 /* =====================================================================
-   Reduced motion: hold still frames. Loops never start (see useLive);
-   the POS line shows a single resting dot.
+   Reduced motion: hold still frames. The loops never start (see useLive);
+   Host is already in place and the alert simply appears.
    ===================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  .runner {
-    animation: none;
-  }
-
-  .runnerOut {
-    transform: translateX(50%);
-  }
-
-  .runnerIn {
-    display: none;
-  }
-
-  .orbit,
-  .pulse::after,
+  .liveDot::after,
   .chipTap,
   .alertBell svg {
     animation: none !important;
+  }
+
+  .pulseHost > * {
+    transform: none !important;
   }
 }

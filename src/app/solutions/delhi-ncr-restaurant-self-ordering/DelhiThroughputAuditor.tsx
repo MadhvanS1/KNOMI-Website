@@ -1,23 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { pricing } from '@/content/site';
 import styles from './DelhiSolutions.module.css';
 
 type DelhiMarket = 'cyberHubGurgaon' | 'connaughtPlace' | 'hauzKhasGk' | 'noidaExpressway' | 'rajouriGarden';
 
-// KNOMI Signature plan price per table per month (KNOMI Brain §2), read from the approved site copy.
-const SIGNATURE_PRICE_PER_TABLE = pricing.plans.find((p) => p.id === 'signature')?.priceMin ?? 250;
-
-// KNOMI's stated target for average-order lift. A target, not a past result or a guarantee.
-const KNOMI_TARGET_LIFT_PCT = 25;
+// The lift starts at 0%, so every figure comes from the owner. No KNOMI default or target.
+const START_LIFT_PCT = 0;
 
 export default function DelhiThroughputAuditor() {
   const [activeTab, setActiveTab] = useState<'delhiTurnoverAuditor' | 'cocktailTandooriBasketModeler'>('delhiTurnoverAuditor');
 
   // Mode 1 State (all values are the user's own figures or assumptions)
   const [market, setMarket] = useState<DelhiMarket>('cyberHubGurgaon');
-  const [tableCount, setTableCount] = useState<number>(45);
   const [currentWaiters, setCurrentWaiters] = useState<number>(11);
   const [avgTableCheck, setAvgTableCheck] = useState<number>(1850);
   const [waiterMonthlyCost, setWaiterMonthlyCost] = useState<number>(26000);
@@ -28,7 +23,7 @@ export default function DelhiThroughputAuditor() {
   // Mode 2 State
   const [dailyCovers, setDailyCovers] = useState<number>(420);
   const [avgSpend, setAvgSpend] = useState<number>(950);
-  const [orderLiftPct, setOrderLiftPct] = useState<number>(KNOMI_TARGET_LIFT_PCT);
+  const [orderLiftPct, setOrderLiftPct] = useState<number>(START_LIFT_PCT);
   const [basketMarginPct, setBasketMarginPct] = useState<number>(65);
 
   // Mode 1: arithmetic on the user's inputs only
@@ -40,8 +35,7 @@ export default function DelhiThroughputAuditor() {
     const extraMonthlyTurns = Math.round(extraTurnsPerWeek * 4.3);
     const monthlyTurnoverMargin = Math.round(extraMonthlyTurns * avgTableCheck * (grossMarginPct / 100));
 
-    const knomiMonthlyCost = tableCount * SIGNATURE_PRICE_PER_TABLE;
-    const netOfKnomi = redirectedPayroll + monthlyTurnoverMargin - knomiMonthlyCost;
+    const totalMonthlyEstimate = redirectedPayroll + monthlyTurnoverMargin;
 
     return {
       currentLaborCost,
@@ -49,8 +43,7 @@ export default function DelhiThroughputAuditor() {
       redirectedPayroll,
       extraMonthlyTurns,
       monthlyTurnoverMargin,
-      knomiMonthlyCost,
-      netOfKnomi,
+      totalMonthlyEstimate,
     };
   };
 
@@ -85,13 +78,13 @@ export default function DelhiThroughputAuditor() {
 
       <div className={styles.tabButtons}>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'delhiTurnoverAuditor' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'delhiTurnoverAuditor' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('delhiTurnoverAuditor')}
         >
           Mode 1: Floor Labor &amp; Table Turns
         </button>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'cocktailTandooriBasketModeler' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'cocktailTandooriBasketModeler' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('cocktailTandooriBasketModeler')}
         >
           Mode 2: Cocktail &amp; Tandoori Order Lift
@@ -113,19 +106,14 @@ export default function DelhiThroughputAuditor() {
                   setMarket(m);
                   if (m === 'cyberHubGurgaon') {
                     setAvgTableCheck(2200);
-                    setTableCount(50);
                   } else if (m === 'connaughtPlace') {
                     setAvgTableCheck(1800);
-                    setTableCount(45);
                   } else if (m === 'hauzKhasGk') {
                     setAvgTableCheck(1650);
-                    setTableCount(35);
                   } else if (m === 'noidaExpressway') {
                     setAvgTableCheck(1250);
-                    setTableCount(40);
                   } else if (m === 'rajouriGarden') {
                     setAvgTableCheck(1500);
-                    setTableCount(60);
                   }
                 }}
               >
@@ -135,22 +123,6 @@ export default function DelhiThroughputAuditor() {
                 <option value="noidaExpressway">Noida Sector 18 &amp; Advant Navis (Tech Corridors &amp; Family Dining)</option>
                 <option value="rajouriGarden">Rajouri Garden &amp; Punjabi Bagh (Multi-Tier Family Banquet &amp; Tandoor)</option>
               </select>
-            </div>
-
-            <div className={styles.inputGroup}>
-              <div className={styles.inputLabelRow}>
-                <span>Total Dining Tables</span>
-                <span className={styles.inputValueBadge}>{tableCount} Tables</span>
-              </div>
-              <input
-                type="range"
-                min="20"
-                max="100"
-                step="5"
-                value={tableCount}
-                onChange={(e) => setTableCount(Number(e.target.value))}
-                className={styles.rangeSlider}
-              />
             </div>
 
             <div className={styles.inputGroup}>
@@ -252,12 +224,12 @@ export default function DelhiThroughputAuditor() {
 
           <div className={styles.resultsPanel}>
             <div className={styles.highlightRow}>
-              <span className={styles.highlightLabel}>Estimated Monthly Value, Net of KNOMI</span>
+              <span className={styles.highlightLabel}>Estimated Monthly Value</span>
               <span className={styles.highlightValue}>
-                ₹{turnoverResults.netOfKnomi.toLocaleString('en-IN')}
+                ₹{turnoverResults.totalMonthlyEstimate.toLocaleString('en-IN')}
               </span>
               <span className={styles.highlightSubtext}>
-                Estimate from your own figures and assumptions, not a promise
+                Figures are before KNOMI&apos;s fee, which we share on a walkthrough call. An estimate from your own figures and assumptions, not a promise.
               </span>
             </div>
 
@@ -279,13 +251,6 @@ export default function DelhiThroughputAuditor() {
               <span className={styles.metricLabel}>Margin from {turnoverResults.extraMonthlyTurns} Extra Turns / Month (estimate)</span>
               <span className={styles.metricValue}>
                 +₹{turnoverResults.monthlyTurnoverMargin.toLocaleString('en-IN')} / mo
-              </span>
-            </div>
-
-            <div className={styles.metricRow}>
-              <span className={styles.metricLabel}>KNOMI Signature for {tableCount} Tables</span>
-              <span className={styles.metricValue}>
-                ₹{turnoverResults.knomiMonthlyCost.toLocaleString('en-IN')} / mo
               </span>
             </div>
 
@@ -331,7 +296,7 @@ export default function DelhiThroughputAuditor() {
 
             <div className={styles.inputGroup}>
               <div className={styles.inputLabelRow}>
-                <span>Average Order Lift to Model (default: KNOMI&apos;s target, not a guarantee)</span>
+                <span>Average Order Lift to Model (your assumption)</span>
                 <span className={styles.inputValueBadge}>{orderLiftPct}%</span>
               </div>
               <input
@@ -395,7 +360,7 @@ export default function DelhiThroughputAuditor() {
             </div>
 
             <span className={styles.highlightSubtext}>
-              The {KNOMI_TARGET_LIFT_PCT}% default is KNOMI&apos;s target for average-order lift, not a guarantee or a past result. Knomi Host suggests pairings, such as kebabs with the beers; the real effect is something we measure with you on your own tables.
+              The lift starts at 0%: set your own assumption. It is not a KNOMI result or a guarantee. Knomi Host suggests pairings, such as kebabs with the beers; the real effect is something we measure with you on your own tables.
             </span>
           </div>
         </div>

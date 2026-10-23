@@ -4,6 +4,7 @@ import { Caveat, Instrument_Sans, Instrument_Serif } from "next/font/google";
 import localFont from "next/font/local";
 import SmoothScroll from "@/components/SmoothScroll";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import { REVEAL_SCRIPT } from "@/components/ui/revealScript";
 import { OG_IMAGE } from "@/content/site";
 import "lenis/dist/lenis.css";
 import "./globals.css";
@@ -168,13 +169,7 @@ const jsonLd = {
       applicationSubCategory: "Restaurant guest experience software",
       operatingSystem: "Web-based",
       description,
-      offers: {
-        "@type": "AggregateOffer",
-        priceCurrency: "INR",
-        lowPrice: "149",
-        highPrice: "500",
-        description: "Per table, per month. 0% commission on orders.",
-      },
+      // No offers: KNOMI's pricing is shared on the walkthrough call, never on the site.
       creator: { "@type": "Organization", name: "KNOMI", url: "https://www.knomi.in" },
       featureList: [
         "Knomi Sense: guest experience infrastructure that remembers every guest and connects every part of KNOMI",
@@ -202,6 +197,9 @@ export default function RootLayout({
   return (
     <html lang="en-IN" className={`${serif.variable} ${sans.variable} ${hand.variable} ${rupeeSerif.variable} ${rupeeSans.variable}`} suppressHydrationWarning>
       <head>
+        {/* First in <head>: marks <html> as `js` before first paint and starts the reveal
+            observer, so scroll entrances never wait for React (see components/ui/Reveal.tsx). */}
+        <script dangerouslySetInnerHTML={{ __html: REVEAL_SCRIPT }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
         {gaId && (

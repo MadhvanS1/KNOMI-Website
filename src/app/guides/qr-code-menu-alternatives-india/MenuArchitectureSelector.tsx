@@ -3,11 +3,8 @@
 import React, { useState } from 'react';
 import styles from './MenuAlternativesGuide.module.css';
 
-// KNOMI Signature list price per table, per month (KNOMI Brain §2).
-const KNOMI_SIGNATURE_PER_TABLE = 250;
-// KNOMI's average-order target. A target, not a guarantee or a past result.
-const KNOMI_TARGET_LIFT = 0.25;
-const KNOMI_TARGET_LABEL = 'KNOMI target: +25% average order (not a guarantee)';
+// How KNOMI shapes spend, in words: no figure, since any lift depends on the restaurant.
+const KNOMI_SPEND_IMPACT = 'Pairing suggestions from Knomi Host as guests order';
 
 export default function MenuArchitectureSelector() {
   const [activeTab, setActiveTab] = useState<'matrix' | 'capex'>('matrix');
@@ -20,13 +17,15 @@ export default function MenuArchitectureSelector() {
   const [tableCount, setTableCount] = useState<number>(20);
   const [monthlyTables, setMonthlyTables] = useState<number>(1800);
   const [averageCheck, setAverageCheck] = useState<number>(1100);
+  // The owner's own assumed lift in average order: starts modest, never a KNOMI figure.
+  const [liftPct, setLiftPct] = useState<number>(10);
 
   // Mode 1 Logic
   const getFitmentData = () => {
     let architecture = 'Hybrid: Tactile Paper Menus + KNOMI Frictionless Visual Ordering';
     let hardwareCapex = "No table hardware (runs on guests' phones)";
     let tableTurnSpeed = 'No wait to place an order';
-    let spendImpact = KNOMI_TARGET_LABEL;
+    let spendImpact = KNOMI_SPEND_IMPACT;
     let strategicAdvice = 'Provide 1-2 curated physical menus per table for tactile warmth, while placing engraved QR tokens for instant visual browsing, drink re-orders, and ordering without waiting for a waiter.';
 
     if (restaurantType === 'fine_dining') {
@@ -39,7 +38,7 @@ export default function MenuArchitectureSelector() {
       architecture = 'KNOMI Frictionless Tabletop Visual Web Ordering';
       hardwareCapex = "No table hardware (runs in the guest's browser)";
       tableTurnSpeed = 'Re-order from the table without flagging staff';
-      spendImpact = KNOMI_TARGET_LABEL;
+      spendImpact = KNOMI_SPEND_IMPACT;
       strategicAdvice = 'Busy pubs lose sales when guests cannot flag a bartender for round two. A frictionless web ordering flow lets guests re-order drinks from the table without waiting for staff.';
     } else if (restaurantType === 'qsr') {
       architecture = 'Self-Service Counter Kiosks + Express Pickup Screen';
@@ -80,20 +79,16 @@ export default function MenuArchitectureSelector() {
     const annualKioskUpkeep = 2 * 18000;
     const fiveYearKioskCost = initialKioskCapex + annualKioskUpkeep * 5;
 
-    // 4. KNOMI (runs on guests' phones, no table hardware): Signature list price
-    const fiveYearKnomiFee = tableCount * KNOMI_SIGNATURE_PER_TABLE * 60;
-    // Extra sales if KNOMI's +25% average-order target is met (target, not a guarantee)
+    // 4. KNOMI (runs on guests' phones, no table hardware). Extra sales at the lift the
+    // owner assumes, before KNOMI's fee, which is shared on the walkthrough call.
     const annualGross = monthlyTables * averageCheck * 12;
-    const fiveYearUpsellGain = Math.round(annualGross * KNOMI_TARGET_LIFT * 5);
-    const fiveYearTotalBenefit = fiveYearUpsellGain - fiveYearKnomiFee;
+    const fiveYearUpsellGain = Math.round(annualGross * (liftPct / 100) * 5);
 
     return {
       fiveYearPaperCost,
       fiveYearTabletCost,
       fiveYearKioskCost,
-      fiveYearKnomiFee,
       fiveYearUpsellGain,
-      fiveYearTotalBenefit,
     };
   };
 
@@ -112,14 +107,14 @@ export default function MenuArchitectureSelector() {
       <div className={styles.tabButtons}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'matrix' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'matrix' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('matrix')}
         >
           1. Format & Hospitality Fitment Matrix
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'capex' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'capex' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('capex')}
         >
           2. 5-Year Capex & Revenue Estimator
@@ -243,6 +238,22 @@ export default function MenuArchitectureSelector() {
                 className={styles.rangeSlider}
               />
             </div>
+
+            <div className={styles.inputGroup}>
+              <label htmlFor="menu-lift" className={styles.inputLabel}>
+                Lift in Average Order (Your Assumption): <span className={styles.inputVal}>+{liftPct}%</span>
+              </label>
+              <input
+                id="menu-lift"
+                type="range"
+                min="0"
+                max="40"
+                step="1"
+                value={liftPct}
+                onChange={(e) => setLiftPct(Number(e.target.value))}
+                className={styles.rangeSlider}
+              />
+            </div>
           </div>
 
           <div className={styles.resultBox}>
@@ -264,25 +275,20 @@ export default function MenuArchitectureSelector() {
                 <span className={styles.statLabel}>KNOMI Hardware Capex:</span>
                 <span className={styles.statValue} style={{ color: '#3f7a52' }}>No table devices (runs on guests&apos; phones)</span>
               </div>
-              <div className={styles.statRow}>
-                <span className={styles.statLabel}>KNOMI Signature Fee ({tableCount} tables, 5 yrs):</span>
-                <span className={styles.statValue}>Rs {(cpx.fiveYearKnomiFee / 100000).toFixed(2)} Lakhs (Expense)</span>
-              </div>
-              <div className={styles.statRow}>
-                <span className={styles.statLabel}>5-Yr Extra Sales at KNOMI&apos;s +25% Target (not a guarantee):</span>
-                <span className={`${styles.statValue} ${styles.statBenefit}`}>+ Rs {(cpx.fiveYearUpsellGain / 100000).toFixed(2)} Lakhs</span>
-              </div>
               <div className={styles.statRow} style={{ borderBottom: 'none', paddingTop: '12px' }}>
-                <span className={styles.statLabel} style={{ fontWeight: 700 }}>Estimated 5-Yr Extra Sales After KNOMI Fee:</span>
-                <span className={`${styles.statValue} ${styles.statHighlight}`} style={{ color: '#3f7a52', fontSize: '1.25rem' }}>
-                  {cpx.fiveYearTotalBenefit >= 0 ? '+ ' : '- '}Rs {(Math.abs(cpx.fiveYearTotalBenefit) / 100000).toFixed(2)} Lakhs
+                <span className={styles.statLabel} style={{ fontWeight: 700 }}>5-Yr Extra Sales at Your Assumed +{liftPct}% (example only):</span>
+                <span className={`${styles.statValue} ${styles.statHighlight}`} style={{ color: 'var(--color-text-primary)', fontSize: '1.25rem' }}>
+                  + Rs {(cpx.fiveYearUpsellGain / 100000).toFixed(2)} Lakhs
                 </span>
               </div>
+              <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                Figures are before KNOMI&apos;s fee, which we share on a walkthrough call.
+              </p>
             </div>
 
             <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(63, 122, 82, 0.08)', border: '1px solid rgba(63, 122, 82, 0.2)', borderRadius: '6px', fontSize: '0.85rem', color: '#3f7a52', lineHeight: '1.5' }}>
               <strong>Estimate only: </strong>
-              Paper, tablet and kiosk figures use illustrative assumptions (three menus per table reprinted three times a year at Rs 250 each plus Rs 15,000 for specials; about Rs 15,500 per tablet and dock plus Rs 2,500 a year in upkeep; two kiosks at Rs 1.8 Lakhs each plus Rs 18,000 a year in upkeep); replace them with your own quotes. KNOMI runs on guests&apos; phones, so there are no table devices to buy. The +25% is KNOMI&apos;s target, not a guarantee or a past result. Extra sales are revenue, not profit, so food cost still applies.
+              Paper, tablet and kiosk figures use illustrative assumptions (three menus per table reprinted three times a year at Rs 250 each plus Rs 15,000 for specials; about Rs 15,500 per tablet and dock plus Rs 2,500 a year in upkeep; two kiosks at Rs 1.8 Lakhs each plus Rs 18,000 a year in upkeep); replace them with your own quotes. KNOMI runs on guests&apos; phones, so there are no table devices to buy. The lift is your own assumption, not a KNOMI result or guarantee. Extra sales are revenue, not profit, so food cost still applies.
             </div>
           </div>
         </div>

@@ -92,14 +92,14 @@ export default function RestaurantGstBillAuditor() {
       <div className={styles.modeTabs}>
         <button
           type="button"
-          className={`${styles.modeTab} ${activeMode === "splitter" ? styles.modeTabActive : ""}`}
+          className={`${styles.modeTab} pressable ${activeMode === "splitter" ? styles.modeTabActive : ""}`}
           onClick={() => setActiveMode("splitter")}
         >
           1. Multi-Tax Bill Splitter & Receipt Generator
         </button>
         <button
           type="button"
-          className={`${styles.modeTab} ${activeMode === "itc_paradox" ? styles.modeTabActive : ""}`}
+          className={`${styles.modeTab} pressable ${activeMode === "itc_paradox" ? styles.modeTabActive : ""}`}
           onClick={() => setActiveMode("itc_paradox")}
         >
           2. The 5% vs 18% ITC Paradox Auditor

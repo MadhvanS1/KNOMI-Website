@@ -1,10 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
-import { useInView } from "framer-motion";
 import SectionHead from "@/components/ui/SectionHead";
 import HostArt from "@/components/ui/HostArt";
-import { Reveal } from "@/components/ui/Reveal";
+import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { ArrowRight } from "@/components/ui/Icons";
 import { getLenis } from "@/lib/lenis";
 import { sense } from "@/content/site";
@@ -19,7 +18,6 @@ const PAUSE_LABEL = "Pause the instrument’s motion";
 
 const { modules } = sense;
 const COUNT = modules.length;
-const NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"];
 
 const DESKTOP_QUERY = "(min-width: 1024px)";
 const FINE_POINTER_QUERY = "(hover: hover) and (pointer: fine)";
@@ -76,7 +74,7 @@ function ModuleDetail({
   return (
     <div className={`${styles.detail} ${host ? styles.detailHost : ""} ${className ?? ""}`}>
       <p className={styles.body}>{m.body}</p>
-      <a href={m.href} className={styles.see} tabIndex={focusable ? undefined : -1}>
+      <a href={m.href} className={`pressable ${styles.see}`} tabIndex={focusable ? undefined : -1}>
         {SEE_IT}
         <span className="sr-only">: {m.name}</span>
         <ArrowRight size={14} className={styles.seeArrow} />
@@ -373,9 +371,6 @@ export default function SenseCore() {
 
   useEffect(() => () => window.clearTimeout(unlockTimer.current), []);
 
-  /* Rows rise in one after another the first time the list is seen (CSS, see .shown). */
-  const listShown = useInView(scrollerRef, { once: true, amount: 0.25 });
-
   const ready = status === "ready";
 
   return (
@@ -406,14 +401,13 @@ export default function SenseCore() {
                   <span className={styles.beadDot} />
                   <span className={styles.beadStem} />
                   <span className={styles.beadTag} data-tag>
-                    <span className={styles.beadNum}>{NUMERALS[active]}</span>
                     {modules[active].name}
                   </span>
                 </span>
                 {ready && !reduce && (
                   <button
                     type="button"
-                    className={styles.pause}
+                    className={`pressable ${styles.pause}`}
                     aria-pressed={paused}
                     aria-label={PAUSE_LABEL}
                     onClick={() => setPaused((p) => !p)}
@@ -423,12 +417,8 @@ export default function SenseCore() {
                 )}
               </div>
 
-              <Reveal className={styles.plaque} y={14} amount={0.6}>
-                <p className={styles.plaqueName}>
-                  <span className="ornament" aria-hidden="true" />
-                  <span>{sense.core.name}</span>
-                  <span className="ornament" aria-hidden="true" />
-                </p>
+              {/* The instrument's plate. The section's label above already names it, so only its line. */}
+              <Reveal className={styles.plaque} y={12}>
                 <p className={styles.plaqueLine}>{sense.core.line}</p>
               </Reveal>
 
@@ -440,18 +430,19 @@ export default function SenseCore() {
             <div className={styles.track}>
               <div ref={markerRef} className={styles.marker} aria-hidden="true" />
               <div ref={pinRef} className={styles.pin}>
-                <Reveal className={styles.listBox} y={20} amount={0.2}>
+                {/* The rows rise in turn, then the description beneath them. */}
+                <Stagger className={styles.listBox}>
                   <span className={styles.rail} aria-hidden="true">
                     <span ref={railRef} className={styles.railFill} />
                   </span>
 
                   <div ref={scrollerRef} className={styles.scroller} role="group" aria-label={MODULES_LABEL}>
-                    <span className={styles.indicator} aria-hidden="true" style={{ "--i": active } as CSSProperties} />
-                    <ul className={`${styles.modules} ${listShown ? styles.shown : ""}`}>
+                    <span className={styles.indicator} aria-hidden="true" style={{ "--at": active } as CSSProperties} />
+                    <ul className={styles.modules}>
                       {modules.map((m, i) => {
                         const on = i === active;
                         return (
-                          <li key={m.id} className={styles.item} style={{ "--n": i } as CSSProperties}>
+                          <StaggerItem as="li" key={m.id} className={styles.item} index={i}>
                             <div
                               ref={(el) => {
                                 cardRefs.current[i] = el;
@@ -465,9 +456,6 @@ export default function SenseCore() {
                                   aria-pressed={on}
                                   onClick={() => select(i)}
                                 >
-                                  <span className={styles.num} aria-hidden="true">
-                                    {NUMERALS[i]}
-                                  </span>
                                   <span className={styles.name}>{m.name}</span>
                                   <span className={`leader ${styles.leader}`} aria-hidden="true" />
                                   <span className={styles.role}>{m.role}</span>
@@ -476,7 +464,7 @@ export default function SenseCore() {
                               {/* Mobile & tablet: each card carries its own description. */}
                               <ModuleDetail module={m} className={styles.cardDetail} />
                             </div>
-                          </li>
+                          </StaggerItem>
                         );
                       })}
                     </ul>
@@ -484,7 +472,7 @@ export default function SenseCore() {
 
                   {/* Desktop: one description at a time, all five stacked in a single grid
                       cell so the slot always fits the longest and the rows never move. */}
-                  <div className={styles.detailStack}>
+                  <StaggerItem className={styles.detailStack} index={COUNT}>
                     {modules.map((m, i) => (
                       <ModuleDetail
                         key={m.id}
@@ -493,20 +481,17 @@ export default function SenseCore() {
                         focusable={i === active}
                       />
                     ))}
-                  </div>
+                  </StaggerItem>
 
                   <div className={styles.ticks} aria-hidden="true">
                     {modules.map((m, i) => (
                       <span key={m.id} className={`${styles.tick} ${i === active ? styles.tickOn : ""}`} />
                     ))}
                   </div>
-                </Reveal>
+                </Stagger>
 
-                <Reveal className={styles.noteWrap} delay={0.1} y={12} amount={0.5}>
-                  <p className={styles.planNote}>
-                    <span className="ornament" aria-hidden="true" />
-                    {sense.planNote}
-                  </p>
+                <Reveal className={styles.noteWrap} delay={0.1} y={12}>
+                  <p className={styles.note}>{sense.note}</p>
                 </Reveal>
               </div>
             </div>

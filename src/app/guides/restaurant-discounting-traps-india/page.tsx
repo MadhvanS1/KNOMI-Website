@@ -460,7 +460,7 @@ export default function DiscountingGuidePage() {
               KNOMI gives every dish its own illustrated page, and Knomi Host suggests the pairing at
               every table, every night. {GOAL}
             </p>
-            <Link href="/#book" className={styles.calcBtn}>
+            <Link href="/#book" className={`${styles.calcBtn} pressable`}>
               Book a walkthrough
             </Link>
           </div>

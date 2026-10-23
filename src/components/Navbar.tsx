@@ -4,20 +4,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
-import { bookHref, contact, nav, tagline } from "@/content/site";
+import { bookHref, contact, nav, navLabels, tagline } from "@/content/site";
 import { getLenis } from "@/lib/lenis";
 import { ArrowRight } from "./ui/Icons";
 import Wordmark from "./ui/Wordmark";
-import { EASE_OUT } from "./ui/Reveal";
+import { EASE_DRAWER, EASE_OUT } from "./ui/Reveal";
 import styles from "./Navbar.module.css";
-
-const NUMERALS = ["I", "II", "III", "IV", "V", "VI"];
 
 export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  // Past the hero (whose own button books a walkthrough): phones then show "Book" in the bar.
+  const [pastHero, setPastHero] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -25,35 +25,50 @@ export default function Navbar() {
   // True when the menu closed because the visitor jumped to a section.
   const navigatedRef = useRef(false);
 
-  /* Compact on scroll; tuck away while scrolling down, return on the way up. */
+  /* A ground under the bar once the page scrolls; tuck away while scrolling down, return on
+     the way up. Pages without a hero (#top) count as "past" it after 60% of the first screen. */
   useEffect(() => {
+    const hero = document.getElementById("top");
     let lastY = window.scrollY;
-    let ticking = false;
+    let frame = 0;
     const update = () => {
+      frame = 0;
       const y = window.scrollY;
       setScrolled(y > 24);
+      if (!hero) setPastHero(y > window.innerHeight * 0.6);
       if (Math.abs(y - lastY) > 6) {
         setHidden(y > lastY && y > 480);
         lastY = y;
       }
-      ticking = false;
     };
     const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
-      }
+      if (!frame) frame = requestAnimationFrame(update);
     };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+
+    // On the homepage: the hero's bottom edge passing under the bar.
+    let heroWatch: IntersectionObserver | undefined;
+    if (hero) {
+      heroWatch = new IntersectionObserver(
+        ([entry]) => setPastHero(!entry.isIntersecting && entry.boundingClientRect.top < 0),
+        { rootMargin: "-64px 0px 0px 0px" },
+      );
+      heroWatch.observe(hero);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(frame);
+      heroWatch?.disconnect();
+    };
+  }, [pathname]);
 
   /* Highlight the homepage section currently in view. */
   useEffect(() => {
     if (!isHome) return;
     // Watch every section, not only the ones in the nav, so reading the FAQ or
-    // the booking form doesn't leave "Pricing" highlighted.
+    // the booking form doesn't leave "What it's worth" highlighted.
     const sections = Array.from(document.querySelectorAll<HTMLElement>("main section[id]"));
     if (!sections.length) return;
     const observer = new IntersectionObserver(
@@ -86,7 +101,7 @@ export default function Navbar() {
       requestAnimationFrame(() => {
         // The header offset comes from `scroll-padding-top` in globals.css.
         const lenis = getLenis();
-        if (lenis) lenis.scrollTo(target, { duration: 1.4 });
+        if (lenis) lenis.scrollTo(target, { duration: 1 });
         else target.scrollIntoView({ behavior: "auto" });
         history.replaceState(null, "", `#${id}`);
         // Move keyboard focus with the visitor, so the next Tab continues in the section.
@@ -107,7 +122,13 @@ export default function Navbar() {
       if (e.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", onKey);
-    const focusTimer = window.setTimeout(() => firstLinkRef.current?.focus(), 250);
+    // The menu is for narrow screens: widening past the inline links closes it.
+    const wide = window.matchMedia("(min-width: 981px)");
+    const onWide = () => {
+      if (wide.matches) setOpen(false);
+    };
+    wide.addEventListener("change", onWide);
+    const focusTimer = window.setTimeout(() => firstLinkRef.current?.focus({ preventScroll: true }), 250);
     const toggle = toggleRef.current;
     // Keep focus and assistive tech inside the header + menu while it is open.
     const header = toggle?.closest("header");
@@ -119,6 +140,7 @@ export default function Navbar() {
       lenis?.start();
       document.documentElement.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKey);
+      wide.removeEventListener("change", onWide);
       window.clearTimeout(focusTimer);
       outside.forEach((el) => el.removeAttribute("inert"));
       if (!navigatedRef.current) {
@@ -137,6 +159,7 @@ export default function Navbar() {
       <header
         className={`${styles.header} ${scrolled ? styles.scrolled : ""} ${hidden && !open ? styles.hidden : ""} ${open ? styles.menuOpen : ""}`}
         id="navbar"
+        data-motion-safe
       >
         <nav className={styles.bar} aria-label="Main">
           <Link href="/" className={styles.logo} aria-label="KNOMI home" onClick={close}>
@@ -162,19 +185,26 @@ export default function Navbar() {
           </ul>
 
           <div className={styles.actions}>
-            <a href={bookHref} className={`btn btn--ink btn--sm ${styles.cta}`} inert={open}>
-              Book a walkthrough
-              <ArrowRight className="btn__arrow" size={14} />
+            {/* Phones: a compact "Book", shown once the hero (with its own button) is behind the visitor. */}
+            <a
+              href={bookHref}
+              className={`btn btn--ink btn--sm ${styles.cta} ${pastHero ? styles.ctaShown : ""}`}
+              aria-label={navLabels.book}
+              inert={open}
+            >
+              <span className={styles.ctaFull}>{navLabels.book}</span>
+              <span className={styles.ctaShort}>{navLabels.bookShort}</span>
+              <ArrowRight className={`btn__arrow ${styles.ctaArrow}`} size={14} />
             </a>
             <button
               ref={toggleRef}
               type="button"
-              className={`${styles.toggle} ${open ? styles.toggleOpen : ""}`}
+              className={`pressable ${styles.toggle} ${open ? styles.toggleOpen : ""}`}
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="site-menu"
             >
-              <span className={styles.toggleLabel}>{open ? "Close" : "Menu"}</span>
+              <span className={styles.toggleLabel}>{open ? navLabels.close : navLabels.sections}</span>
               <span className={styles.toggleIcon} aria-hidden="true">
                 <span />
                 <span />
@@ -185,6 +215,9 @@ export default function Navbar() {
       </header>
       <span id="main-content" tabIndex={-1} className={styles.skipTarget} />
 
+      {/* The sheet drops in from the top (0.4s) and fades away when closed (0.25s), so a jump
+          to a section is never held up. Reduced motion: framer-motion's "user" setting (see
+          SmoothScroll) drops the movement and keeps the fades. */}
       <AnimatePresence>
         {open && (
           <motion.nav
@@ -192,23 +225,22 @@ export default function Navbar() {
             className={`theme-dark ${styles.overlay}`}
             aria-label="Site menu"
             data-lenis-prevent
-            initial={{ clipPath: "inset(0 0 100% 0)" }}
-            animate={{ clipPath: "inset(0 0 0% 0)" }}
-            exit={{ clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+            initial={{ y: "-100%", opacity: 0 }}
+            animate={{
+              y: "0%",
+              opacity: 1,
+              transition: { y: { duration: 0.4, ease: EASE_DRAWER }, opacity: { duration: 0.15, ease: "linear" } },
+            }}
+            exit={{ opacity: 0, transition: { duration: 0.25, ease: EASE_OUT } }}
           >
             <div className={styles.overlayInner}>
-              <p className={styles.overlayEyebrow}>
-                <span className="ornament" /> The menu
-              </p>
               <ul className={styles.overlayLinks}>
                 {nav.map((link, i) => (
                   <motion.li
                     key={link.href}
-                    initial={{ opacity: 0, y: 40 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20, transition: { duration: 0.2 } }}
-                    transition={{ duration: 0.8, delay: 0.25 + i * 0.06, ease: EASE_OUT }}
+                    transition={{ duration: 0.35, delay: 0.12 + i * 0.04, ease: EASE_OUT }}
                   >
                     <a
                       href={link.href}
@@ -216,9 +248,7 @@ export default function Navbar() {
                       className={styles.overlayLink}
                       onClick={(e) => goTo(e, link.href)}
                     >
-                      <span className={styles.overlayNumeral}>{NUMERALS[i]}</span>
                       <span className={styles.overlayLabel}>{link.label}</span>
-                      <span className={styles.overlayLeader} aria-hidden="true" />
                     </a>
                   </motion.li>
                 ))}
@@ -227,11 +257,10 @@ export default function Navbar() {
                 className={styles.overlayFoot}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
+                transition={{ duration: 0.25, delay: 0.2, ease: EASE_OUT }}
               >
                 <a href={bookHref} className="btn btn--ink btn--lg" onClick={(e) => goTo(e, bookHref)}>
-                  Book a walkthrough
+                  {navLabels.book}
                   <ArrowRight className="btn__arrow" />
                 </a>
                 <div className={styles.overlayContact}>

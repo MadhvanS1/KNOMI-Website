@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import styles from "../legal/LegalPage.module.css";
+import callout from "../compare/Callout.module.css";
 import { OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -79,13 +80,13 @@ export default function RefundPolicyPage() {
           {/* Legal Navigation Tabs */}
           <nav className={styles.legalNav} aria-label="Legal Documents Navigation">
             <span className={styles.navLabel}>Compliance Docs:</span>
-            <Link href="/privacy" className={styles.navTab}>
+            <Link href="/privacy" className={`${styles.navTab} pressable`}>
               Privacy Policy
             </Link>
-            <Link href="/terms" className={styles.navTab}>
+            <Link href="/terms" className={`${styles.navTab} pressable`}>
               Terms of Service
             </Link>
-            <Link href="/refund-policy" className={`${styles.navTab} ${styles.navTabActive}`}>
+            <Link href="/refund-policy" className={`${styles.navTab} ${styles.navTabActive} pressable`}>
               Cancellation &amp; Refund Policy
             </Link>
           </nav>
@@ -114,9 +115,9 @@ export default function RefundPolicyPage() {
                 Where KNOMI offers a trial, its length, the tables it covers, and any fees are confirmed with you in
                 writing before it begins:
               </p>
-              <div className={styles.callout}>
-                <div className={styles.calloutTitle}>Trial Commitment</div>
-                <p className={styles.calloutText}>
+              <div className={`${callout.box} ${styles.callout}`}>
+                <div className={callout.title}>Trial Commitment</div>
+                <p className={callout.text}>
                   Any fees for a trial are set out in the written trial terms. If an operator concludes that KNOMI does
                   not match their operational flow, they may discontinue at any point before the agreed trial period ends.
                   No cancellation penalties, hidden fees, or clawbacks will apply.

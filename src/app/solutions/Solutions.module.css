@@ -10,8 +10,14 @@
   margin-bottom: clamp(28px, 4vw, 48px);
 }
 
-.crumbs a:hover {
-  color: var(--fg);
+.crumbs a {
+  transition: color 150ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .crumbs a:hover {
+    color: var(--fg);
+  }
 }
 
 .head {
@@ -35,7 +41,7 @@
 .row {
   position: relative;
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 0.9fr) minmax(0, 1.4fr) 24px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) 24px;
   align-items: baseline;
   gap: 16px 24px;
   padding: clamp(20px, 2.6vw, 30px) 0;
@@ -52,13 +58,12 @@
   border-radius: var(--r-md);
   background: var(--bg-alt);
   opacity: 0;
-  transition: opacity var(--dur) var(--ease-out);
+  transition: opacity 200ms ease;
 }
 
-.index {
-  font-size: var(--fs-micro);
-  color: var(--fg-3);
-  font-variant-numeric: tabular-nums;
+/* A full-width row presses by a hair less than a button. */
+.list .row:global(.pressable):active {
+  scale: 0.98;
 }
 
 .name {
@@ -66,7 +71,7 @@
   font-size: clamp(1.9rem, 1.4rem + 1.8vw, 3rem);
   line-height: 1;
   letter-spacing: -0.015em;
-  transition: transform 500ms var(--ease-out), color var(--dur) var(--ease-out);
+  transition: transform 240ms var(--ease-out);
 }
 
 .line {
@@ -77,17 +82,18 @@
 .arrow {
   align-self: center;
   color: var(--fg-3);
-  transition: transform var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+  transition:
+    transform 240ms var(--ease-out),
+    color 200ms ease;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .row:hover::before {
     opacity: 1;
   }
 
   .row:hover .name {
     transform: translateX(6px);
-    color: var(--accent);
   }
 
   .row:hover .arrow {
@@ -103,15 +109,21 @@
 
 @media (max-width: 720px) {
   .row {
-    grid-template-columns: 2.5rem minmax(0, 1fr) 20px;
+    grid-template-columns: minmax(0, 1fr) 20px;
   }
 
   .line {
-    grid-column: 2 / 3;
+    grid-column: 1 / 2;
   }
 
   .arrow {
     grid-row: 1;
-    grid-column: 3;
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list .row:global(.pressable):active {
+    scale: none;
   }
 }

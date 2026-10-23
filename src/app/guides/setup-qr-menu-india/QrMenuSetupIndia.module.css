@@ -26,8 +26,10 @@
   transition: color 0.15s ease;
 }
 
-.breadcrumb a:hover {
-  color: var(--color-whiskey-sour);
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb a:hover {
+    color: var(--color-whiskey-sour);
+  }
 }
 
 .title {
@@ -36,7 +38,7 @@
   margin-bottom: 20px;
   color: var(--color-text-primary);
   font-family: var(--font-playfair, serif);
-  font-weight: 700;
+  font-weight: 400;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
@@ -49,9 +51,8 @@
   gap: 16px;
   font-size: 0.875rem;
   color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-weight: 500;
   margin-bottom: 24px;
 }
 
@@ -65,23 +66,13 @@
 
 /* Quick Answer Box */
 .quickAnswerBox {
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border-strong);
-  border-left: 4px solid var(--color-whiskey-sour);
-  border-radius: 8px;
-  padding: 24px;
+  composes: callout from "../GuideKit.module.css";
   margin: 40px auto;
   max-width: 840px;
 }
 
 .quickAnswerBadge {
-  display: inline-block;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  color: var(--color-whiskey-sour);
-  margin-bottom: 8px;
+  composes: calloutLabel from "../GuideKit.module.css";
 }
 
 .quickAnswerText {
@@ -154,18 +145,12 @@
 
 /* Callout Box */
 .calloutBox {
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border-strong);
-  border-radius: 8px;
-  padding: 24px;
+  composes: callout from "../GuideKit.module.css";
   margin: 32px 0;
 }
 
 .calloutTitle {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: 8px;
+  composes: calloutTitle from "../GuideKit.module.css";
 }
 
 /* Comparison Table */
@@ -199,8 +184,10 @@
   vertical-align: top;
 }
 
-.comparisonTable tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+@media (hover: hover) and (pointer: fine) {
+  .comparisonTable tr:hover {
+    background: var(--color-surface-hover);
+  }
 }
 
 /* Step Cards */
@@ -229,7 +216,7 @@
 .stepBadge {
   background: var(--color-whiskey-sour);
   color: #1c1411;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.95rem;
   width: 36px;
   height: 36px;
@@ -242,7 +229,7 @@
 
 .stepTitle {
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text-primary);
   margin: 0;
 }
@@ -264,7 +251,7 @@
   border-radius: 12px;
   padding: 36px 32px;
   margin: 50px 0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-soft);
 }
 
 .calcHeader {
@@ -284,7 +271,7 @@
 
 .calcTitle {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text-primary);
   margin-bottom: 8px;
 }
@@ -311,12 +298,14 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, var(--press-transition);
 }
 
-.tabBtn:hover {
-  border-color: var(--color-whiskey-sour);
-  color: var(--color-text-primary);
+@media (hover: hover) and (pointer: fine) {
+  .tabBtn:hover {
+    border-color: var(--color-whiskey-sour);
+    color: var(--color-text-primary);
+  }
 }
 
 .activeTabBtn {
@@ -395,7 +384,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 9px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--line);
   font-size: 0.925rem;
 }
 

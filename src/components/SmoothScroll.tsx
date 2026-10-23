@@ -7,24 +7,40 @@ import { setLenis } from "@/lib/lenis";
 
 /**
  * Weighted, inertial scrolling on desktop wheels (touch stays native),
- * smooth same-page anchor jumps, and reduced-motion respected throughout.
+ * smooth same-page anchor jumps, and reduced-motion respected throughout:
+ * Lenis stops and starts as the visitor's setting changes, not just at load.
  */
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let lenis: Lenis | null = null;
 
-    const lenis = new Lenis({
-      autoRaf: true,
-      lerp: 0.1,
-      // Header offset comes from `scroll-padding-top` (globals.css), which Lenis honours.
-      anchors: true,
-      stopInertiaOnNavigate: true,
-    });
-    setLenis(lenis);
+    const start = () => {
+      if (lenis) return;
+      lenis = new Lenis({
+        autoRaf: true,
+        lerp: 0.1,
+        // Header offset comes from `scroll-padding-top` (globals.css), which Lenis honours.
+        anchors: true,
+        stopInertiaOnNavigate: true,
+      });
+      setLenis(lenis);
+    };
 
-    return () => {
+    const stop = () => {
+      if (!lenis) return;
       setLenis(null);
       lenis.destroy();
+      lenis = null;
+    };
+
+    const sync = () => (reduce.matches ? stop() : start());
+    sync();
+    reduce.addEventListener("change", sync);
+
+    return () => {
+      reduce.removeEventListener("change", sync);
+      stop();
     };
   }, []);
 

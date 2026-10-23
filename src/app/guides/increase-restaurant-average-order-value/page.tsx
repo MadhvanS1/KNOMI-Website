@@ -388,7 +388,7 @@ export default function IncreaseAverageOrderValuePage() {
                     <td><strong>Average Check Lift</strong></td>
                     <td>Depends on staff and shift</td>
                     <td>Little or none (no prompts)</td>
-                    <td><strong>Our target: +25%, measured on your own tables (not a past result)</strong></td>
+                    <td><strong>A goal we measure with you, on your own tables</strong></td>
                   </tr>
                 </tbody>
               </table>
@@ -428,9 +428,10 @@ export default function IncreaseAverageOrderValuePage() {
               <p className={styles.ctaText}>
                 Don&apos;t leave upselling to a busy floor team on a Saturday night. KNOMI puts Knomi Host inside your menu,
                 suggesting the pairing at every table, with no app download or login for guests and 0% commission.
-                Signature, our recommended plan, is Rs 250 per table, per month.
+                See <Link href="/#worth">what upselling could be worth</Link> on your own numbers; we share pricing on
+                a short <Link href="/#book">walkthrough call</Link>, once we understand your restaurant.
               </p>
-              <Link href="/guides/improve-restaurant-table-turnover" className={styles.ctaButton}>
+              <Link href="/guides/improve-restaurant-table-turnover" className={`${styles.ctaButton} pressable`}>
                 Calculate Table Turnover & RevPASH &rarr;
               </Link>
             </div>

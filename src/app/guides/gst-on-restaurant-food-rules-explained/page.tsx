@@ -491,13 +491,12 @@ export default function GstFoodRatesGuidePage() {
               fee in your costs.
               <br />
               2. <strong>Works Alongside Your POS:</strong> KNOMI does not replace your billing. Your existing POS keeps
-              handling GST invoices and bar billing, orders reach your kitchen display, and on the Signature plan KNOMI
-              integrates with the POS you already use.
+              handling GST invoices and bar billing, orders reach your kitchen display, and KNOMI integrates with the
+              POS you already use.
               <br />
-              3. <strong>Simple Per-Table Pricing:</strong> Menu ₹149, Signature ₹250 (our recommended plan, including
-              Knomi Host, Knomi Pulse, guest self-ordering, integration with your existing POS and the essentials of Knomi Sense)
-              and Ecosystem ₹500 (adding Knomi&apos;s own POS, the full Knomi Sense and Knomi Compass), per table, per
-              month. <Link href="/#pricing">See pricing</Link>.
+              3. <strong>Pricing on a Short Call:</strong> We share pricing on a short{" "}
+              <Link href="/#book" className={styles.inlineLink}>walkthrough call</Link>, once we understand your restaurant. Until then,{" "}
+              <Link href="/#worth" className={styles.inlineLink}>see what upselling could be worth</Link> on your own numbers.
             </p>
           </div>
 
@@ -531,7 +530,7 @@ export default function GstFoodRatesGuidePage() {
               login, while Knomi Host suggests the right pairing. Orders go to your kitchen display, billing stays on the
               POS you already use, and we take 0% commission.
             </p>
-            <Link href="/#book" className={styles.ctaButton}>
+            <Link href="/#book" className={`${styles.ctaButton} pressable`}>
               Book a walkthrough
             </Link>
           </div>

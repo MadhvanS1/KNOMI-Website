@@ -76,7 +76,7 @@ html {
   --fs-body: 1.0625rem;
   --fs-small: 0.9375rem;
   --fs-micro: 0.8125rem;
-  --fs-eyebrow: 0.75rem;
+  --fs-eyebrow: 0.8125rem;
 
   /* ---------- Space & layout ---------- */
   --wrap: 1320px;
@@ -99,13 +99,26 @@ html {
   --shadow-lift: 0 2px 6px rgba(28, 20, 17, 0.05), 0 30px 70px -28px rgba(28, 20, 17, 0.32);
   --shadow-phone: 0 50px 90px -40px rgba(28, 20, 17, 0.55), 0 18px 40px -20px rgba(28, 20, 17, 0.3);
 
-  /* ---------- Motion ---------- */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  /* ---------- Motion ----------
+     ease-out for things arriving or leaving, ease-in-out for things moving on screen,
+     ease-drawer for panels and sheets. Nothing overshoots: the +25% seal keeps its
+     bounce in its own CSS (--ease-overshoot is there for it). */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.25, 1, 0.5, 1); /* kept for older rules: a soft settle, no overshoot */
+  --ease-overshoot: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-press: 160ms;
   --dur-fast: 180ms;
   --dur: 320ms;
   --dur-slow: 700ms;
+  /* Append to a component's own transition list so its press feedback eases too:
+     transition: color 200ms ease, var(--press-transition); */
+  --press-transition: scale var(--dur-press) var(--ease-out);
+  --reveal-dur: 0.7s;
+
+  /* Paper grain: static noise, drawn beneath content (see body::before). */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.27 0 0 0 0 0.2 0 0 0 0.03 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 
   /* ---------- Legacy aliases ----------
      The guides, compare and city pages were written against the old token
@@ -187,16 +200,16 @@ body {
   font-feature-settings: "kern" 1, "liga" 1;
 }
 
-/* Paper grain: a fixed, static noise layer that makes flat beige feel tactile. */
-body::after {
+/* Paper grain: a fixed, static noise layer that makes flat beige feel tactile.
+   It sits beneath all content (z-index -1 in the root stacking context), so the
+   menu screenshots and Host's art are never tinted. .section--alt carries it too. */
+body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: -1;
   pointer-events: none;
-  opacity: 0.32;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.27 0 0 0 0 0.2 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: var(--grain);
 }
 
 h1,
@@ -284,6 +297,7 @@ button {
 
 .section--alt {
   background-color: var(--bg-alt);
+  background-image: var(--grain);
 }
 
 /* Anchor jumps and keyboard focus stay clear of the fixed navbar. */
@@ -297,30 +311,23 @@ section[tabindex="-1"]:focus {
 }
 
 /* ---------- Type utilities ---------- */
+/* One quiet label above a headline, at most. No rule, no accent colour. */
 .eyebrow,
 .section-label {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   font-family: var(--font-sans);
   font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.2em;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg-3);
 }
 
-.eyebrow::before {
-  content: "";
-  width: 28px;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.6;
-}
-
 .section-label {
   margin-bottom: 16px;
-  color: var(--accent);
 }
 
 .display {
@@ -396,14 +403,16 @@ h3 em,
   white-space: nowrap;
   overflow: hidden;
   isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
   transition:
-    color var(--dur) var(--ease-out),
-    border-color var(--dur) var(--ease-out),
-    transform var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out);
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow var(--dur) var(--ease-out),
+    transform 200ms var(--ease-out),
+    var(--press-transition);
 }
 
-/* Fill wipes up from below on hover */
+/* Fill wipes up from below on hover (pointer devices only: see the hover block below) */
 .btn::before {
   content: "";
   position: absolute;
@@ -412,19 +421,7 @@ h3 em,
   background: var(--btn-hover-bg, var(--accent));
   transform: translateY(101%);
   border-radius: inherit;
-  transition: transform 520ms var(--ease-out);
-}
-
-.btn:hover::before {
-  transform: translateY(0);
-}
-
-.btn:hover {
-  color: var(--btn-hover-fg, var(--paper));
-}
-
-.btn:active {
-  transform: scale(0.98);
+  transition: transform 300ms var(--ease-out);
 }
 
 .btn:disabled {
@@ -434,15 +431,41 @@ h3 em,
 
 .btn__arrow {
   display: inline-block;
-  transition: transform var(--dur) var(--ease-out);
+  transition: transform 200ms var(--ease-out);
 }
 
 .btn > svg {
   flex-shrink: 0;
 }
 
-.btn:hover .btn__arrow {
-  transform: translateX(4px);
+/* Press feedback. `scale` (not `transform`) so it composes with any transform an
+   element already has, including framer-motion's inline one. The transition here
+   has no weight (:where), so a component's own transition list wins: add
+   var(--press-transition) to it. */
+:where(.pressable, [data-pressable]) {
+  -webkit-tap-highlight-color: transparent;
+  transition: var(--press-transition);
+}
+
+.btn:active:not(:disabled),
+.pressable:active:not(:disabled, [aria-disabled="true"]),
+[data-pressable]:active:not(:disabled, [aria-disabled="true"]) {
+  scale: 0.97;
+}
+
+/* Hover only where there is a real pointer: on touch, a tap would leave it stuck on. */
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover::before {
+    transform: translateY(0);
+  }
+
+  .btn:hover {
+    color: var(--btn-hover-fg, var(--paper));
+  }
+
+  .btn:hover .btn__arrow {
+    transform: translateX(4px);
+  }
 }
 
 .btn--ink,
@@ -494,13 +517,14 @@ h3 em,
   background-position: 0 100%;
   background-repeat: no-repeat;
   padding-bottom: 2px;
-  transition: background-size var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+  transition: background-size var(--dur) var(--ease-out);
 }
 
-.link:hover {
-  background-size: 0% 1px;
-  background-position: 100% 100%;
-  color: var(--accent);
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    background-size: 0% 1px;
+    background-position: 100% 100%;
+  }
 }
 
 /* ---------- Surfaces ---------- */
@@ -511,13 +535,14 @@ h3 em,
   padding: 32px;
   transition:
     box-shadow var(--dur) var(--ease-out),
-    transform var(--dur) var(--ease-out),
     border-color var(--dur) var(--ease-out);
 }
 
-.card:hover {
-  box-shadow: var(--shadow-soft);
-  border-color: var(--line-strong);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    box-shadow: var(--shadow-soft);
+    border-color: var(--line-strong);
+  }
 }
 
 .hairline {
@@ -527,7 +552,7 @@ h3 em,
   border: 0;
 }
 
-/* Dotted leader, like a printed menu: <span>Item</span><span class="leader"/><span>₹250</span> */
+/* Dotted leader, like a printed menu: <span>Item</span><span class="leader"/><span>₹120</span> */
 .leader {
   flex: 1;
   min-width: 24px;
@@ -568,19 +593,6 @@ h3 em,
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
-}
-
-.fade-in-up {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity var(--dur-slow) var(--ease-out),
-    transform var(--dur-slow) var(--ease-out);
-}
-
-.fade-in-up.visible {
-  opacity: 1;
-  transform: none;
 }
 
 .sr-only {
@@ -634,20 +646,177 @@ h3 em,
   }
 }
 
-/* ---------- Reduced motion ---------- */
+/* ---------- Reveal ----------
+   Content is visible by default. REVEAL_SCRIPT (src/components/ui/Reveal.tsx, inlined
+   in <head>) adds .js to <html> before first paint and sets [data-in] on each
+   [data-reveal] element as it nears the viewport; the entrance is a CSS animation.
+
+   data-reveal="rise"   fade and rise (--reveal-y, default 16px; --reveal-delay)
+   data-reveal="fade"   fade only
+   data-reveal="group"  its [data-reveal-item] descendants rise in turn
+                        (--reveal-stagger, --reveal-group-delay; --i is the place in the queue)
+   data-reveal="words"  headline words rise from their masks (Reveal.module.css)
+   data-reveal="watch"  no built-in entrance: only receives [data-in], for a component's
+                        own CSS, e.g. :global(html.js) .receipt[data-in] .line { ... }
+   data-reveal-now      the same entrances, played on first paint (above the fold)
+
+   The animations fill backwards only, so once played they leave nothing behind
+   (no lingering transform, opacity or will-change on the element). */
+@property --reveal-delay {
+  syntax: "<time>";
+  inherits: false;
+  initial-value: 0s;
+}
+
+@property --reveal-y {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 16px;
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y, 16px), 0);
+  }
+}
+
+@keyframes reveal-lift {
+  from {
+    transform: translate3d(0, var(--reveal-y, 16px), 0);
+  }
+}
+
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Holds an element hidden for 2.5s, then fades it back to its own opacity. */
+@keyframes reveal-wait {
+  0%,
+  89% {
+    opacity: 0;
+  }
+}
+
+/* Waiting to be seen (only while the reveal script runs). */
+html.js[data-reveal-live] :is([data-reveal="rise"], [data-reveal="fade"]):not([data-in]),
+html.js[data-reveal-live] [data-reveal="group"]:not([data-in]) [data-reveal-item] {
+  opacity: 0;
+}
+
+/* Failsafe: until the observer has reported once, wait 2.5s at most, then show. */
+html.js:not([data-reveal-live]) :is([data-reveal="rise"], [data-reveal="fade"]):not([data-in]),
+html.js:not([data-reveal-live]) [data-reveal="group"]:not([data-in]) [data-reveal-item] {
+  animation: reveal-wait 2.8s ease-out;
+}
+
+html.js [data-reveal="rise"][data-in],
+html.js [data-reveal="group"][data-in] [data-reveal-item],
+[data-reveal-now="rise"] {
+  animation: reveal-rise var(--reveal-dur) var(--ease-out) var(--reveal-delay, 0s) backwards;
+}
+
+html.js [data-reveal="fade"][data-in],
+[data-reveal-now="fade"] {
+  animation: reveal-fade var(--reveal-dur) var(--ease-out) var(--reveal-delay, 0s) backwards;
+}
+
+html.js [data-reveal="group"][data-in] [data-reveal-item] {
+  animation-delay: calc(var(--reveal-group-delay, 0s) + var(--i, 0) * var(--reveal-stagger, 50ms));
+}
+
+[data-reveal-now="lift"] {
+  animation: reveal-lift var(--reveal-dur) var(--ease-out) var(--reveal-delay, 0s) backwards;
+}
+
+/* Place in the stagger queue, from position among siblings (capped, so long lists
+   never keep their last rows waiting). StaggerItem's `index` prop overrides it. */
+[data-reveal-item] { --i: 0; }
+[data-reveal-item]:nth-child(2) { --i: 1; }
+[data-reveal-item]:nth-child(3) { --i: 2; }
+[data-reveal-item]:nth-child(4) { --i: 3; }
+[data-reveal-item]:nth-child(5) { --i: 4; }
+[data-reveal-item]:nth-child(6) { --i: 5; }
+[data-reveal-item]:nth-child(7) { --i: 6; }
+[data-reveal-item]:nth-child(n + 8) { --i: 7; }
+
+@media print {
+  [data-reveal],
+  [data-reveal-item],
+  [data-reveal-now] {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+}
+
+/* ---------- Reduced motion ----------
+   Fewer and gentler, not none: movement goes, short fades and state feedback stay.
+   By default, keyframes land on their last frame and transitions are instant, so
+   nothing moves. Reveals, buttons, links and cards keep short fades (below). A
+   component that handles reduced motion itself marks its root with data-motion-safe:
+   everything inside then keeps its own (fade-only) animations and transitions. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
+  *:not([data-motion-safe], [data-motion-safe] *),
+  *:not([data-motion-safe], [data-motion-safe] *)::before,
+  *:not([data-motion-safe], [data-motion-safe] *)::after {
+    animation-duration: 1ms !important;
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 
-  .fade-in-up {
-    opacity: 1;
+  *:not([data-motion-safe], [data-motion-safe] *, .btn, .link, .card),
+  *:not([data-motion-safe], [data-motion-safe] *, .btn, .link, .card)::before,
+  *:not([data-motion-safe], [data-motion-safe] *, .btn, .link, .card)::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  /* Reveals: a short fade in place, all together. */
+  html.js :is([data-reveal="rise"], [data-reveal="fade"], [data-reveal="words"])[data-in],
+  html.js [data-reveal="group"][data-in] [data-reveal-item],
+  [data-reveal-now]:not([data-reveal-now="lift"]) {
+    animation: reveal-fade 0.3s ease backwards !important;
+  }
+
+  html.js[data-reveal-live] [data-reveal="words"]:not([data-in]) {
+    opacity: 0;
+  }
+
+  html.js:not([data-reveal-live]) :is([data-reveal="rise"], [data-reveal="fade"], [data-reveal="words"]):not([data-in]),
+  html.js:not([data-reveal-live]) [data-reveal="group"]:not([data-in]) [data-reveal-item] {
+    animation: reveal-wait 2.8s ease-out !important;
+  }
+
+  [data-reveal-now="lift"] {
+    animation: none !important;
+  }
+
+  /* Buttons: the fill fades in instead of wiping up; the arrow stays put. */
+  .btn::before {
     transform: none;
+    opacity: 0;
+    transition-property: opacity;
+  }
+
+  .btn__arrow {
+    transform: none !important;
+  }
+
+  /* Press feedback dims instead of shrinking. */
+  .btn:active:not(:disabled),
+  .pressable:active:not(:disabled, [aria-disabled="true"]),
+  [data-pressable]:active:not(:disabled, [aria-disabled="true"]) {
+    scale: none;
+    opacity: 0.82;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+  .btn:hover::before {
+    opacity: 1;
   }
 }

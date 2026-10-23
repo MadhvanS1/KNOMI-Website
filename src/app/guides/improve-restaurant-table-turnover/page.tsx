@@ -428,7 +428,7 @@ export default function ImproveTableTurnoverPage() {
                 Cut the waiting, not the meal. With KNOMI, guests order from an illustrated menu on their phone the moment they
                 are ready, orders land on your kitchen display, and Knomi Host suggests the pairing along the way. {GOAL}
               </p>
-              <Link href="/guides/qr-code-menu-alternatives-india" className={styles.ctaButton}>
+              <Link href="/guides/qr-code-menu-alternatives-india" className={`${styles.ctaButton} pressable`}>
                 Explore Tabletop Ordering Systems &rarr;
               </Link>
             </div>

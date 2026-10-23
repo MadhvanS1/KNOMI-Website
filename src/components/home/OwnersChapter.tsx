@@ -1,21 +1,26 @@
 "use client";
 
-import { useEffect, useReducer, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { AnimatePresence, motion, useInView, usePageInView, useReducedMotion } from "framer-motion";
+import { useEffect, useReducer, useRef, useState, useSyncExternalStore } from "react";
+import { AnimatePresence, motion, useInView, usePageInView } from "framer-motion";
 import SectionHead from "@/components/ui/SectionHead";
 import HostArt from "@/components/ui/HostArt";
-import { EASE_OUT, Reveal } from "@/components/ui/Reveal";
+import { EASE_IN_OUT, EASE_OUT, Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { Check } from "@/components/ui/Icons";
-import Wordmark from "@/components/ui/Wordmark";
 import { ownersChapter } from "@/content/site";
 import styles from "./OwnersChapter.module.css";
 
 /* ---------------------------------------------------------------------------
-   For owners — "Everything behind the pass." Knomi Dash, Pulse & Compass.
-   A bento of six tiles, each carrying a small working model of the feature.
-   Every model idles while offscreen or in a hidden tab, and holds a finished
-   still frame for visitors who prefer reduced motion.
+   For owners — "Everything behind the pass."
+   One picture: Knomi Dash, the live ticket board, set large. Beside it (below
+   on phones) the rest of the owner's side as a plain ruled list, with Knomi
+   Host peeking over the Pulse check-in. The board and the check-in idle while
+   offscreen or in a hidden tab, and hold a finished frame for visitors who
+   prefer reduced motion.
    --------------------------------------------------------------------------- */
+
+/** The feature drawn as the section's one picture, and the one Host peeks into. */
+const DASH_KEY = "kds";
+const PULSE_KEY = "pulse";
 
 // copy: illustrative labels inside the mock interfaces below (UI furniture, not claims)
 const KDS_COPY = {
@@ -28,8 +33,6 @@ const KDS_COPY = {
   item: "item",
   items: "items",
 } as const;
-// copy: node label in the POS diagram (the KNOMI node uses the wordmark)
-const POS_LABEL = "Your POS";
 // copy: the Knomi Pulse check-in a guest answers before the bill, and the alert the manager gets (illustrative)
 const PULSE_COPY = {
   question: "How was everything tonight?",
@@ -37,30 +40,39 @@ const PULSE_COPY = {
   table: "Table 7",
   alert: "Manager notified",
 } as const;
-// copy: a dish row in the menu editor, with its neighbours
-const UPDATE_COPY = {
-  dish: "Tiramisu",
-  price: "₹380",
-  on: "Available",
-  off: "Sold out",
-  before: { dish: "Panna cotta", price: "₹320" },
-  after: { dish: "Affogato", price: "₹260" },
-} as const;
-// copy: Knomi Compass legend
-const SENSE_COPY = { looked: "Looked at", ordered: "Ordered" } as const;
+
+/* ---------- Shared: reduced motion, hydration-safe ---------- */
+
+/* The server value (false) is used while hydrating, then the real one straight after.
+   framer's useReducedMotion() would read matchMedia during the first client render. */
+const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribeReduced(onChange: () => void) {
+  const query = window.matchMedia(REDUCED_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    subscribeReduced,
+    () => window.matchMedia(REDUCED_QUERY).matches,
+    () => false,
+  );
+}
 
 /* ---------- Shared: run only while it can be seen ---------- */
 
 /* Each run is capped at five seconds and then holds its last frame (WCAG 2.2.2:
-   moving content must stop on its own or be pausable). Scrolling a tile back
-   into view gives it a fresh run. */
+   moving content must stop on its own or be pausable). Scrolling back into view
+   gives it a fresh run. */
 const LIVE_BUDGET_MS = 5000;
 
 function useLive<T extends Element>(amount = 0.35) {
   const ref = useRef<T>(null);
   const inView = useInView(ref, { amount });
   const pageVisible = usePageInView();
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const [spent, setSpent] = useState(false);
   // Coming back into view earns a fresh run (React's "adjust state on change" pattern).
   const [prevInView, setPrevInView] = useState(inView);
@@ -79,52 +91,8 @@ function useLive<T extends Element>(amount = 0.35) {
   return { ref, live: active && !spent };
 }
 
-/* Reduced-motion preference for render output, hydration-safe: the server value
-   (false) is used while hydrating, then the real one straight after. framer's
-   useReducedMotion() would read matchMedia during the first client render. */
-const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
-
-function subscribeReduced(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_QUERY);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
-
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    subscribeReduced,
-    () => window.matchMedia(REDUCED_QUERY).matches,
-    () => false,
-  );
-}
-
-/* ---------- Line icons (1.5px, currentColor) ---------- */
-
-function TerminalIcon() {
-  return (
-    <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9.5 7V3.75h9V7" />
-      <path d="M11.5 5.5h5" />
-      <rect x="6" y="7" width="16" height="17.5" rx="2.75" />
-      <rect x="9" y="10" width="10" height="4.5" rx="1" />
-      <path d="M10.25 18.25h.01M14 18.25h.01M17.75 18.25h.01M10.25 21.25h.01M14 21.25h.01M17.75 21.25h.01" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function MenuArchIcon() {
-  return (
-    <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M7 24.5V11.5a7 7 0 0 1 14 0v13Z" />
-      <path d="M10.75 18.5h6.5M10.75 21.25h4" />
-      <path d="M14 8.9l.75 1.85 1.85.75-1.85.75L14 14.1l-.75-1.85-1.85-.75 1.85-.75Z" fill="currentColor" strokeWidth="1" />
-    </svg>
-  );
-}
-
-
 /* ===========================================================================
-   I. Kitchen display — tickets arrive, cook and leave in a gentle cascade.
+   Knomi Dash — tickets arrive, cook and leave in a gentle cascade.
    =========================================================================== */
 
 type Stage = 0 | 1 | 2;
@@ -150,16 +118,15 @@ const ORDERS: Order[] = [
   { table: 10, dishes: [[1, "Panna cotta"], [1, "Espresso"]] },
 ];
 
-/* Four tickets a lane: the board fills the tall tile and carries on past its
-   bottom edge. ORDERS outnumbers the tickets on screen, so no order shows twice. */
+/* Four tickets a lane. ORDERS outnumbers the tickets on screen, so no order shows twice. */
 const LANE_CAP = 4;
 const KDS_CYCLE_MS = 2200;
 /** One cycle, as a cascade: the oldest ready ticket is served, then everything shuffles right, then a new order lands. */
 const KDS_SEQUENCE: [BoardStep, number][] = [
   ["serve", 0],
-  ["fire", 240],
-  ["start", 480],
-  ["arrive", 880],
+  ["fire", 200],
+  ["start", 400],
+  ["arrive", 700],
 ];
 
 /* Ready: the four oldest. Preparing: the next four. New: the latest four. */
@@ -206,6 +173,11 @@ function boardReducer(board: Board, step: BoardStep): Board {
   }
 }
 
+/* A ticket arrives and leaves with a short fade; moving between lanes is movement on
+   screen, so it eases in and out. */
+const TICKET_TRANSITION = { duration: 0.45, ease: EASE_OUT, layout: { duration: 0.5, ease: EASE_IN_OUT } };
+const TICKET_EXIT = { opacity: 0, x: 12, transition: { duration: 0.25, ease: EASE_OUT } };
+
 function KdsTicket({ ticket, row, tick }: { ticket: Ticket; row: number; tick: number }) {
   const order = ORDERS[ticket.id % ORDERS.length];
   const items = order.dishes.reduce((sum, [qty]) => sum + qty, 0);
@@ -217,10 +189,10 @@ function KdsTicket({ ticket, row, tick }: { ticket: Ticket; row: number; tick: n
       className={styles.ticket}
       data-stage={ticket.stage}
       style={{ gridColumn: ticket.stage + 1, gridRow: row + 2 }}
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, x: 18, transition: { duration: 0.45, ease: EASE_OUT } }}
-      transition={{ duration: 0.8, ease: EASE_OUT }}
+      exit={TICKET_EXIT}
+      transition={TICKET_TRANSITION}
     >
       <span className={styles.ticketHead}>
         <span className={styles.ticketTable}>
@@ -247,7 +219,7 @@ function KdsTicket({ ticket, row, tick }: { ticket: Ticket; row: number; tick: n
   );
 }
 
-function KdsVisual() {
+function KdsBoard() {
   const { ref, live } = useLive<HTMLDivElement>(0.3);
   const [board, dispatch] = useReducer(boardReducer, INITIAL_BOARD);
 
@@ -271,7 +243,7 @@ function KdsVisual() {
     <div ref={ref} className={`theme-dark ${styles.kds}`} data-live={live || undefined}>
       <div className={styles.kdsBar}>
         <span className={styles.kdsLive}>
-          <span className={styles.pulse} />
+          <span className={styles.liveDot} />
           {KDS_COPY.live}
         </span>
         <span>{KDS_COPY.service}</span>
@@ -301,49 +273,10 @@ function KdsVisual() {
 }
 
 /* ===========================================================================
-   II. Alongside your POS — two doorways, one quiet line between them.
-   =========================================================================== */
-
-function PosVisual() {
-  const { ref, live } = useLive<HTMLDivElement>();
-
-  return (
-    <div ref={ref} className={`${styles.stage} ${styles.pos}`} data-live={live || undefined}>
-      <div className={styles.posRow}>
-        <div className={`${styles.node} ${styles.nodeStart}`}>
-          <span className={`${styles.nodeArch} ${styles.nodePos}`}>
-            <TerminalIcon />
-          </span>
-          <span className={styles.nodeLabel}>{POS_LABEL}</span>
-        </div>
-
-        <div className={styles.wire}>
-          <span className={styles.wireLine} />
-          <span className={`${styles.runner} ${styles.runnerOut}`}>
-            <span className={styles.runnerDot} />
-          </span>
-          <span className={`${styles.runner} ${styles.runnerIn}`}>
-            <span className={styles.runnerDot} />
-          </span>
-        </div>
-
-        <div className={`${styles.node} ${styles.nodeEnd}`}>
-          <span className={`theme-dark ${styles.nodeArch} ${styles.nodeKnomi}`}>
-            <MenuArchIcon />
-          </span>
-          <span className={styles.nodeLabel}>
-            <Wordmark className={styles.nodeMark} />
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ===========================================================================
-   III. Knomi Pulse — before the bill, Host asks how it went. The guest taps
-   "Something wasn’t right", and the manager's alert slides in while there is
-   still time to make it right. Runs once per visit to the tile, then rests.
+   Knomi Pulse — before the bill, Host asks how it went. He rises over the
+   check-in's top edge as it comes into view; the guest taps "Something wasn’t
+   right", and the manager's alert slides in while there is still time to make
+   it right. Runs once per visit, then rests.
    =========================================================================== */
 
 /** The answer this guest gives. */
@@ -363,10 +296,10 @@ function BellIcon() {
   );
 }
 
-function PulseVisual() {
+function PulseCheckin() {
   const { ref, live } = useLive<HTMLDivElement>();
-  // Any part on screen. Once the tile is fully out of sight it rewinds, so the
-  // next visit plays from the question again without anyone seeing the reset.
+  // Any part on screen. Once it is fully out of sight it rewinds, so the next
+  // visit plays from the question again without anyone seeing the reset.
   const onScreen = useInView(ref);
   const reduced = usePrefersReducedMotion();
   const [step, setStep] = useState(0);
@@ -385,11 +318,19 @@ function PulseVisual() {
   const shown = reduced ? PULSE_REST : step;
 
   return (
-    <div ref={ref} className={`${styles.stage} ${styles.pulseStage}`} data-step={shown}>
+    // "watch": the reveal script marks it [data-in] as it nears the viewport, which is Host's cue to rise.
+    <div
+      ref={ref}
+      className={styles.pulse}
+      data-step={shown}
+      data-reveal="watch"
+      aria-hidden="true"
+      suppressHydrationWarning
+    >
       <div className={styles.checkin}>
-        {/* Host peeks over the check-in card's top edge, hands on it, as he does on the menu */}
-        <span className={styles.pulseHost} aria-hidden="true">
-          <HostArt pose="peek" fit="art" size="100%" decorative sizes="96px" />
+        {/* Host peeks over the check-in's top edge, hands on it, as he does on the menu */}
+        <span className={styles.pulseHost}>
+          <HostArt pose="peek" fit="art" size="100%" decorative sizes="88px" />
         </span>
         <div className={styles.checkinCard}>
           <p className={styles.checkinAsk}>{PULSE_COPY.question}</p>
@@ -424,237 +365,43 @@ function PulseVisual() {
 }
 
 /* ===========================================================================
-   IV. 0% commission — a figure, a seal, nothing else.
+   The section
    =========================================================================== */
-
-function CommissionVisual() {
-  const { ref, live } = useLive<HTMLDivElement>();
-
-  return (
-    <div ref={ref} className={styles.zero} data-live={live || undefined}>
-      <span className={styles.zeroFigure}>
-        <span className={styles.zeroDigit}>
-          <span className={styles.ring} />
-          <span className={styles.orbit}>
-            <span className={`ornament ${styles.orbitStar}`} />
-          </span>
-          0
-        </span>
-        <span className={styles.zeroPct}>%</span>
-      </span>
-    </div>
-  );
-}
-
-/* ===========================================================================
-   V. Menu updates — Tiramisu goes off and comes back, every table sees it.
-   =========================================================================== */
-
-function UpdatesVisual() {
-  const { ref, live } = useLive<HTMLDivElement>();
-  const [soldOut, setSoldOut] = useState(false);
-
-  useEffect(() => {
-    if (!live) return;
-    const id = window.setTimeout(() => setSoldOut((v) => !v), soldOut ? 2400 : 3200);
-    return () => window.clearTimeout(id);
-  }, [live, soldOut]);
-
-  return (
-    <div ref={ref} className={`${styles.stage} ${styles.updates}`} data-sold={soldOut || undefined}>
-      <div className={styles.menuGhost}>
-        <span>{UPDATE_COPY.before.dish}</span>
-        <span className="leader" />
-        <span>{UPDATE_COPY.before.price}</span>
-      </div>
-
-      <div className={styles.menuCard}>
-        <div className={styles.menuRow}>
-          <span className={styles.menuDish}>
-            {UPDATE_COPY.dish}
-            <span className={styles.strike} />
-          </span>
-          <span className="leader" />
-          <span className={styles.menuPrice}>{UPDATE_COPY.price}</span>
-        </div>
-        <div className={styles.menuControl}>
-          <span className={styles.status}>
-            <span className={styles.statusDot} />
-            <span className={styles.statusLabels}>
-              <span className={styles.labelOn}>{UPDATE_COPY.on}</span>
-              <span className={styles.labelOff}>{UPDATE_COPY.off}</span>
-            </span>
-          </span>
-          <span className={styles.switch}>
-            <span className={styles.switchOn} />
-            <span className={styles.knob} />
-          </span>
-        </div>
-      </div>
-
-      <div className={styles.menuGhost}>
-        <span>{UPDATE_COPY.after.dish}</span>
-        <span className="leader" />
-        <span>{UPDATE_COPY.after.price}</span>
-      </div>
-    </div>
-  );
-}
-
-/* ===========================================================================
-   VI. Knomi Compass — what guests linger on versus what they order.
-   Bars only: shapes, not figures, so nothing reads as real data.
-   =========================================================================== */
-
-type SenseRow = { dish: string; looked: [number, number]; ordered: [number, number]; linger?: boolean };
-
-// copy: illustrative dish names for the Compass bars
-const SENSE_ROWS: SenseRow[] = [
-  { dish: "Burrata", looked: [0.64, 0.58], ordered: [0.5, 0.44] },
-  { dish: "Truffle fries", looked: [0.94, 0.88], ordered: [0.2, 0.27], linger: true },
-  { dish: "Tiramisu", looked: [0.52, 0.6], ordered: [0.43, 0.51] },
-];
-
-const BAR_KINDS = ["looked", "ordered"] as const;
-
-/** A bar is a clip-path wipe, so its rounded ends never squash. */
-const barClip = (v: number) => `inset(0% ${((1 - v) * 100).toFixed(1)}% 0% 0% round 999px)`;
-
-function SenseVisual() {
-  const { ref, live } = useLive<HTMLDivElement>(0.4);
-  const seen = useInView(ref, { once: true, amount: 0.5 });
-  const reduced = useReducedMotion();
-  const [phase, setPhase] = useState<0 | 1>(0);
-
-  useEffect(() => {
-    if (!live) return;
-    const id = window.setInterval(() => setPhase((p) => (p === 0 ? 1 : 0)), 3600);
-    return () => window.clearInterval(id);
-  }, [live]);
-
-  return (
-    <div ref={ref} className={`${styles.stage} ${styles.sense}`}>
-      <div className={styles.senseGrid}>
-        {SENSE_ROWS.map((row, i) => (
-          <div key={row.dish} className={styles.senseRow} data-linger={row.linger || undefined}>
-            <span className={styles.senseDish}>
-              {row.dish}
-              {row.linger && <span className={`ornament ${styles.senseMark}`} />}
-            </span>
-            <span className={styles.bars}>
-              {BAR_KINDS.map((kind, k) => (
-                <span key={kind} className={styles.track}>
-                  <motion.span
-                    className={`${styles.fill} ${kind === "looked" ? styles.fillLooked : styles.fillOrdered}`}
-                    initial={{ clipPath: barClip(0) }}
-                    animate={{ clipPath: barClip(seen ? row[kind][phase] : 0) }}
-                    transition={reduced ? { duration: 0 } : { duration: 1.1, ease: EASE_OUT, delay: i * 0.09 + k * 0.12 }}
-                  />
-                </span>
-              ))}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className={styles.legend}>
-        <span className={styles.legendItem}>
-          <span className={`${styles.swatch} ${styles.fillLooked}`} />
-          {SENSE_COPY.looked}
-        </span>
-        <span className={styles.legendItem}>
-          <span className={`${styles.swatch} ${styles.fillOrdered}`} />
-          {SENSE_COPY.ordered}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* ===========================================================================
-   The bento
-   =========================================================================== */
-
-type Feature = (typeof ownersChapter.features)[number];
-
-const TILE_LAYOUT: Record<string, { className: string; delay: number }> = {
-  kds: { className: styles.tileKds, delay: 0 },
-  pos: { className: styles.tilePos, delay: 0.08 },
-  // The Pulse feature is keyed "reviews" in site.ts; "pulse" is accepted too.
-  reviews: { className: styles.tilePulse, delay: 0.16 },
-  pulse: { className: styles.tilePulse, delay: 0.16 },
-  commission: { className: `theme-dark ${styles.tileCommission}`, delay: 0.16 },
-  updates: { className: styles.tileUpdates, delay: 0 },
-  sense: { className: styles.tileSense, delay: 0.08 },
-};
-
-function FeatureVisual({ id }: { id: string }) {
-  switch (id) {
-    case "kds":
-      return <KdsVisual />;
-    case "pos":
-      return <PosVisual />;
-    case "reviews":
-    case "pulse":
-      return <PulseVisual />;
-    case "commission":
-      return <CommissionVisual />;
-    case "updates":
-      return <UpdatesVisual />;
-    case "sense":
-      return <SenseVisual />;
-    default:
-      return null;
-  }
-}
-
-function Tile({ feature, className, delay, children }: { feature: Feature; className: string; delay: number; children: ReactNode }) {
-  return (
-    <Reveal as="article" className={`${styles.tile} ${className}`} delay={delay} y={32} amount={0.2}>
-      <div className={styles.visual} aria-hidden="true">
-        {children}
-      </div>
-      <div className={styles.copy}>
-        <div className={styles.titleRow}>
-          <h3 className={styles.title}>{feature.title}</h3>
-          {feature.tag && (
-            <span className={styles.tag}>
-              <span className={`ornament ${styles.tagMark}`} aria-hidden="true" />
-              {feature.tag}
-            </span>
-          )}
-        </div>
-        <p className={styles.body}>{feature.body}</p>
-      </div>
-    </Reveal>
-  );
-}
 
 export default function OwnersChapter() {
-  const { numeral, eyebrow, titleLead, titleAccent, lead, features } = ownersChapter;
+  const { eyebrow, titleLead, titleAccent, lead, features } = ownersChapter;
+  const dash = features.find((f) => f.key === DASH_KEY);
+  const rest = features.filter((f) => f.key !== DASH_KEY);
 
   return (
     <section id="owners" className={`section ${styles.section}`}>
       <div className="wrap">
-        <SectionHead
-          numeral={numeral}
-          eyebrow={eyebrow}
-          titleLead={titleLead}
-          titleAccent={titleAccent}
-          lead={lead}
-          breakBeforeAccent
-        />
+        <SectionHead eyebrow={eyebrow} titleLead={titleLead} titleAccent={titleAccent} accentStyle="plain" lead={lead} />
 
-        <div className={styles.grid}>
-          {features.map((feature) => {
-            const layout = TILE_LAYOUT[feature.key];
-            if (!layout) return null;
-            return (
-              <Tile key={feature.key} feature={feature} className={layout.className} delay={layout.delay}>
-                <FeatureVisual id={feature.key} />
-              </Tile>
-            );
-          })}
+        <div className={styles.layout}>
+          {dash && (
+            <Reveal className={styles.dash}>
+              <div className={styles.dashCopy}>
+                <h3 className={styles.dashTitle}>{dash.title}</h3>
+                <p className={styles.body}>{dash.body}</p>
+              </div>
+              <div className={styles.screen} aria-hidden="true">
+                <KdsBoard />
+              </div>
+            </Reveal>
+          )}
+
+          <Stagger as="ul" className={styles.list}>
+            {rest.map((feature) => (
+              <StaggerItem as="li" key={feature.key} className={styles.item}>
+                <h3 className={styles.title}>{feature.title}</h3>
+                <div className={styles.detail}>
+                  <p className={styles.body}>{feature.body}</p>
+                  {feature.key === PULSE_KEY && <PulseCheckin />}
+                </div>
+              </StaggerItem>
+            ))}
+          </Stagger>
         </div>
       </div>
     </section>

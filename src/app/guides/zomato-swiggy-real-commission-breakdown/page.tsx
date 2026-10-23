@@ -496,8 +496,9 @@ export default function AggregatorCommissionGuidePage() {
               themed to your restaurant in their phone&apos;s browser. They confirm an order with their phone number.
             </li>
             <li>
-              <strong>0% Commission:</strong> A flat fee per table, per month (Menu ₹149, Signature ₹250,
-              Ecosystem ₹500) and nothing taken from your orders. What your guests order is yours.
+              <strong>0% Commission:</strong> Nothing is taken from your orders. What your guests order is yours.
+              We share KNOMI&apos;s pricing on a short <Link href="/#book" className={styles.inlineLink}>walkthrough call</Link>, once we
+              understand your restaurant.
             </li>
             <li>
               <strong>Knomi Host at Every Table:</strong> Knomi Host suggests the pairing as guests order, the way
@@ -537,7 +538,7 @@ export default function AggregatorCommissionGuidePage() {
               Your guests are already at your tables. See how KNOMI gives them an illustrated menu with a warm host
               inside, sends orders straight to your kitchen display, and takes 0% commission.
             </p>
-            <Link href="/#book" className={styles.ctaButton}>
+            <Link href="/#book" className={`${styles.ctaButton} pressable`}>
               Book a walkthrough &rarr;
             </Link>
           </div>

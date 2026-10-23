@@ -1,16 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { pricing } from '@/content/site';
 import styles from './MumbaiSolutions.module.css';
 
 type MumbaiMarket = 'bandra' | 'lowerParel' | 'bkc' | 'fortColaba' | 'andheriJuhu';
 
-// KNOMI Signature plan price per table per month (KNOMI Brain §2), read from the approved site copy.
-const SIGNATURE_PRICE_PER_TABLE = pricing.plans.find((p) => p.id === 'signature')?.priceMin ?? 250;
-
-// KNOMI's stated target for average-order lift. A target, not a past result or a guarantee.
-const KNOMI_TARGET_LIFT_PCT = 25;
+// The lift starts at 0%, so every figure comes from the owner. No KNOMI default or target.
+const START_LIFT_PCT = 0;
 
 export default function MumbaiTableYieldAuditor() {
   const [activeTab, setActiveTab] = useState<'revpashAuditor' | 'bambaiyaBasketModeler'>('revpashAuditor');
@@ -26,7 +22,7 @@ export default function MumbaiTableYieldAuditor() {
   // Mode 2 State
   const [dailyCovers, setDailyCovers] = useState<number>(320);
   const [avgCoverSpend, setAvgCoverSpend] = useState<number>(850);
-  const [orderLiftPct, setOrderLiftPct] = useState<number>(KNOMI_TARGET_LIFT_PCT);
+  const [orderLiftPct, setOrderLiftPct] = useState<number>(START_LIFT_PCT);
   const [grossMarginPct, setGrossMarginPct] = useState<number>(65);
 
   // Mode 1: rent and table-time arithmetic on the user's inputs only
@@ -38,14 +34,11 @@ export default function MumbaiTableYieldAuditor() {
     const tableHoursFreed = Math.round((tableCount * seatingsPerTablePerDay * 30 * minutesSavedPerSeating) / 60);
     const rentValueOfFreedTime = tableHoursFreed * rentCostPerTableHour;
 
-    const knomiMonthlyCost = tableCount * SIGNATURE_PRICE_PER_TABLE;
-
     return {
       rentCostPerTableHour,
       rentCostOfWaitPerSeating,
       tableHoursFreed,
       rentValueOfFreedTime,
-      knomiMonthlyCost,
     };
   };
 
@@ -80,13 +73,13 @@ export default function MumbaiTableYieldAuditor() {
 
       <div className={styles.tabButtons}>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'revpashAuditor' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'revpashAuditor' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('revpashAuditor')}
         >
           Mode 1: Rent &amp; Table-Time Yield
         </button>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'bambaiyaBasketModeler' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'bambaiyaBasketModeler' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('bambaiyaBasketModeler')}
         >
           Mode 2: Average Order Lift
@@ -238,13 +231,9 @@ export default function MumbaiTableYieldAuditor() {
                 <span className={styles.statLabel}>Rent Value of That Table Time (estimate):</span>
                 <span className={styles.highlightVal}>₹{revpashResults.rentValueOfFreedTime.toLocaleString('en-IN')}/mo</span>
               </div>
-              <div className={styles.statRow}>
-                <span className={styles.statLabel}>KNOMI Signature for {tableCount} Tables:</span>
-                <span className={styles.statVal}>₹{revpashResults.knomiMonthlyCost.toLocaleString('en-IN')}/mo</span>
-              </div>
             </div>
             <p className={styles.calcNotice}>
-              Estimate only, built from the figures and assumptions you entered. Freed table time turns into revenue only if you can seat more guests in it; KNOMI does not promise a set number of minutes, and we measure what actually changes with you, on your own tables.
+              Estimate only, built from the figures and assumptions you entered. Freed table time turns into revenue only if you can seat more guests in it; KNOMI does not promise a set number of minutes, and we measure what actually changes with you, on your own tables. Figures are before KNOMI&apos;s fee, which we share on a walkthrough call.
             </p>
           </div>
         </div>
@@ -286,7 +275,7 @@ export default function MumbaiTableYieldAuditor() {
 
             <div className={styles.inputGroup}>
               <label className={styles.inputLabel}>
-                <span>Average Order Lift to Model (default: KNOMI&apos;s target, not a guarantee):</span>
+                <span>Average Order Lift to Model (your assumption):</span>
                 <span className={styles.inputVal}>{orderLiftPct}%</span>
               </label>
               <input
@@ -343,7 +332,7 @@ export default function MumbaiTableYieldAuditor() {
               </div>
             </div>
             <p className={styles.calcNotice}>
-              The {KNOMI_TARGET_LIFT_PCT}% default is KNOMI&apos;s target for average-order lift, not a guarantee or a past result. Knomi Host suggests pairings, such as a signature cocktail with small plates; the real effect is something we measure with you on your own tables.
+              The lift starts at 0%: set your own assumption. It is not a KNOMI result or a guarantee. Knomi Host suggests pairings, such as a signature cocktail with small plates; the real effect is something we measure with you on your own tables.
             </p>
           </div>
         </div>

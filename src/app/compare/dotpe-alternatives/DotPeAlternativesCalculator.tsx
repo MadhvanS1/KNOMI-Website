@@ -2,10 +2,6 @@
 
 import React, { useState } from "react";
 import styles from "./DotPeAlternatives.module.css";
-import { pricing } from "@/content/site";
-
-const signaturePlan = pricing.plans.find((plan) => plan.id === "signature");
-const SIGNATURE_PRICE = signaturePlan ? signaturePlan.priceMin : 250;
 
 export default function DotPeAlternativesCalculator() {
   const [activeTab, setActiveTab] = useState<"commission" | "otp">("commission");
@@ -54,14 +50,14 @@ export default function DotPeAlternativesCalculator() {
       <div className={styles.tabGroup}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === "commission" ? styles.tabBtnActive : ""}`}
+          className={`${styles.tabBtn} pressable ${activeTab === "commission" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("commission")}
         >
           1. Per-Order Fee &amp; Commission Drag Auditor
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === "otp" ? styles.tabBtnActive : ""}`}
+          className={`${styles.tabBtn} pressable ${activeTab === "otp" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("otp")}
         >
           2. Phone OTP Drop-Off Simulator
@@ -165,9 +161,9 @@ export default function DotPeAlternativesCalculator() {
 
           <div className={styles.comparisonBanner}>
             <div>
-              <div className={styles.bannerTitle}>The Flat-Fee Difference</div>
+              <div className={styles.bannerTitle}>The 0% Commission Difference</div>
               <p className={styles.bannerSub}>
-                Per-order fees rise with every busy month. KNOMI charges a flat fee per table instead (Signature is ₹{SIGNATURE_PRICE} per table, per month) with 0% commission, so the fee stays the same however many orders you take. Gateway MDR on digital payments is set by your payment provider and usually applies whichever menu you use.
+                Per-order fees rise with every busy month. KNOMI takes 0% commission on your orders, and we share our pricing on a short walkthrough call, once we understand your restaurant. Gateway MDR on digital payments is set by your payment provider and usually applies whichever menu you use.
               </p>
             </div>
             <div>

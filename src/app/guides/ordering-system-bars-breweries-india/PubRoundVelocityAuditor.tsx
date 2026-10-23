@@ -99,14 +99,14 @@ export default function PubRoundVelocityAuditor() {
       <div className={styles.tabButtons}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'roundVelocity' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'roundVelocity' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('roundVelocity')}
         >
           Mode 1: Round Velocity &amp; Lost Pours
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'taxSplitAuditor' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'taxSplitAuditor' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('taxSplitAuditor')}
         >
           Mode 2: Dual Tax Bill &amp; Per-Guest Share

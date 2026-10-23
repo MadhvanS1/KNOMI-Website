@@ -52,7 +52,7 @@ export default function NotFound() {
                 {COPY.home}
                 <ArrowRight className="btn__arrow" />
               </Link>
-              <Link href="/guides" className="link">
+              <Link href="/guides" className={`link pressable ${styles.journal}`}>
                 {COPY.journal}
               </Link>
             </Reveal>

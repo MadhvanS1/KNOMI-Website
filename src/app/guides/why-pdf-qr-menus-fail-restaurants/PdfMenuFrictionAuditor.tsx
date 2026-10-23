@@ -17,8 +17,8 @@ export default function PdfMenuFrictionAuditor() {
   const [monthlyTables, setMonthlyTables] = useState<number>(1500);
   const [averageCheck, setAverageCheck] = useState<number>(950);
   const [paperWaitMins, setPaperWaitMins] = useState<number>(4);
-  // Average-order lift to model: the user's assumption. KNOMI's +25% is a target, not a guarantee.
-  const [liftPct, setLiftPct] = useState<number>(25);
+  // Average-order lift to model: the user's own assumption, not a KNOMI figure. Starts modest.
+  const [liftPct, setLiftPct] = useState<number>(10);
 
   // Mode 1 Calculations (arithmetic on the user's inputs)
   const calculateLatency = () => {
@@ -65,14 +65,14 @@ export default function PdfMenuFrictionAuditor() {
       <div className={styles.tabButtons}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'latency' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'latency' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('latency')}
         >
           1. 4G Latency & Mobile Bounce Simulator
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'revenue' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'revenue' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('revenue')}
         >
           2. Floor Labor & Revenue Estimate
@@ -245,7 +245,7 @@ export default function PdfMenuFrictionAuditor() {
                 className={styles.rangeSlider}
               />
               <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-                KNOMI&apos;s target is around +25% (not a guarantee). Set the lift you want to test.
+                Your own assumption: set the lift you want to test.
               </span>
             </div>
           </div>
@@ -282,7 +282,7 @@ export default function PdfMenuFrictionAuditor() {
             <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(63, 122, 82, 0.08)', border: '1px solid rgba(63, 122, 82, 0.2)', borderRadius: '6px', fontSize: '0.85rem', color: '#3f7a52', lineHeight: '1.5' }}>
               <strong>Reading this estimate: </strong>
               On your inputs, tables that fall back to paper menus take about {rev.monthlyHoursBurned} waiter-hours a month, and a {liftPct}% higher average order would be worth about ₹{(rev.annualUpside / 100000).toFixed(2)} lakhs a year.
-              These figures come from your assumptions, not from results. KNOMI&apos;s +25% is a target we measure with you on your own tables, not a guarantee.
+              These figures come from your assumptions, not from results.
             </div>
           </div>
         </div>

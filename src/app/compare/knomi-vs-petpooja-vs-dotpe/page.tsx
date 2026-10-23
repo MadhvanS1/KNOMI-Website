@@ -4,16 +4,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ExperienceKnomiBox from "@/components/ExperienceKnomiBox";
 import styles from "./KnomiPetpoojaDotpe.module.css";
-import { OG_IMAGE, bookHref, pricing } from "@/content/site";
-
-const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
-
-// Illustrative 20-table example used in the cost section and FAQ.
-const EXAMPLE_TABLES = 20;
-const EXAMPLE_SIGNATURE_MONTHLY = EXAMPLE_TABLES * signaturePlan.priceMin;
-const EXAMPLE_SIGNATURE_ANNUAL = EXAMPLE_SIGNATURE_MONTHLY * 12;
-const inr = (val: number) => val.toLocaleString("en-IN");
+import callout from "../Callout.module.css";
+import { OG_IMAGE, bookHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "KNOMI vs Petpooja vs DotPe: 3-Way Restaurant QR Ordering Comparison (2026)",
@@ -51,11 +43,11 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "What is the key difference between KNOMI, Petpooja and DotPe?",
-    a: "Petpooja is a billing-first restaurant POS, with QR ordering available as an add-on module. DotPe is a digital commerce platform for QR ordering, payments and online stores, with pricing reported to include per-transaction fees. KNOMI is guest experience infrastructure that helps dining rooms grow: Knomi Host suggesting pairings inside an illustrated menu guests open without an app or a login, orders going straight to your kitchen display, 0% commission, and Knomi Sense behind it all, with Knomi Compass menu insights on the Ecosystem plan.",
+    a: "Petpooja is a billing-first restaurant POS, with QR ordering available as an add-on module. DotPe is a digital commerce platform for QR ordering, payments and online stores, with pricing reported to include per-transaction fees. KNOMI is guest experience infrastructure that helps dining rooms grow: Knomi Host suggesting pairings inside an illustrated menu guests open without an app or a login, orders going straight to your kitchen display, 0% commission, and Knomi Sense behind it all, with Knomi Compass menu insights.",
   },
   {
     q: "Can we use KNOMI alongside Petpooja without disrupting our current setup?",
-    a: "Yes. KNOMI is built to sit alongside your POS, not replace it. Keep Petpooja for billing, GST and accounting, and put KNOMI on the tables. On the Signature plan, KNOMI integrates with Petpooja so orders placed at the table flow into it, and orders also appear on KNOMI's kitchen display or print to network thermal printers.",
+    a: "Yes. KNOMI is built to sit alongside your POS, not replace it. Keep Petpooja for billing, GST and accounting, and put KNOMI on the tables. KNOMI integrates with Petpooja so orders placed at the table flow into it, and orders also appear on KNOMI's kitchen display or print to network thermal printers.",
   },
   {
     q: "Why do Indian diners dislike QR menus that ask for a phone OTP before browsing?",
@@ -66,8 +58,8 @@ const faqs = [
     a: "In a server-led dining room, much of the rush goes on reciting the menu, writing orders and walking them to the counter. With KNOMI, guests browse, order and re-order drinks or desserts from their own phones, and the order goes straight to the kitchen display. Guests can also call a server from the menu when they need one, so your team spends more of the evening on hospitality.",
   },
   {
-    q: "Which system costs less for a 20-table restaurant?",
-    a: `KNOMI is a flat fee per table with 0% commission: on Signature, 20 tables cost ₹${inr(EXAMPLE_SIGNATURE_MONTHLY)} a month. Petpooja is priced as an annual licence plus add-on modules, quoted on request. DotPe's pricing has been reported to include per-transaction fees on top of payment gateway charges, so its cost moves with your sales. Ask each vendor for a written quote at your volume.`,
+    q: "How do KNOMI, Petpooja and DotPe charge?",
+    a: "KNOMI takes 0% commission, and we share its pricing on a short walkthrough call, once we understand your restaurant. Petpooja is priced as an annual licence plus add-on modules, quoted on request. DotPe's pricing has been reported to include per-transaction fees on top of payment gateway charges, so its cost moves with your sales. Ask each vendor for a written quote at your volume.",
   },
   {
     q: "Does KNOMI require proprietary touchscreen hardware or tablets?",
@@ -123,7 +115,7 @@ const comparisonJsonLd = {
         "A 3-way comparison of dine-in restaurant technology in India: login friction, commission and fees, the guest-facing menu and kitchen routing.",
       url: "https://www.knomi.in/compare/knomi-vs-petpooja-vs-dotpe",
       datePublished: "2026-09-06T00:00:00+05:30",
-      dateModified: "2026-10-11T12:00:00+05:30",
+      dateModified: "2026-10-16T12:00:00+05:30",
       author: {
         "@type": "Organization",
         name: "KNOMI",
@@ -178,16 +170,16 @@ export default function KnomiPetpoojaDotpeComparisonPage() {
             </div>
 
             {/* Answer-First AEO Snippet */}
-            <div className={styles.aeoBox}>
-              <span className={styles.aeoLabel}>Executive Summary &amp; Key Finding</span>
+            <div className={`${callout.box} ${styles.aeoBox}`}>
+              <span className={callout.label}>Executive Summary &amp; Key Finding</span>
               <h2 className={styles.aeoHeading}>How Do These Three Platforms Fundamentally Differ?</h2>
-              <p className={styles.aeoText}>
+              <p className={callout.text}>
                 <strong>Petpooja</strong> is a billing-first restaurant POS with QR ordering available as an add-on;{" "}
                 <strong>DotPe</strong> is a digital commerce platform for QR ordering, payments and online stores, with
                 pricing reported to include per-transaction fees; <strong>KNOMI</strong> is guest experience infrastructure
                 that helps dining rooms grow: Knomi Host suggesting pairings inside an illustrated menu guests open without an
                 app or a login, orders going straight to your kitchen display, 0% commission, and Knomi Sense behind it all, with
-                Knomi Compass menu insights on the Ecosystem plan.
+                Knomi Compass menu insights.
               </p>
             </div>
           </div>
@@ -268,7 +260,7 @@ export default function KnomiPetpoojaDotpeComparisonPage() {
                     <td className={styles.highlightCol}>
                       <span className={styles.statusCheck}>0% Commission</span>
                       <br />
-                      Flat fee per table, per month
+                      No cut of your food &amp; beverage sales
                     </td>
                     <td>
                       <span className={styles.statusCheck}>Licence-Based</span>
@@ -334,7 +326,7 @@ export default function KnomiPetpoojaDotpeComparisonPage() {
                     <td className={styles.highlightCol}>
                       <span className={styles.statusCheck}>Knomi Compass</span>
                       <br />
-                      Dwell time, scroll depth &amp; dishes viewed but not ordered (Ecosystem plan, powered by Knomi Sense)
+                      Dwell time, scroll depth &amp; dishes viewed but not ordered (powered by Knomi Sense)
                     </td>
                     <td>
                       <span className={styles.statusWarn}>Sales-Based</span>
@@ -420,9 +412,9 @@ export default function KnomiPetpoojaDotpeComparisonPage() {
                       <span className={styles.featureSub}>Billing structure</span>
                     </td>
                     <td className={styles.highlightCol}>
-                      <strong>Flat per Table</strong>
+                      <strong>Shared on a Walkthrough Call</strong>
                       <br />
-                      ₹{menuPlan.priceMin} / ₹{signaturePlan.priceMin} / ₹{ecosystemPlan.priceMin} per table, per month; 0% commission
+                      0% commission
                     </td>
                     <td>
                       <strong>Annual Licence + Add-ons</strong>
@@ -460,7 +452,7 @@ export default function KnomiPetpoojaDotpeComparisonPage() {
                 <p className={styles.platformArchetype}>Guest Experience Infrastructure</p>
                 <p className={styles.platformSummary}>
                   Made in Bengaluru to help dining rooms grow. KNOMI puts Knomi Host at every table, inside an illustrated
-                  menu, to suggest the right dish at the right moment. It sends orders straight to your kitchen display, and on the Ecosystem plan shows
+                  menu, to suggest the right dish at the right moment. It sends orders straight to your kitchen display, and with Knomi Compass shows
                   the &quot;invisible demand&quot; a billing POS can&apos;t see: dishes guests look at but don&apos;t order.
                 </p>
 
@@ -595,7 +587,7 @@ export default function KnomiPetpoojaDotpeComparisonPage() {
           <div className="container">
             <div className={styles.sectionHeader}>
               <p className="section-label">Financial Comparison</p>
-              <h2 className={styles.sectionTitle}>12-Month Total Cost of Ownership (₹ INR)</h2>
+              <h2 className={styles.sectionTitle}>12-Month Cost: How Each Platform Charges</h2>
               <p className={styles.sectionDesc}>
                 An illustrative example: a 20-table casual dining restaurant doing ₹12,00,000 a month in dine-in sales
                 (₹1.44 crore a year).
@@ -605,11 +597,11 @@ export default function KnomiPetpoojaDotpeComparisonPage() {
             <div className={styles.costBox}>
               <div className={styles.costGrid}>
                 <div className={`${styles.costItem} ${styles.costItemKnomi}`}>
-                  <p className={styles.costLabel}>KNOMI Signature ({EXAMPLE_TABLES} Tables)</p>
-                  <p className={styles.costAmount}>₹{inr(EXAMPLE_SIGNATURE_ANNUAL)} / yr</p>
+                  <p className={styles.costLabel}>KNOMI</p>
+                  <p className={styles.costAmount}>Shared on the Call</p>
                   <p className={styles.costNote}>
-                    ₹{signaturePlan.priceMin} per table, per month × {EXAMPLE_TABLES} tables = ₹{inr(EXAMPLE_SIGNATURE_MONTHLY)} a month.{" "}
-                    <strong>₹0 commission</strong> on the ₹1.44 crore of sales. The fee stays the same however busy the year is.
+                    0% commission, so nothing is taken from the ₹1.44 crore of sales. We share KNOMI&apos;s pricing on a short
+                    walkthrough call, once we understand your restaurant.
                   </p>
                 </div>
 
@@ -670,7 +662,7 @@ export default function KnomiPetpoojaDotpeComparisonPage() {
                 <ul className={styles.decisionList}>
                   <li>You run a cafe, brewery, casual dining or fine dining venue where guest experience is paramount.</li>
                   <li>You want guests to open the menu with no app and no login, and confirm with a phone number only when they order.</li>
-                  <li>You want 0% commission on a flat, predictable fee per table.</li>
+                  <li>You want 0% commission on every dine-in order.</li>
                   <li>You want Knomi Host suggesting pairings at every table, and the option of Knomi Compass menu insights.</li>
                 </ul>
               </div>
@@ -703,7 +695,7 @@ export default function KnomiPetpoojaDotpeComparisonPage() {
             <ExperienceKnomiBox
               city="India"
               title="Experience Frictionless QR Ordering for Your Restaurant"
-              description={`An illustrated menu with Knomi Host inside it, orders straight to your kitchen display, and 0% commission. Plans are ${PRICE_LADDER}.`}
+              description="An illustrated menu with Knomi Host inside it, orders straight to your kitchen display, and 0% commission. We share pricing on the walkthrough, once we understand your restaurant."
               buttonText="Book a Walkthrough"
               buttonHref={bookHref}
             />

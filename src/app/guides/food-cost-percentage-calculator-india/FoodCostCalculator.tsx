@@ -45,6 +45,7 @@ export default function FoodCostCalculator() {
         {/* Tab Toggle */}
         <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginTop: "20px" }}>
           <button
+            className="pressable"
             type="button"
             onClick={() => setActiveTab("period")}
             style={{
@@ -56,12 +57,13 @@ export default function FoodCostCalculator() {
               border: "1px solid var(--color-whiskey-sour)",
               backgroundColor: activeTab === "period" ? "var(--color-whiskey-sour)" : "transparent",
               color: activeTab === "period" ? "#fbf8f3" : "var(--color-text-primary)",
-              transition: "all 0.15s ease",
+              transition: "background-color 150ms ease, color 150ms ease, var(--press-transition)",
             }}
           >
             1. Monthly Period COGS & Leakage Simulator
           </button>
           <button
+            className="pressable"
             type="button"
             onClick={() => setActiveTab("dish")}
             style={{
@@ -73,7 +75,7 @@ export default function FoodCostCalculator() {
               border: "1px solid var(--color-whiskey-sour)",
               backgroundColor: activeTab === "dish" ? "var(--color-whiskey-sour)" : "transparent",
               color: activeTab === "dish" ? "#fbf8f3" : "var(--color-text-primary)",
-              transition: "all 0.15s ease",
+              transition: "background-color 150ms ease, color 150ms ease, var(--press-transition)",
             }}
           >
             2. Single Dish Recipe Costing

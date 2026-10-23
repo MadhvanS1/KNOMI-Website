@@ -161,13 +161,13 @@ export default function CloudKitchenCapexAuditor() {
 
       <div className={styles.tabButtons}>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'capexRunway' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'capexRunway' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('capexRunway')}
         >
           Mode 1: Capex & 90-Day Runway
         </button>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'aggregatorVsDirect' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'aggregatorVsDirect' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('aggregatorVsDirect')}
         >
           Mode 2: Aggregator vs Direct Channel Margins

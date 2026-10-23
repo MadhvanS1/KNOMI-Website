@@ -3,10 +3,6 @@
 import React, { useState } from 'react';
 import styles from './BillingSoftwareGuide.module.css';
 
-// KNOMI Signature list price per table, per month (KNOMI Brain §2).
-const KNOMI_SIGNATURE_PER_TABLE = 250;
-// KNOMI's average-order target. A target, not a guarantee or a past result.
-const KNOMI_TARGET_LIFT = 0.25;
 // Illustrative per-order fee for the per-transaction pricing comparison. Not a vendor quote.
 const ILLUSTRATIVE_PER_ORDER_FEE = 3;
 
@@ -27,7 +23,8 @@ export default function BillingSoftwareAuditor() {
   // Mode 2: Cost & Upsell Estimate State
   const [monthlyOrders, setMonthlyOrders] = useState<number>(1500);
   const [averageCheck, setAverageCheck] = useState<number>(850);
-  const [tableCount, setTableCount] = useState<number>(15);
+  // The owner's own assumed lift in average order: starts modest, never a KNOMI figure.
+  const [liftPct, setLiftPct] = useState<number>(10);
 
   // Mode 1 Calculations
   const getFitmentResults = () => {
@@ -98,20 +95,15 @@ export default function BillingSoftwareAuditor() {
     // Option B: Per-order pricing at an illustrative fee per order
     const posBThreeYearTotalCost = monthlyOrders * 12 * 3 * ILLUSTRATIVE_PER_ORDER_FEE;
 
-    // KNOMI Signature list price, 0% commission
-    const knomiThreeYearFee = tableCount * KNOMI_SIGNATURE_PER_TABLE * 36;
-
-    // Extra sales if KNOMI's +25% average-order target is met (target, not a guarantee)
-    const threeYearTargetSales = Math.round(annualGrossRevenue * KNOMI_TARGET_LIFT * 3);
-    const threeYearSalesAfterFee = threeYearTargetSales - knomiThreeYearFee;
+    // Extra sales at the lift the owner assumes. Shown before KNOMI's fee, which is
+    // shared on the walkthrough call.
+    const threeYearTargetSales = Math.round(annualGrossRevenue * (liftPct / 100) * 3);
 
     return {
       monthlyGrossRevenue,
       posAThreeYearTotalCost,
       posBThreeYearTotalCost,
-      knomiThreeYearFee,
       threeYearTargetSales,
-      threeYearSalesAfterFee,
     };
   };
 
@@ -130,14 +122,14 @@ export default function BillingSoftwareAuditor() {
       <div className={styles.tabButtons}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'fitment' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'fitment' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('fitment')}
         >
           1. Format & Hardware Fitment Matrix
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'tco' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'tco' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('tco')}
         >
           2. 3-Year Cost & Upsell Estimate
@@ -320,16 +312,17 @@ export default function BillingSoftwareAuditor() {
             </div>
 
             <div className={styles.inputGroup}>
-              <label className={styles.inputLabel}>
-                Dining Tables: <span className={styles.inputVal}>{tableCount} Tables</span>
+              <label htmlFor="billing-lift" className={styles.inputLabel}>
+                Lift in Average Order (Your Assumption): <span className={styles.inputVal}>+{liftPct}%</span>
               </label>
               <input
+                id="billing-lift"
                 type="range"
-                min="4"
-                max="60"
+                min="0"
+                max="40"
                 step="1"
-                value={tableCount}
-                onChange={(e) => setTableCount(Number(e.target.value))}
+                value={liftPct}
+                onChange={(e) => setLiftPct(Number(e.target.value))}
                 className={styles.rangeSlider}
               />
             </div>
@@ -338,7 +331,7 @@ export default function BillingSoftwareAuditor() {
               <p style={{ margin: 0 }}>
                 <strong>Baseline Monthly Revenue:</strong> Rs {tco.monthlyGrossRevenue.toLocaleString('en-IN')}
                 <br />
-                Option A uses your licence and add-on inputs from tab 1. The KNOMI fee uses the Signature list price of Rs {KNOMI_SIGNATURE_PER_TABLE} per table, per month. All figures exclude GST.
+                Option A uses your licence and add-on inputs from tab 1. KNOMI&apos;s fee is left out: we share pricing on a short walkthrough call. All figures exclude GST.
               </p>
             </div>
           </div>
@@ -355,28 +348,23 @@ export default function BillingSoftwareAuditor() {
                 <span className={styles.statValue} style={{ color: '#a8402f' }}>Rs {lakhs(tco.posBThreeYearTotalCost)} Lakhs (Expense)</span>
               </div>
               <div className={styles.statRow}>
-                <span className={styles.statLabel}>KNOMI Signature Fee ({tableCount} tables, 3 yrs):</span>
-                <span className={styles.statValue}>Rs {lakhs(tco.knomiThreeYearFee)} Lakhs (Expense)</span>
-              </div>
-              <div className={styles.statRow}>
                 <span className={styles.statLabel}>KNOMI Dine-In Order Commission:</span>
                 <span className={styles.statValue} style={{ color: '#3f7a52' }}>0% (Zero Take-Rate)</span>
               </div>
-              <div className={styles.statRow}>
-                <span className={styles.statLabel}>3-Yr Extra Sales at KNOMI&apos;s +25% Target (not a guarantee):</span>
-                <span className={`${styles.statValue} ${styles.statBenefit}`}>+ Rs {lakhs(tco.threeYearTargetSales)} Lakhs</span>
-              </div>
               <div className={styles.statRow} style={{ borderBottom: 'none', paddingTop: '12px' }}>
-                <span className={styles.statLabel} style={{ fontWeight: 700 }}>Estimated 3-Yr Extra Sales After KNOMI Fee:</span>
-                <span className={`${styles.statValue} ${styles.statHighlight}`} style={{ color: '#3f7a52', fontSize: '1.25rem' }}>
-                  {tco.threeYearSalesAfterFee >= 0 ? '+ ' : '- '}Rs {lakhs(Math.abs(tco.threeYearSalesAfterFee))} Lakhs
+                <span className={styles.statLabel} style={{ fontWeight: 700 }}>3-Yr Extra Sales at Your Assumed +{liftPct}% (example only):</span>
+                <span className={`${styles.statValue} ${styles.statHighlight}`} style={{ color: 'var(--color-text-primary)', fontSize: '1.25rem' }}>
+                  + Rs {lakhs(tco.threeYearTargetSales)} Lakhs
                 </span>
               </div>
+              <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                Figures are before KNOMI&apos;s fee, which we share on a walkthrough call.
+              </p>
             </div>
 
             <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(63, 122, 82, 0.08)', border: '1px solid rgba(63, 122, 82, 0.2)', borderRadius: '6px', fontSize: '0.85rem', color: '#3f7a52', lineHeight: '1.5' }}>
               <strong>Estimate only: </strong>
-              Swapping one cashier POS for another mostly changes software fees. A table-ordering layer is about what guests order. The +25% is KNOMI&apos;s target, not a guarantee or a past result. Extra sales are revenue, not profit, so food cost still applies, and payment-gateway charges (which apply under any model) are left out.
+              Swapping one cashier POS for another mostly changes software fees. A table-ordering layer is about what guests order. The lift is your own assumption, not a KNOMI result or guarantee. Extra sales are revenue, not profit, so food cost still applies, and payment-gateway charges (which apply under any model) are left out.
             </div>
           </div>
         </div>

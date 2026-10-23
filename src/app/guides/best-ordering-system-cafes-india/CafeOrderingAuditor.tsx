@@ -84,13 +84,13 @@ export default function CafeOrderingAuditor() {
 
       <div className={styles.tabButtons}>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'queueSimulator' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'queueSimulator' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('queueSimulator')}
         >
           Mode 1: Counter Queue &amp; Rush Walkaways
         </button>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'laptopModeler' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'laptopModeler' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('laptopModeler')}
         >
           Mode 2: Remote Worker &amp; Laptop Table Yield

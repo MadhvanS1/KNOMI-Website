@@ -26,22 +26,22 @@
   transition: color 0.15s ease;
 }
 
-.breadcrumb a:hover {
-  color: var(--color-whiskey-sour);
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb a:hover {
+    color: var(--color-whiskey-sour);
+  }
 }
 
+/* One quiet label above the headline, as on the homepage: no pill. */
 .cityBadge {
   display: inline-block;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  color: var(--color-whiskey-sour);
-  background: rgba(133, 97, 58, 0.1);
-  border: 1px solid var(--color-whiskey-sour);
-  border-radius: 20px;
-  padding: 6px 14px;
   margin-bottom: 16px;
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-3);
 }
 
 .title {
@@ -50,7 +50,7 @@
   margin-bottom: 20px;
   color: var(--color-text-primary);
   font-family: var(--font-playfair, serif);
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .postMeta {
@@ -84,28 +84,7 @@
 }
 
 .quickAnswerBox {
-  background: rgba(133, 97, 58, 0.08);
-  border: 1px solid var(--color-whiskey-sour);
-  border-left: 6px solid var(--color-whiskey-sour);
-  border-radius: 12px;
-  padding: 24px 28px;
   margin-bottom: 48px;
-}
-
-.quickAnswerLabel {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-  color: var(--color-whiskey-sour);
-  margin-bottom: 8px;
-}
-
-.quickAnswerText {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: var(--color-text-primary);
-  margin: 0;
 }
 
 /* Calculator Section */
@@ -154,12 +133,14 @@
   background: var(--color-surface-pressed);
   color: var(--color-text-primary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, var(--press-transition);
 }
 
-.tabBtn:hover {
-  border-color: var(--color-whiskey-sour);
-  color: var(--color-burnt-coffee);
+@media (hover: hover) and (pointer: fine) {
+  .tabBtn:hover {
+    border-color: var(--color-whiskey-sour);
+    color: var(--color-burnt-coffee);
+  }
 }
 
 .activeTabBtn {
@@ -169,9 +150,11 @@
   font-weight: 700;
 }
 
-.activeTabBtn:hover {
-  background: var(--color-whiskey-sour) !important;
-  color: #fbf8f3 !important;
+@media (hover: hover) and (pointer: fine) {
+  .activeTabBtn:hover {
+    background: var(--color-whiskey-sour) !important;
+    color: #fbf8f3 !important;
+  }
 }
 
 .calcGrid {
@@ -308,14 +291,7 @@
   margin: 48px 0 20px;
   color: var(--color-text-primary);
   font-family: var(--font-playfair, serif);
-  font-weight: 700;
-}
-
-.subHeading {
-  font-size: 1.3rem;
-  margin: 32px 0 14px;
-  color: var(--color-text-primary);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .paragraph {
@@ -349,13 +325,15 @@
   border-radius: 12px;
   padding: 24px;
   box-shadow: var(--shadow-card);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
-.blueprintCard:hover {
-  transform: translateY(-3px);
-  border-color: var(--color-whiskey-sour);
-  box-shadow: var(--shadow-card-hover);
+@media (hover: hover) and (pointer: fine) {
+  /* A reading card, not a link: it warms, it doesn't lift. */
+  .blueprintCard:hover {
+    border-color: var(--color-whiskey-sour);
+    box-shadow: var(--shadow-card-hover);
+  }
 }
 
 .blueprintBadge {
@@ -372,7 +350,7 @@
   font-size: 1.25rem;
   margin-bottom: 12px;
   color: var(--color-text-primary);
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .blueprintText {
@@ -425,8 +403,10 @@
   border-bottom: none;
 }
 
-.compTable tr:hover td {
-  background: var(--color-surface-hover);
+@media (hover: hover) and (pointer: fine) {
+  .compTable tr:hover td {
+    background: var(--color-surface-hover);
+  }
 }
 
 .knomiCol {
@@ -461,13 +441,17 @@
   margin: 0;
 }
 
+/* "Hypothetical Example", stamped like the homepage's "Example only". */
 .caseStudyTag {
-  font-size: 0.8rem;
-  background: var(--color-whiskey-sour);
-  color: #fbf8f3 !important;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 20px;
+  padding: 4px 8px 3px;
+  border: 1px solid color-mix(in srgb, var(--russet) 70%, transparent);
+  border-radius: 3px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--russet);
 }
 
 .caseStudyGrid {
@@ -509,7 +493,7 @@
 
 .faqQuestion {
   font-size: 1.15rem;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--color-text-primary);
   margin-bottom: 10px;
 }
@@ -519,51 +503,4 @@
   line-height: 1.7;
   color: var(--color-text-secondary);
   margin: 0;
-}
-
-/* CTA Section */
-.ctaBox {
-  background: linear-gradient(135deg, rgba(133, 97, 58, 0.12) 0%, var(--color-surface-card) 100%);
-  border: 1px solid var(--color-whiskey-sour);
-  border-radius: 16px;
-  padding: 48px 32px;
-  text-align: center;
-  margin-top: 64px;
-  box-shadow: var(--shadow-card);
-}
-
-.ctaTitle {
-  font-size: 2.2rem;
-  font-family: var(--font-playfair, serif);
-  color: var(--color-text-primary);
-  margin-bottom: 16px;
-}
-
-.ctaText {
-  font-size: 1.1rem;
-  color: var(--color-text-secondary);
-  max-width: 620px;
-  margin: 0 auto 28px;
-  line-height: 1.6;
-}
-
-.ctaButton,
-a.ctaButton {
-  display: inline-block;
-  background: var(--color-whiskey-sour);
-  color: #fbf8f3 !important;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 14px 32px;
-  border-radius: 8px;
-  text-decoration: none !important;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.ctaButton:hover,
-a.ctaButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(133, 97, 58, 0.35);
-  color: #fbf8f3 !important;
-  text-decoration: none !important;
 }

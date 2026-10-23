@@ -1,46 +1,118 @@
+/* A round button, clear of the iPhone home bar. Hidden by default (and on first render);
+   .shown brings it in with a short fade and rise. It never changes size: on a mouse hover
+   its label slides out beside it as a separate pill. */
 .floatButton {
   position: fixed;
-  right: clamp(16px, 2.5vw, 28px);
-  bottom: clamp(16px, 2.5vw, 28px);
+  right: calc(clamp(16px, 2.5vw, 28px) + env(safe-area-inset-right, 0px));
+  bottom: calc(clamp(16px, 2.5vw, 28px) + env(safe-area-inset-bottom, 0px));
   z-index: 100;
-  display: inline-flex;
-  align-items: center;
+  display: grid;
+  place-items: center;
+  width: 52px;
   height: 52px;
-  padding: 0 16px;
-  gap: 0;
-  border-radius: var(--r-pill);
-  background: var(--ink);
+  border-radius: 50%;
+  background-color: var(--ink);
   color: var(--bone);
   border: 1px solid rgba(244, 238, 229, 0.12);
   box-shadow: 0 18px 40px -18px rgba(28, 20, 17, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(12px);
   transition:
-    gap var(--dur) var(--ease-out),
-    background-color var(--dur) var(--ease-out),
-    transform var(--dur) var(--ease-out);
+    opacity 180ms var(--ease-out),
+    transform 180ms var(--ease-out),
+    visibility 0s linear 180ms,
+    background-color 200ms ease,
+    var(--press-transition);
+}
+
+.shown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition:
+    opacity 240ms var(--ease-out),
+    transform 240ms var(--ease-out),
+    visibility 0s,
+    background-color 200ms ease,
+    var(--press-transition);
 }
 
 .icon {
-  flex-shrink: 0;
   color: var(--brass-light);
 }
 
 .label {
-  max-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 10px);
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: var(--bone);
   font-size: 0.875rem;
   font-weight: 600;
-  transition: max-width 500ms var(--ease-out);
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 12px 28px -16px rgba(28, 20, 17, 0.5);
+  opacity: 0;
+  transform: translate(6px, -50%);
+  pointer-events: none;
+  transition:
+    opacity 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
 }
 
-.floatButton:hover,
-.floatButton:focus-visible {
-  gap: 10px;
-  background: var(--walnut);
-  transform: translateY(-2px);
-}
-
-.floatButton:hover .label,
 .floatButton:focus-visible .label {
-  max-width: 140px;
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .floatButton:hover {
+    background-color: var(--walnut);
+  }
+
+  .floatButton:hover .label {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+@media (max-width: 560px) {
+  .floatButton {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Wide screens: parked in the right margin beside the content column (--wrap), at least
+   8px clear of it, so it can't reach the content at all. */
+@media (min-width: 1440px) {
+  .floatButton {
+    right: clamp(8px, calc((100% - var(--wrap)) / 2 - 60px), 28px);
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Reduced motion (the root carries data-motion-safe): it fades in place. */
+@media (prefers-reduced-motion: reduce) {
+  .floatButton,
+  .shown {
+    transform: none;
+  }
+
+  .label,
+  .floatButton:focus-visible .label {
+    transform: translate(0, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+  .floatButton:hover .label {
+    transform: translate(0, -50%);
+  }
 }

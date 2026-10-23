@@ -8,7 +8,7 @@ export default function DiscountCalculator() {
   const [aov, setAov] = useState<number>(750);
   const [foodCostPct, setFoodCostPct] = useState<number>(32);
   const [discountPct, setDiscountPct] = useState<number>(20);
-  // Upselling lift to compare: the user's assumption. KNOMI's +25% is a target, not a guarantee.
+  // Upselling lift to compare: the user's own assumption, not a KNOMI figure.
   const [liftPct, setLiftPct] = useState<number>(15);
 
   // Math
@@ -150,7 +150,7 @@ export default function DiscountCalculator() {
             />
             <div className={styles.rangeLimits}>
               <span>0%</span>
-              <span>30% (KNOMI&apos;s target is about +25%, not a guarantee)</span>
+              <span>30%</span>
             </div>
           </div>
         </div>

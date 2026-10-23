@@ -44,6 +44,7 @@ export default function InventoryParCalculator() {
         {/* Tab Toggle */}
         <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginTop: "24px" }}>
           <button
+            className="pressable"
             type="button"
             onClick={() => setActiveTab("par")}
             style={{
@@ -55,12 +56,13 @@ export default function InventoryParCalculator() {
               border: "1px solid var(--color-whiskey-sour)",
               backgroundColor: activeTab === "par" ? "var(--color-whiskey-sour)" : "transparent",
               color: activeTab === "par" ? "#fbf8f3" : "var(--color-text-primary)",
-              transition: "all 0.15s ease",
+              transition: "background-color 150ms ease, color 150ms ease, var(--press-transition)",
             }}
           >
             Mode 1: Par Level & Reorder Optimizer
           </button>
           <button
+            className="pressable"
             type="button"
             onClick={() => setActiveTab("variance")}
             style={{
@@ -72,7 +74,7 @@ export default function InventoryParCalculator() {
               border: "1px solid var(--color-whiskey-sour)",
               backgroundColor: activeTab === "variance" ? "var(--color-whiskey-sour)" : "transparent",
               color: activeTab === "variance" ? "#fbf8f3" : "var(--color-text-primary)",
-              transition: "all 0.15s ease",
+              transition: "background-color 150ms ease, color 150ms ease, var(--press-transition)",
             }}
           >
             Mode 2: Sheet-to-Floor Variance Auditor

@@ -1,23 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { pricing } from '@/content/site';
 import styles from './BangaloreSolutions.module.css';
 
 type MicroMarket = 'indiranagar' | 'koramangala' | 'hsrLayout' | 'churchStreet' | 'whitefield';
 
-// KNOMI Signature plan price per table per month (KNOMI Brain §2), read from the approved site copy.
-const SIGNATURE_PRICE_PER_TABLE = pricing.plans.find((p) => p.id === 'signature')?.priceMin ?? 250;
-
-// KNOMI's stated target for average-order lift. A target, not a past result or a guarantee.
-const KNOMI_TARGET_LIFT_PCT = 25;
+// The lift starts at 0%, so every figure comes from the owner. No KNOMI default or target.
+const START_LIFT_PCT = 0;
 
 export default function BangaloreHospitalityRoiAuditor() {
   const [activeTab, setActiveTab] = useState<'microMarketAuditor' | 'breweryBasketModeler'>('microMarketAuditor');
 
   // Mode 1 State (all values are the user's own figures or assumptions)
   const [market, setMarket] = useState<MicroMarket>('indiranagar');
-  const [tableCount, setTableCount] = useState<number>(35);
   const [avgTableCheck, setAvgTableCheck] = useState<number>(1650);
   const [currentServers, setCurrentServers] = useState<number>(8);
   const [serverMonthlyCost, setServerMonthlyCost] = useState<number>(24000);
@@ -28,7 +23,7 @@ export default function BangaloreHospitalityRoiAuditor() {
   // Mode 2 State
   const [dailyCovers, setDailyCovers] = useState<number>(350);
   const [avgSpendPerGuest, setAvgSpendPerGuest] = useState<number>(1100);
-  const [orderLiftPct, setOrderLiftPct] = useState<number>(KNOMI_TARGET_LIFT_PCT);
+  const [orderLiftPct, setOrderLiftPct] = useState<number>(START_LIFT_PCT);
   const [basketMarginPct, setBasketMarginPct] = useState<number>(65);
 
   // Mode 1: arithmetic on the user's inputs only
@@ -41,9 +36,7 @@ export default function BangaloreHospitalityRoiAuditor() {
     const monthlyTurnoverRevenue = monthlyExtraTurns * avgTableCheck;
     const monthlyTurnoverMargin = Math.round(monthlyTurnoverRevenue * (grossMarginPct / 100));
 
-    const knomiMonthlyCost = tableCount * SIGNATURE_PRICE_PER_TABLE;
     const totalMonthlyEstimate = redirectedPayroll + monthlyTurnoverMargin;
-    const netOfKnomi = totalMonthlyEstimate - knomiMonthlyCost;
 
     return {
       currentLaborCost,
@@ -51,9 +44,7 @@ export default function BangaloreHospitalityRoiAuditor() {
       redirectedPayroll,
       monthlyExtraTurns,
       monthlyTurnoverMargin,
-      knomiMonthlyCost,
       totalMonthlyEstimate,
-      netOfKnomi,
     };
   };
 
@@ -88,13 +79,13 @@ export default function BangaloreHospitalityRoiAuditor() {
 
       <div className={styles.tabButtons}>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'microMarketAuditor' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'microMarketAuditor' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('microMarketAuditor')}
         >
           Mode 1: Floor Labor &amp; Table Turns
         </button>
         <button
-          className={`${styles.tabBtn} ${activeTab === 'breweryBasketModeler' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'breweryBasketModeler' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('breweryBasketModeler')}
         >
           Mode 2: Average Order Lift
@@ -116,23 +107,18 @@ export default function BangaloreHospitalityRoiAuditor() {
                   const val = e.target.value as MicroMarket;
                   setMarket(val);
                   if (val === 'indiranagar') {
-                    setTableCount(45);
                     setAvgTableCheck(2200);
                     setCurrentServers(10);
                   } else if (val === 'koramangala') {
-                    setTableCount(30);
                     setAvgTableCheck(1100);
                     setCurrentServers(7);
                   } else if (val === 'hsrLayout') {
-                    setTableCount(22);
                     setAvgTableCheck(750);
                     setCurrentServers(5);
                   } else if (val === 'churchStreet') {
-                    setTableCount(28);
                     setAvgTableCheck(1400);
                     setCurrentServers(6);
                   } else if (val === 'whitefield') {
-                    setTableCount(60);
                     setAvgTableCheck(2600);
                     setCurrentServers(14);
                   }
@@ -144,22 +130,6 @@ export default function BangaloreHospitalityRoiAuditor() {
                 <option value="churchStreet">Church Street &amp; MG Rd (High-Density Walk-In Dining)</option>
                 <option value="whitefield">Whitefield &amp; ORR (Large Format Breweries &amp; Corporate Tabs)</option>
               </select>
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label className={styles.inputLabel}>
-                <span>Active Dine-in Tables:</span>
-                <span className={styles.inputVal}>{tableCount} tables</span>
-              </label>
-              <input
-                type="range"
-                min={15}
-                max={75}
-                step={1}
-                value={tableCount}
-                onChange={(e) => setTableCount(Number(e.target.value))}
-                className={styles.rangeSlider}
-              />
             </div>
 
             <div className={styles.inputGroup}>
@@ -279,17 +249,13 @@ export default function BangaloreHospitalityRoiAuditor() {
                 <span className={styles.statLabel}>Margin from Extra Turns (estimate):</span>
                 <span className={styles.greenVal}>+₹{marketResults.monthlyTurnoverMargin.toLocaleString('en-IN')}/mo</span>
               </div>
-              <div className={styles.statRow}>
-                <span className={styles.statLabel}>KNOMI Signature for {tableCount} Tables:</span>
-                <span className={styles.statVal}>₹{marketResults.knomiMonthlyCost.toLocaleString('en-IN')}/mo</span>
-              </div>
               <div className={`${styles.statRow} ${styles.highlightRow}`}>
-                <span className={styles.statLabel}>Estimated Monthly Value, Net of KNOMI:</span>
-                <span className={styles.highlightVal}>₹{marketResults.netOfKnomi.toLocaleString('en-IN')}/mo</span>
+                <span className={styles.statLabel}>Estimated Monthly Value:</span>
+                <span className={styles.highlightVal}>₹{marketResults.totalMonthlyEstimate.toLocaleString('en-IN')}/mo</span>
               </div>
             </div>
             <p className={styles.calcNotice}>
-              Estimate only, built entirely from the figures and assumptions you entered. KNOMI does not promise staff reductions or extra turns; we measure what actually changes with you, on your own tables.
+              Figures are before KNOMI&apos;s fee, which we share on a walkthrough call. Estimate only, built entirely from the figures and assumptions you entered. KNOMI does not promise staff reductions or extra turns; we measure what actually changes with you, on your own tables.
             </p>
           </div>
         </div>
@@ -331,7 +297,7 @@ export default function BangaloreHospitalityRoiAuditor() {
 
             <div className={styles.inputGroup}>
               <label className={styles.inputLabel}>
-                <span>Average Order Lift to Model (default: KNOMI&apos;s target, not a guarantee):</span>
+                <span>Average Order Lift to Model (your assumption):</span>
                 <span className={styles.inputVal}>{orderLiftPct}%</span>
               </label>
               <input
@@ -388,7 +354,7 @@ export default function BangaloreHospitalityRoiAuditor() {
               </div>
             </div>
             <p className={styles.calcNotice}>
-              The {KNOMI_TARGET_LIFT_PCT}% default is KNOMI&apos;s target for average-order lift, not a guarantee or a past result. Knomi Host suggests pairings, such as a snack with the next round; the real effect is something we measure with you on your own tables.
+              The lift starts at 0%: set your own assumption. It is not a KNOMI result or a guarantee. Knomi Host suggests pairings, such as a snack with the next round; the real effect is something we measure with you on your own tables.
             </p>
           </div>
         </div>

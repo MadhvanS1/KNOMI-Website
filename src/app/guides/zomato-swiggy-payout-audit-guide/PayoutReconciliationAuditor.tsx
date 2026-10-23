@@ -50,6 +50,7 @@ export default function PayoutReconciliationAuditor() {
         {/* Tab Toggle */}
         <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginTop: "24px" }}>
           <button
+            className="pressable"
             type="button"
             onClick={() => setActiveTab("auditor")}
             style={{
@@ -61,12 +62,13 @@ export default function PayoutReconciliationAuditor() {
               border: "1px solid var(--color-whiskey-sour)",
               backgroundColor: activeTab === "auditor" ? "var(--color-whiskey-sour)" : "transparent",
               color: activeTab === "auditor" ? "#fbf8f3" : "var(--color-text-primary)",
-              transition: "all 0.15s ease",
+              transition: "background-color 150ms ease, color 150ms ease, var(--press-transition)",
             }}
           >
             Mode 1: Weekly Settlement Discrepancy Auditor
           </button>
           <button
+            className="pressable"
             type="button"
             onClick={() => setActiveTab("cashflow")}
             style={{
@@ -78,7 +80,7 @@ export default function PayoutReconciliationAuditor() {
               border: "1px solid var(--color-whiskey-sour)",
               backgroundColor: activeTab === "cashflow" ? "var(--color-whiskey-sour)" : "transparent",
               color: activeTab === "cashflow" ? "#fbf8f3" : "var(--color-text-primary)",
-              transition: "all 0.15s ease",
+              transition: "background-color 150ms ease, color 150ms ease, var(--press-transition)",
             }}
           >
             Mode 2: Daily vs Weekly Cashflow Simulator

@@ -114,14 +114,14 @@ export default function NoShowPolicyAuditor() {
       <div className={styles.tabButtons}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'bleedAuditor' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'bleedAuditor' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('bleedAuditor')}
         >
           Mode 1: Table Bleed &amp; Revenue Attrition
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'policySimulator' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'policySimulator' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('policySimulator')}
         >
           Mode 2: Deposit Policy Comparison

@@ -165,14 +165,14 @@ export default function GstOnboardingChecker() {
       <div className={styles.modeTabs}>
         <button
           type="button"
-          className={`${styles.modeTab} ${activeMode === "matrix" ? styles.modeTabActive : ""}`}
+          className={`${styles.modeTab} pressable ${activeMode === "matrix" ? styles.modeTabActive : ""}`}
           onClick={() => setActiveMode("matrix")}
         >
           1. Onboarding Eligibility & Document Matrix
         </button>
         <button
           type="button"
-          className={`${styles.modeTab} ${activeMode === "liability" ? styles.modeTabActive : ""}`}
+          className={`${styles.modeTab} pressable ${activeMode === "liability" ? styles.modeTabActive : ""}`}
           onClick={() => setActiveMode("liability")}
         >
           2. Section 9(5) Liability & GSTR-3B Split

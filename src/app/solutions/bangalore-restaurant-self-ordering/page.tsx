@@ -5,7 +5,8 @@ import Footer from '@/components/Footer';
 import BangaloreHospitalityRoiAuditor from './BangaloreHospitalityRoiAuditor';
 import ExperienceKnomiBox from '@/components/ExperienceKnomiBox';
 import styles from './BangaloreSolutions.module.css';
-import { GOAL, OG_IMAGE } from "@/content/site";
+import callout from '../../compare/Callout.module.css';
+import { GOAL, OG_IMAGE, bookHref, worthHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'AI Restaurant Ordering System Bangalore (2026) | KNOMI',
@@ -80,7 +81,7 @@ export default function BangaloreRestaurantSelfOrderingPage() {
         name: 'Do I need to replace my existing restaurant POS software in Bangalore?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'No. KNOMI works alongside the billing software you already use. Orders reach your kitchen display and station KOT printers, and on the Signature plan KNOMI integrates with your existing POS (our Petpooja integration is already built; ask us about yours). Your accounts and GST billing stay on your current system.',
+          text: 'No. KNOMI works alongside the billing software you already use. Orders reach your kitchen display and station KOT printers, and KNOMI can integrate with your existing POS (our Petpooja integration is already built; ask us about yours). Your accounts and GST billing stay on your current system.',
         },
       },
       {
@@ -178,9 +179,9 @@ export default function BangaloreRestaurantSelfOrderingPage() {
 
       {/* Answer-First Summary Box */}
       <div className="container">
-        <div className={styles.quickAnswerBox}>
-          <span className={styles.quickAnswerBadge}>Quick Answer: Self-Ordering in Bangalore Restaurants</span>
-          <p className={styles.quickAnswerText}>
+        <div className={`${callout.box} ${styles.quickAnswerBox}`}>
+          <span className={callout.label}>Quick Answer: Self-Ordering in Bangalore Restaurants</span>
+          <p className={callout.text}>
             A restaurant self-ordering system in Bangalore lets diners in Indiranagar, Koramangala, HSR Layout and beyond scan the QR on their table, browse a visual menu and order without waiting for a server. KNOMI adds a host inside the menu that suggests pairings, sends every order to your kitchen display the moment it is confirmed, works alongside your existing POS and charges 0% commission.
           </p>
         </div>
@@ -265,8 +266,8 @@ export default function BangaloreRestaurantSelfOrderingPage() {
             </div>
           </div>
 
-          <div className={styles.calloutBox}>
-            <div className={styles.calloutTitle}>5. Whitefield, Bellandur &amp; Outer Ring Road: Corporate Group Tables</div>
+          <div className={`${callout.box} ${styles.calloutBox}`}>
+            <div className={callout.title}>5. Whitefield, Bellandur &amp; Outer Ring Road: Corporate Group Tables</div>
             <p>
               In large microbreweries and casual dining venues along Whitefield and Sarjapur Road, teams of colleagues gather for after-work socials. Taking a dozen orders by hand, then settling one long bill, keeps a server tied to a single table.
             </p>
@@ -346,7 +347,7 @@ export default function BangaloreRestaurantSelfOrderingPage() {
                   <td>Free</td>
                   <td>Typically device cost plus a software fee</td>
                   <td>Varies: subscription and/or per-order fees</td>
-                  <td>Signature, with self-ordering: Rs 250 per table / month (Menu only: Rs 149; Ecosystem: Rs 500); 0% commission</td>
+                  <td>Shared on a walkthrough call · 0% commission</td>
                 </tr>
               </tbody>
             </table>
@@ -383,8 +384,8 @@ export default function BangaloreRestaurantSelfOrderingPage() {
           <ul>
             <li><strong>Monthly Seatings:</strong> say 1,500 table seatings a month.</li>
             <li><strong>Revenue on the Floor:</strong> 1,500 seatings x Rs 2,200 = Rs 33,00,000 a month.</li>
-            <li><strong>At KNOMI&apos;s Target:</strong> a lift of around 25% in the average order would be about Rs 550 more per table bill, or roughly Rs 8,25,000 a month. That is a target to measure against, not a guarantee.</li>
-            <li><strong>What It Would Cost:</strong> Signature at Rs 250 per table is Rs 10,000 a month for 40 tables, with 0% commission.</li>
+            <li><strong>Your Own Lift:</strong> put your own bill and covers into the <a href={worthHref}>calculator on our homepage</a>. Every figure in it is yours, not a KNOMI result.</li>
+            <li><strong>What It Would Cost:</strong> we share pricing on a short <a href={bookHref}>walkthrough call</a>, once we understand your restaurant. There is 0% commission on every order.</li>
             <li><strong>How We Would Check It:</strong> {GOAL}</li>
           </ul>
 

@@ -5,10 +5,8 @@ import Footer from '@/components/Footer';
 import ExperienceKnomiBox from '@/components/ExperienceKnomiBox';
 import BehavioralVsPosSimulator from './BehavioralVsPosSimulator';
 import styles from './PosVsBehavioral.module.css';
-import { OG_IMAGE, bookHref, pricing } from "@/content/site";
-
-const ecosystemPlan = pricing.plans[2];
-const ECOSYSTEM_PRICE = `₹${ecosystemPlan.priceMin}`;
+import callout from '../Callout.module.css';
+import { OG_IMAGE, bookHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'Why a POS Is Not Enough: Behavioral Intelligence vs Legacy Restaurant Software (2026) | KNOMI',
@@ -54,7 +52,7 @@ const faqs = [
   },
   {
     q: 'Does KNOMI replace my existing Petpooja or Posist POS system?',
-    a: 'No. KNOMI is designed to sit alongside your billing POS. Petpooja, Posist or ShawMan keep handling back-office accounting, inventory, GST filing and cashier settlement. KNOMI replaces the paper or PDF menu on the table as the guest-facing layer, sending orders to your kitchen display. On the Signature plan, KNOMI integrates with your existing POS (Petpooja integration is available), so orders flow into it.',
+    a: 'No. KNOMI is designed to sit alongside your billing POS. Petpooja, Posist or ShawMan keep handling back-office accounting, inventory, GST filing and cashier settlement. KNOMI replaces the paper or PDF menu on the table as the guest-facing layer, sending orders to your kitchen display. KNOMI integrates with your existing POS (Petpooja integration is available), so orders flow into it.',
   },
   {
     q: 'How does tracking diner dwell time increase restaurant revenue?',
@@ -78,7 +76,7 @@ export default function PosVsBehavioralPage() {
     description:
       'Why traditional restaurant point-of-sale systems can\'t see pre-order behaviour, and how browsing data such as dwell time and attention-to-order conversion fills the gap.',
     datePublished: '2026-06-28T08:00:00+05:30',
-    dateModified: '2026-10-11T12:00:00+05:30',
+    dateModified: '2026-10-16T12:00:00+05:30',
     author: [
       {
         '@type': 'Person',
@@ -203,13 +201,13 @@ export default function PosVsBehavioralPage() {
         </section>
 
         {/* Answer-First AEO Box */}
-        <section className={styles.quickAnswerBox}>
-          <span className={styles.quickAnswerBadge}>Executive Summary for Restaurateurs</span>
-          <p className={styles.quickAnswerText}>
+        <section className={`${callout.box} ${styles.quickAnswerBox}`}>
+          <span className={callout.label}>Executive Summary for Restaurateurs</span>
+          <p className={callout.text}>
             A traditional restaurant POS is an accounting tool that records completed sales, so it can&apos;t see what happens
             before the bill is printed. Behavioral intelligence measures what guests do on the menu: which dishes they open, how long
             they linger, and which ones they view but don&apos;t order. Knomi Sense, the guest experience infrastructure behind KNOMI,
-            learns from it; Knomi Compass, on the Ecosystem plan, puts it on a 2x2 attention-to-order matrix; and Knomi Host suggests
+            learns from it; Knomi Compass puts it on a 2x2 attention-to-order matrix; and Knomi Host suggests
             pairings at the moment of choice. It all runs alongside your existing POS.
           </p>
         </section>
@@ -221,8 +219,8 @@ export default function PosVsBehavioralPage() {
             <div className={styles.statLabel}>Knomi Compass matrix: attention vs orders, for every dish</div>
           </div>
           <div className={styles.statCard}>
-            <div className={styles.statNumber}>+25%</div>
-            <div className={styles.statLabel}>KNOMI&apos;s target lift in average order: a goal we measure in the trial, not a past result</div>
+            <div className={styles.statNumber}>5</div>
+            <div className={styles.statLabel}>Parts of Knomi Sense sharing one memory of your guests</div>
           </div>
           <div className={styles.statCard}>
             <div className={styles.statNumber}>0</div>
@@ -230,7 +228,7 @@ export default function PosVsBehavioralPage() {
           </div>
           <div className={styles.statCard}>
             <div className={styles.statNumber}>0%</div>
-            <div className={styles.statLabel}>Commission on orders; KNOMI is a flat fee per table</div>
+            <div className={styles.statLabel}>Commission on orders: what your guests order is yours</div>
           </div>
         </div>
 
@@ -252,14 +250,14 @@ export default function PosVsBehavioralPage() {
               looking in the rearview mirror. <strong>A POS records what guests settled on; it tells you nothing about what else they considered.</strong>
             </p>
 
-            <div className={styles.quoteCard}>
-              <div className={styles.quoteText}>
+            <figure className={`${callout.box} ${styles.quoteCard}`}>
+              <blockquote className={styles.quoteText}>
                 &ldquo;Imagine an online store that only tracked completed checkouts and ignored page views, abandoned carts
                 and scroll depth. It would be flying blind. Yet restaurants have long tried to run multi-crore
                 dining floors using little more than the checkout receipt.&rdquo;
-              </div>
-              <div className={styles.quoteAuthor}>Yash Garg, Co-Founder at KNOMI</div>
-            </div>
+              </blockquote>
+              <figcaption className={styles.quoteAuthor}>Yash Garg, Co-Founder at KNOMI</figcaption>
+            </figure>
 
             <h2>What Is Invisible Demand? The Anatomy of the 40-Second Dish View</h2>
             <p>
@@ -485,8 +483,8 @@ export default function PosVsBehavioralPage() {
               <li><strong>Before the Bill:</strong> Knomi Pulse asks how the meal went. If something wasn&apos;t right, your manager is alerted while the guest is still at the table.</li>
             </ol>
 
-            <div className={styles.calloutBox}>
-              <div className={styles.calloutTitle}>The Labour Equation: Time Back on the Floor</div>
+            <div className={`${callout.box} ${styles.calloutBox}`}>
+              <div className={callout.title}>The Labour Equation: Time Back on the Floor</div>
               <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
                 When guests order from the menu themselves, the order goes straight to the kitchen display, so servers spend less of
                 the rush carrying chits and more of it looking after guests. What that is worth depends on your floor and your team;
@@ -512,23 +510,22 @@ export default function PosVsBehavioralPage() {
               </li>
               <li>
                 <strong>KNOMI:</strong> Replaces the paper or PDF menu on the tables with an illustrated menu and Knomi Host. It sends orders
-                to your kitchen display or to ESC/POS network thermal printers, and on the Signature plan integrates with your existing POS
-                (Petpooja integration is available).
+                to your kitchen display or to ESC/POS network thermal printers, and integrates with your existing POS (Petpooja
+                integration is available).
               </li>
               <li>
-                <strong>Knomi Sense &amp; Compass:</strong> Signature includes the essentials of Knomi Sense. On the Ecosystem plan
-                ({ECOSYSTEM_PRICE} per table, per month), the full Knomi Sense and Knomi Compass add the attention-to-order matrix and
-                browsing insights to your dashboard, with no disruption to your cashier or back-office accounting.
+                <strong>Knomi Sense &amp; Compass:</strong> Knomi Compass, powered by Knomi Sense, adds the attention-to-order matrix
+                and browsing insights to your dashboard, with no disruption to your cashier or back-office accounting.
               </li>
             </ul>
 
-            <div className={styles.quoteCard}>
-              <div className={styles.quoteText}>
+            <figure className={`${callout.box} ${styles.quoteCard}`}>
+              <blockquote className={styles.quoteText}>
                 &ldquo;You do not replace your accounting software to improve your sales pitch. Similarly, you do not replace your back-office billing POS
                 to improve table hospitality. You give your guests a dining interface that understands what they want to eat.&rdquo;
-              </div>
-              <div className={styles.quoteAuthor}>Madhvan Sharma, Co-Founder at KNOMI</div>
-            </div>
+              </blockquote>
+              <figcaption className={styles.quoteAuthor}>Madhvan Sharma, Co-Founder at KNOMI</figcaption>
+            </figure>
 
             {/* Conversion CTA Box */}
             <ExperienceKnomiBox

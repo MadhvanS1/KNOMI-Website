@@ -6,7 +6,7 @@
   overflow-x: clip;
 }
 
-/* A rule with a star where the FAQ ends and the reservation begins. */
+/* A plain rule where the FAQ ends and the reservation begins. */
 .divider {
   position: absolute;
   top: 0;
@@ -14,7 +14,6 @@
   right: 0;
   display: flex;
   align-items: center;
-  gap: 18px;
   pointer-events: none;
 }
 
@@ -63,7 +62,7 @@
   color: var(--fg);
 }
 
-/* A russet rule draws along the hairline on hover. */
+/* An ink rule draws along the hairline on hover. */
 .contact::after {
   content: "";
   position: absolute;
@@ -71,10 +70,10 @@
   right: 0;
   bottom: -1px;
   height: 1px;
-  background: var(--accent);
+  background: var(--fg);
   transform: scaleX(0);
   transform-origin: 0 50%;
-  transition: transform 700ms var(--ease-out);
+  transition: transform 280ms var(--ease-out);
 }
 
 .contactIcon {
@@ -87,9 +86,15 @@
   border-radius: 50%;
   color: var(--fg-2);
   transition:
-    background-color var(--dur) var(--ease-out),
-    border-color var(--dur) var(--ease-out),
-    color var(--dur) var(--ease-out);
+    background-color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    var(--press-transition);
+}
+
+/* Press feedback on the round icon: a full-width row shrinking would read as a jolt. */
+.contact:active .contactIcon {
+  scale: 0.92;
 }
 
 .contactValue {
@@ -101,9 +106,7 @@
   letter-spacing: -0.012em;
   font-feature-settings: "lnum" 1;
   overflow-wrap: anywhere;
-  transition:
-    color var(--dur) var(--ease-out),
-    transform 450ms var(--ease-out);
+  transition: transform 220ms var(--ease-out);
 }
 
 .contactArrow {
@@ -111,16 +114,16 @@
   color: var(--fg-3);
   opacity: 0.7;
   transition:
-    transform 400ms var(--ease-out),
-    color var(--dur) var(--ease-out),
-    opacity var(--dur) var(--ease-out);
+    transform 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    opacity 200ms var(--ease-out);
 }
 
 .contact:focus-visible {
   outline-offset: 2px;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .contact:hover::after {
     transform: scaleX(1);
   }
@@ -132,21 +135,18 @@
   }
 
   .contact:hover .contactValue {
-    color: var(--accent);
     transform: translateX(4px);
   }
 
   .contact:hover .contactArrow {
     transform: translate(3px, -3px);
-    color: var(--accent);
+    color: var(--fg);
     opacity: 1;
   }
 }
 
 .city {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
+  display: block;
   margin-top: 24px;
   font-size: var(--fs-eyebrow);
   font-weight: 600;
@@ -178,11 +178,6 @@
   pointer-events: none;
 }
 
-.vaultInner {
-  position: absolute;
-  inset: 0;
-}
-
 .vaultLine {
   position: absolute;
   inset: 0;
@@ -197,13 +192,6 @@
   inset: 11px 11px 0;
   border-radius: 50% 50% 0 0 / calc(var(--vault-r) - 11px) calc(var(--vault-r) - 11px) 0 0;
   opacity: 0.55;
-}
-
-.keystone {
-  position: absolute;
-  top: -5px;
-  left: 50%;
-  margin-left: -5px;
 }
 
 /* ---------- The reservation card ---------- */
@@ -256,17 +244,6 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--fg-3);
-}
-
-.cardNo {
-  flex-shrink: 0;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.375rem;
-  line-height: 1;
-  color: var(--accent-soft);
-  font-feature-settings: "lnum" 1;
-  margin-left: auto;
 }
 
 /* Ticket perforation: a dotted tear line with a half-moon notch at each edge. */
@@ -350,16 +327,16 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg-3);
-  transition: color var(--dur) var(--ease-out);
+  transition: color 200ms var(--ease-out);
 }
 
 .field:focus-within .label {
-  color: var(--accent);
+  color: var(--fg);
 }
 
 .req {
   margin-left: 3px;
-  color: var(--accent);
+  color: var(--fg-2);
 }
 
 .control {
@@ -378,7 +355,7 @@
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: 0 50%;
-  transition: transform 520ms var(--ease-out);
+  transition: transform 240ms var(--ease-out);
   pointer-events: none;
 }
 
@@ -400,7 +377,7 @@
   font-size: 1.0625rem;
   line-height: 1.4;
   color: var(--fg);
-  transition: border-color var(--dur) var(--ease-out);
+  transition: border-color 200ms var(--ease-out);
 }
 
 .input:focus,
@@ -409,14 +386,100 @@
   border-radius: 0;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .input:hover {
     border-bottom-color: var(--fg-3);
   }
 }
 
-.input:user-invalid {
+.input[aria-invalid="true"] {
   border-bottom-color: var(--terracotta);
+}
+
+/* The message under a field: what to fix, in words. */
+.fieldError {
+  margin-top: 8px;
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--terracotta);
+  animation: noteIn 200ms var(--ease-out);
+}
+
+@keyframes noteIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+/* ---------- Add details (optional) ---------- */
+
+.moreToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: clamp(14px, 1.6vw, 20px);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--fg-2);
+  transition:
+    color 200ms var(--ease-out),
+    var(--press-transition);
+}
+
+.moreIcon {
+  position: relative;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  transition: border-color 200ms var(--ease-out);
+}
+
+.moreBar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 1.5px;
+  margin: -0.75px 0 0 -4.5px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: transform 200ms var(--ease-out);
+}
+
+.moreBarV {
+  transform: rotate(90deg);
+}
+
+.moreToggle[aria-expanded="true"] .moreBarV {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .moreToggle:hover {
+    color: var(--fg);
+  }
+
+  .moreToggle:hover .moreIcon {
+    border-color: var(--fg);
+  }
+}
+
+/* Opens with a short fade from just above (0.25s); closes at once. Height never animates. */
+.more:not([hidden]) {
+  margin-top: clamp(10px, 1.2vw, 16px);
+  animation: moreIn 250ms var(--ease-out);
+}
+
+@keyframes moreIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
 }
 
 .textarea {
@@ -445,20 +508,37 @@
   caret-color: var(--fg);
 }
 
+/* Sending failed: say so, and hand over the same request on WhatsApp or by email. */
 .error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
   margin-top: 24px;
-  padding: 14px 16px;
+  padding: 14px 16px 16px;
   border: 1px solid color-mix(in srgb, var(--terracotta) 28%, transparent);
   border-radius: var(--r-sm);
   background: color-mix(in srgb, var(--terracotta) 7%, transparent);
   font-size: var(--fs-small);
   line-height: 1.55;
   color: var(--fg);
+  animation: noteIn 200ms var(--ease-out);
 }
 
-.error a {
+.errorWhatsapp {
+  white-space: normal;
+  text-align: left;
+}
+
+.errorEmail {
+  font-size: var(--fs-micro);
+  color: var(--fg-2);
+}
+
+.errorEmail a,
+.confirmNote a {
   font-weight: 600;
-  color: var(--accent);
+  color: var(--fg);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
@@ -466,7 +546,16 @@
 
 .submit {
   width: 100%;
-  margin-top: clamp(28px, 3vw, 38px);
+  margin-top: clamp(24px, 2.6vw, 34px);
+}
+
+/* WhatsApp mode: what the button will do, said plainly under it. */
+.submitNote {
+  margin-top: 12px;
+  font-size: var(--fs-micro);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--fg-2);
 }
 
 /* ---------- Success ---------- */
@@ -536,12 +625,27 @@
   color: var(--fg-2);
 }
 
+.confirmMore {
+  margin-top: 22px;
+  font-size: var(--fs-small);
+}
+
+.confirmNote {
+  margin-top: 12px;
+  font-size: var(--fs-micro);
+  color: var(--fg-2);
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 559.98px) {
   .fields {
     grid-template-columns: minmax(0, 1fr);
     row-gap: 14px;
+  }
+
+  .moreToggle {
+    margin-top: 8px;
   }
 
   .cardLabel {
@@ -605,5 +709,26 @@
   /* The card's top aligns with the eyebrow; the arch rises into the section's top space. */
   .stage {
     margin-top: 0;
+  }
+}
+
+/* Reduced motion: the form is data-motion-safe, so its notes and the details panel keep
+   a short fade, in place; the plus sign and the focus rule simply change. */
+@media (prefers-reduced-motion: reduce) {
+  .fieldError,
+  .error,
+  .more:not([hidden]) {
+    animation-name: fadeIn;
+  }
+
+  .moreBar,
+  .control::after {
+    transition: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
 }

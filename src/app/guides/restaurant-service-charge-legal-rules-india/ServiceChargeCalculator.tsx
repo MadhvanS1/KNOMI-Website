@@ -66,14 +66,14 @@ export default function ServiceChargeCalculator() {
       <div className={styles.modeTabs}>
         <button
           type="button"
-          className={`${styles.modeTab} ${activeMode === "friction" ? styles.modeTabActive : ""}`}
+          className={`${styles.modeTab} pressable ${activeMode === "friction" ? styles.modeTabActive : ""}`}
           onClick={() => setActiveMode("friction")}
         >
           1. Dispute Friction &amp; Upsell Comparison
         </button>
         <button
           type="button"
-          className={`${styles.modeTab} ${activeMode === "compensation" ? styles.modeTabActive : ""}`}
+          className={`${styles.modeTab} pressable ${activeMode === "compensation" ? styles.modeTabActive : ""}`}
           onClick={() => setActiveMode("compensation")}
         >
           2. Transparent Menu Price Absorption

@@ -548,8 +548,8 @@ export default function ProfitMarginGuidePage() {
             <h2 className={styles.ctaTitle}>Ready to protect your restaurant net margin?</h2>
             <p className={styles.ctaDesc}>
               KNOMI helps you grow every table: Knomi Host suggests the right pairing inside an illustrated menu, guests
-              order from their phone, orders land on your kitchen display, and you pay 0% commission. One flat price per table, per month:
-              Menu ₹149, Signature ₹250 (our recommendation), or Ecosystem ₹500.
+              order from their phone, orders land on your kitchen display, and you pay 0% commission. We share pricing on a
+              short walkthrough call, once we understand your restaurant.
             </p>
             <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href={bookHref} className="btn btn--primary btn--large">

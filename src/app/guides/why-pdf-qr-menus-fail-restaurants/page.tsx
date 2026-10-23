@@ -370,7 +370,7 @@ export default function WhyPdfQrMenusFailPage() {
                     <td><strong>Takes Kitchen Order</strong></td>
                     <td>No (Requires waiter KOT)</td>
                     <td>Yes</td>
-                    <td><strong>Yes (to your kitchen display; POS integration on Signature)</strong></td>
+                    <td><strong>Yes (to your kitchen display; integrates with your POS)</strong></td>
                   </tr>
                   <tr>
                     <td><strong>Pairing Suggestions</strong></td>
@@ -485,7 +485,7 @@ export default function WhyPdfQrMenusFailPage() {
               <p className={styles.ctaText}>
                 Swap pinch-and-zoom for an illustrated menu themed to your restaurant, with Knomi Host suggesting the pairing at every table. {GOAL}
               </p>
-              <Link href="/guides/best-restaurant-billing-software-india" className={styles.ctaButton}>
+              <Link href="/guides/best-restaurant-billing-software-india" className={`${styles.ctaButton} pressable`}>
                 Explore POS Co-Existence Architecture &rarr;
               </Link>
             </div>

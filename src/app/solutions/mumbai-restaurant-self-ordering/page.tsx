@@ -5,7 +5,8 @@ import Footer from '@/components/Footer';
 import MumbaiTableYieldAuditor from './MumbaiTableYieldAuditor';
 import ExperienceKnomiBox from '@/components/ExperienceKnomiBox';
 import styles from './MumbaiSolutions.module.css';
-import { GOAL, OG_IMAGE } from "@/content/site";
+import callout from '../../compare/Callout.module.css';
+import { GOAL, OG_IMAGE, bookHref, worthHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: 'AI Restaurant Ordering System Mumbai (2026) | KNOMI',
@@ -88,7 +89,7 @@ export default function MumbaiRestaurantSelfOrderingPage() {
         name: 'Do I need to replace my existing POS software in Mumbai?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'No. KNOMI works alongside your existing billing software. Orders reach your kitchen display and station KOT printers the moment a guest confirms, and on the Signature plan KNOMI integrates with your existing POS (our Petpooja integration is already built; ask us about yours). Your accounting, inventory and GST workflows stay where they are.',
+          text: 'No. KNOMI works alongside your existing billing software. Orders reach your kitchen display and station KOT printers the moment a guest confirms, and KNOMI can integrate with your existing POS (our Petpooja integration is already built; ask us about yours). Your accounting, inventory and GST workflows stay where they are.',
         },
       },
       {
@@ -178,9 +179,9 @@ export default function MumbaiRestaurantSelfOrderingPage() {
 
       {/* Answer-First Summary Box */}
       <div className="container">
-        <div className={styles.quickAnswerBox}>
-          <span className={styles.quickAnswerBadge}>Quick Answer: Self-Ordering in Mumbai Restaurants</span>
-          <p className={styles.quickAnswerText}>
+        <div className={`${callout.box} ${styles.quickAnswerBox}`}>
+          <span className={callout.label}>Quick Answer: Self-Ordering in Mumbai Restaurants</span>
+          <p className={callout.text}>
             A restaurant self-ordering system in Mumbai lets diners in compact dining rooms across Bandra West, Lower Parel and Fort scan the QR on their table, browse a visual menu and order in moments. KNOMI takes the wait for a menu and a server off the table, sends orders straight to your kitchen display, works alongside your existing POS and charges 0% commission.
           </p>
         </div>
@@ -270,8 +271,8 @@ export default function MumbaiRestaurantSelfOrderingPage() {
             </div>
           </div>
 
-          <div className={styles.calloutBox}>
-            <div className={styles.calloutTitle}>5. Andheri West, Juhu &amp; Versova: Late-Night Dining &amp; Creative Meetings</div>
+          <div className={`${callout.box} ${styles.calloutBox}`}>
+            <div className={callout.title}>5. Andheri West, Juhu &amp; Versova: Late-Night Dining &amp; Creative Meetings</div>
             <p>
               Along the creative corridors of Andheri West and Versova, cafés and restobars host daytime meetings that roll into late dinners. When shifts change late in the evening, it is easy for a table that wants dessert or another drink to be missed.
             </p>
@@ -347,7 +348,7 @@ export default function MumbaiRestaurantSelfOrderingPage() {
                   <td>Free</td>
                   <td>Typically device cost plus a software fee</td>
                   <td>Varies: subscription and/or per-order fees</td>
-                  <td>Signature, with self-ordering: Rs 250 per table / month (Menu only: Rs 149; Ecosystem: Rs 500); 0% commission</td>
+                  <td>Shared on a walkthrough call · 0% commission</td>
                 </tr>
               </tbody>
             </table>
@@ -366,7 +367,7 @@ export default function MumbaiRestaurantSelfOrderingPage() {
             Mumbai operators cannot afford disruption. KNOMI does not ask you to discard your billing software. It runs as an ordering layer alongside it:
           </p>
           <ul>
-            <li><strong>Petpooja Integration:</strong> On the Signature plan, orders placed from the table can be sent to your Petpooja POS. With other billing systems, KNOMI runs side by side, and we confirm the setup for your POS on a walkthrough.</li>
+            <li><strong>Petpooja Integration:</strong> Orders placed from the table can be sent straight to your Petpooja POS. With other billing systems, KNOMI runs side by side, and we confirm the setup for your POS on a walkthrough.</li>
             <li><strong>Bar Routing:</strong> Cocktails, shots and beer route to your bar station while food tickets print at the kitchen pass, each on its own KOT.</li>
             <li><strong>Minimal Retraining:</strong> Cashiers keep using their familiar POS screens for day-end reconciliation and GST filing.</li>
           </ul>
@@ -378,8 +379,8 @@ export default function MumbaiRestaurantSelfOrderingPage() {
           <ul>
             <li><strong>Monthly Seatings:</strong> say 1,450 table seatings across lunch and dinner.</li>
             <li><strong>Revenue on the Floor:</strong> 1,450 seatings x Rs 1,850 = Rs 26,82,500 a month.</li>
-            <li><strong>At KNOMI&apos;s Target:</strong> a lift of around 25% in the average order would be about Rs 460 more per table check, or roughly Rs 6.7 Lakhs a month. That is a target to measure against, not a guarantee.</li>
-            <li><strong>What It Would Cost:</strong> Signature at Rs 250 per table is Rs 8,750 a month for 35 tables, with 0% commission.</li>
+            <li><strong>Your Own Lift:</strong> put your own bill and covers into the <a href={worthHref}>calculator on our homepage</a>. Every figure in it is yours, not a KNOMI result.</li>
+            <li><strong>What It Would Cost:</strong> we share pricing on a short <a href={bookHref}>walkthrough call</a>, once we understand your restaurant. There is 0% commission on every order.</li>
             <li><strong>How We Would Check It:</strong> {GOAL}</li>
           </ul>
 

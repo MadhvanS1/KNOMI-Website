@@ -1,18 +1,9 @@
 "use client";
 
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
+import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef } from "react";
 import { ArrowRight } from "@/components/ui/Icons";
-import { EASE_OUT, Reveal } from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import SectionHead from "@/components/ui/SectionHead";
 import { hero, process } from "@/content/site";
 import styles from "./Process.module.css";
@@ -25,9 +16,9 @@ import styles from "./Process.module.css";
    vertical down the left edge, and each step owns its own stretch of it, so the
    tip of the line always sits at the same height in the viewport.
 
-   Both rails are rendered; CSS shows the one that fits the layout. Reduced
-   motion: CSS pins every rail and stop to its finished state, and the pops
-   below jump instead of springing.
+   Both rails are rendered; CSS shows the one that fits the layout. A stop's
+   fill is a short CSS fade from 90% (data-on), never a pop from nothing.
+   Reduced motion: CSS pins every rail and stop to its finished state.
    --------------------------------------------------------------------------- */
 
 const STEPS = process.steps;
@@ -35,27 +26,18 @@ const COUNT = STEPS.length;
 
 type Step = (typeof STEPS)[number];
 
-const POP_IN = { type: "spring", stiffness: 520, damping: 24, mass: 0.7 } as const;
-const POP_OUT = { duration: 0.28, ease: EASE_OUT };
-
-/** Springs `target` to 1 when `progress` crosses `threshold`, and back to 0 below it. */
-function usePop(progress: MotionValue<number>, threshold: number, reduce: boolean) {
-  const target = useMotionValue(0);
-  const on = useRef(false);
-
+/** Marks the element [data-on] while `progress` is at or past `threshold`. It writes the
+ *  attribute directly, so scrolling never re-renders the step. */
+function useReached<T extends Element>(progress: MotionValue<number>, threshold: number) {
+  const ref = useRef<T>(null);
   useMotionValueEvent(progress, "change", (v) => {
-    const next = v >= threshold;
-    if (next === on.current) return;
-    on.current = next;
-    animate(target, next ? 1 : 0, reduce ? { duration: 0 } : next ? POP_IN : POP_OUT);
+    ref.current?.toggleAttribute("data-on", v >= threshold);
   });
-
-  return target;
+  return ref;
 }
 
 export default function Process() {
   const listRef = useRef<HTMLOListElement>(null);
-  const reduce = Boolean(useReducedMotion());
 
   // Wide layout: the rail starts as the row rises past 90% of the viewport and
   // is complete once its bottom edge reaches 55%.
@@ -72,15 +54,16 @@ export default function Process() {
           eyebrow={process.eyebrow}
           titleLead={process.titleLead}
           titleAccent={process.titleAccent}
+          accentStyle="plain"
         />
 
         <ol ref={listRef} className={styles.steps}>
           {STEPS.map((step, i) => (
-            <StepItem key={step.n} step={step} index={i} row={row} reduce={reduce} />
+            <StepItem key={step.n} step={step} index={i} row={row} />
           ))}
         </ol>
 
-        <Reveal className={styles.cta} y={14} delay={0.2} amount={0.6}>
+        <Reveal className={styles.cta} delay={0.1}>
           <a href={hero.primaryCta.href} className="btn btn--ghost">
             {hero.primaryCta.label}
             <ArrowRight className="btn__arrow" />
@@ -91,17 +74,7 @@ export default function Process() {
   );
 }
 
-function StepItem({
-  step,
-  index,
-  row,
-  reduce,
-}: {
-  step: Step;
-  index: number;
-  row: MotionValue<number>;
-  reduce: boolean;
-}) {
+function StepItem({ step, index, row }: { step: Step; index: number; row: MotionValue<number> }) {
   const ref = useRef<HTMLLIElement>(null);
   const isLast = index === COUNT - 1;
 
@@ -118,10 +91,10 @@ function StepItem({
   const to = (index + 1) / COUNT;
   const segX = useTransform(row, [from, to], [0, 1]);
 
-  const stopH = usePop(row, from + 0.012, reduce);
-  const stopV = usePop(self, 0.002, reduce);
-  const capH = usePop(row, 0.985, reduce);
-  const capV = usePop(self, 0.97, reduce);
+  const stopH = useReached<HTMLSpanElement>(row, from + 0.012);
+  const stopV = useReached<HTMLSpanElement>(self, 0.002);
+  const capH = useReached<HTMLSpanElement>(row, 0.985);
+  const capV = useReached<HTMLSpanElement>(self, 0.97);
 
   return (
     <li ref={ref} className={`${styles.step} ${isLast ? styles.last : ""}`}>
@@ -131,8 +104,8 @@ function StepItem({
 
       <span className={styles.rail} aria-hidden="true">
         <span className={styles.stop}>
-          <motion.span className={`${styles.stopFill} ${styles.wideOnly}`} style={{ scale: stopH }} />
-          <motion.span className={`${styles.stopFill} ${styles.narrowOnly}`} style={{ scale: stopV }} />
+          <span ref={stopH} className={`${styles.stopFill} ${styles.wideOnly}`} />
+          <span ref={stopV} className={`${styles.stopFill} ${styles.narrowOnly}`} />
         </span>
 
         <span className={styles.track}>
@@ -142,13 +115,13 @@ function StepItem({
 
         {isLast && (
           <span className={styles.cap}>
-            <motion.span className={`${styles.capFill} ${styles.wideOnly}`} style={{ scale: capH }} />
-            <motion.span className={`${styles.capFill} ${styles.narrowOnly}`} style={{ scale: capV }} />
+            <span ref={capH} className={`${styles.capFill} ${styles.wideOnly}`} />
+            <span ref={capV} className={`${styles.capFill} ${styles.narrowOnly}`} />
           </span>
         )}
       </span>
 
-      <Reveal className={styles.body} y={18} delay={0.08 * index} amount={0.5}>
+      <Reveal className={styles.body} delay={0.05 * index}>
         <h3 className={styles.title}>{step.title}</h3>
         <p className={styles.text}>{step.body}</p>
       </Reveal>

@@ -66,14 +66,14 @@ export default function HyperpureProcurementAuditor() {
       <div className={styles.modeTabs}>
         <button
           type="button"
-          className={`${styles.modeTab} ${activeMode === "basket" ? styles.modeTabActive : ""}`}
+          className={`${styles.modeTab} pressable ${activeMode === "basket" ? styles.modeTabActive : ""}`}
           onClick={() => setActiveMode("basket")}
         >
           1. Mandi vs Hyperpure Basket Auditor
         </button>
         <button
           type="button"
-          className={`${styles.modeTab} ${activeMode === "concentration" ? styles.modeTabActive : ""}`}
+          className={`${styles.modeTab} pressable ${activeMode === "concentration" ? styles.modeTabActive : ""}`}
           onClick={() => setActiveMode("concentration")}
         >
           2. Supplier Concentration Check

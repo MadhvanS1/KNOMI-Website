@@ -1,13 +1,36 @@
+/* The head measures itself, so it only goes two-column when it actually has the
+   room (a full-width head), never inside a narrow column beside a picture. */
 .head {
+  container: section-head / inline-size;
   position: relative;
+  width: 100%;
+}
+
+.inner {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 22px;
+  gap: clamp(14px, 0.6rem + 0.5vw, 20px);
   max-width: 900px;
 }
 
-.center {
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.title {
+  max-width: 18ch;
+}
+
+.lead {
+  margin: 0;
+}
+
+.center .inner,
+.center .main {
   align-items: center;
   text-align: center;
   margin-inline: auto;
@@ -17,29 +40,20 @@
   margin-inline: auto;
 }
 
-.title {
-  max-width: 14ch;
-}
+/* Wide: headline on the left, lead on the right, their last lines on one baseline. */
+@media (min-width: 1024px) {
+  @container section-head (min-width: 880px) {
+    .split .inner {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+      column-gap: clamp(48px, 5vw, 96px);
+      align-items: end;
+      align-items: last baseline;
+      max-width: none;
+    }
 
-.center .title {
-  max-width: 16ch;
-}
-
-.lead {
-  margin-top: 2px;
-}
-
-.numeral {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
-  line-height: 1;
-  color: var(--accent-soft);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.4em;
-  height: 2.4em;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px 999px 999px 999px;
+    .split .lead {
+      max-width: 30em;
+    }
+  }
 }

@@ -16,12 +16,10 @@ export default function Footer() {
     <footer className={`theme-dark ${styles.footer}`} id="footer">
       <div className={`wrap ${styles.inner}`}>
         <div className={styles.top}>
-          <Reveal className={styles.statement} amount={0.4}>
+          <Reveal className={styles.statement}>
             <p className={styles.statementText}>
-              {tagline.map((line, i) => (
-                <span key={line} className={i === 1 ? styles.statementAccent : undefined}>
-                  {line}{" "}
-                </span>
+              {tagline.map((line) => (
+                <span key={line}>{line} </span>
               ))}
             </p>
             <a href={bookHref} className="btn btn--ink btn--lg">

@@ -398,10 +398,10 @@ export default function HyperpureReviewGuidePage() {
             With <strong>KNOMI&apos;s QR menu</strong> in your dining room:
           </p>
           <ul>
-            <li><strong>0% Commission:</strong> KNOMI charges a flat fee per table, per month and takes nothing from your orders. What your guests order is yours.</li>
+            <li><strong>0% Commission:</strong> KNOMI takes nothing from your orders. What your guests order is yours.</li>
             <li><strong>No App, No Login:</strong> Diners scan the table QR and browse an illustrated menu themed to your restaurant in their phone&apos;s browser, then confirm an order with their phone number.</li>
-            <li><strong>Works Alongside Your POS:</strong> Billing stays with the POS you already use; on the Signature plan, KNOMI integrates with it.</li>
-            <li><strong>Simple Pricing:</strong> Menu ₹149, Signature ₹250 (recommended) or Ecosystem ₹500, per table, per month. See <Link href="/#pricing">pricing</Link>.</li>
+            <li><strong>Works Alongside Your POS:</strong> Billing stays with the POS you already use, and KNOMI integrates with it.</li>
+            <li><strong>Pricing on a Short Call:</strong> We share pricing on a short <Link href="/#book" className={styles.inlineLink}>walkthrough call</Link>, once we understand your restaurant. Until then, <Link href="/#worth" className={styles.inlineLink}>see what upselling could be worth</Link>.</li>
           </ul>
 
           <div className={styles.tableWrapper}>
@@ -471,7 +471,7 @@ export default function HyperpureReviewGuidePage() {
               Strengthen kitchen purchasing with dual-vendor sourcing, then keep your floor direct with KNOMI:
               an illustrated menu with Knomi Host inside, orders straight to your kitchen display, and 0% commission.
             </p>
-            <Link href="/#book" className={styles.ctaButton}>
+            <Link href="/#book" className={`${styles.ctaButton} pressable`}>
               Book a walkthrough
             </Link>
           </div>

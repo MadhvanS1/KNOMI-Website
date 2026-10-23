@@ -103,14 +103,14 @@ export default function AovExpansionCalculator() {
       <div className={styles.tabButtons}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'basket' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'basket' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('basket')}
         >
           1. Dining Basket Item-Attachment Auditor
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'matrix' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'matrix' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('matrix')}
         >
           2. Menu Engineering Margin Simulator

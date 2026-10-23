@@ -44,7 +44,7 @@ const faqs = [
   },
   {
     q: "How does direct QR self-ordering lower a restaurant's break even point?",
-    a: "Direct tabletop ordering can touch both sides of the formula. On the margin side, orders placed on your own QR menu carry no third-party commission (KNOMI takes 0% commission and charges a flat fee per table), so if some of your dine-in bills currently pass through third-party apps or platform-funded discount programmes, those sales keep more of their contribution margin. On the cost side, when guests place their own orders, servers spend less time taking orders and more time running food and looking after tables, which may change how you staff a busy shift. Remember that the subscription itself is a fixed cost. The size of each effect depends on your own sales mix and floor, so test it with your own numbers in the calculator.",
+    a: "Direct tabletop ordering can touch both sides of the formula. On the margin side, orders placed on your own QR menu carry no third-party commission (KNOMI takes 0% commission), so if some of your dine-in bills currently pass through third-party apps or platform-funded discount programmes, those sales keep more of their contribution margin. On the cost side, when guests place their own orders, servers spend less time taking orders and more time running food and looking after tables, which may change how you staff a busy shift. Remember that any software you add is a cost too, so include it in your fixed costs. The size of each effect depends on your own sales mix and floor, so test it with your own numbers in the calculator.",
   },
 ];
 
@@ -94,7 +94,7 @@ const articleJsonLd = {
           "@type": "ListItem",
           position: 2,
           name: "Guides",
-          item: "https://www.knomi.in/#owners",
+          item: "https://www.knomi.in/guides",
         },
         {
           "@type": "ListItem",
@@ -135,7 +135,7 @@ export default function BreakEvenGuidePage() {
             <nav className={styles.breadcrumb} aria-label="Breadcrumb">
               <Link href="/">Home</Link>
               <span>/</span>
-              <Link href="/#owners">Guides</Link>
+              <Link href="/guides">Guides</Link>
               <span>/</span>
               <span>Break Even Calculator</span>
             </nav>
@@ -185,7 +185,7 @@ export default function BreakEvenGuidePage() {
               </div>
               <div className={styles.metricCard}>
                 <div className={styles.metricValue}>0%</div>
-                <div className={styles.metricLabel}>KNOMI Commission on Table Orders (Flat Fee per Table)</div>
+                <div className={styles.metricLabel}>KNOMI Commission on Table Orders</div>
               </div>
             </div>
           </div>
@@ -454,7 +454,7 @@ export default function BreakEvenGuidePage() {
               <strong>Reclaim dine-in orders from aggregators:</strong> Platform commissions, fees and funded discounts
               come straight out of your contribution margin. For guests already sitting in your room,{" "}
               <Link href="/compare/dotpe-vs-knomi">direct tabletop QR ordering</Link> means no third-party commission:
-              KNOMI takes 0% commission and charges a flat monthly fee per table. Check how much of your dine-in
+              KNOMI takes 0% commission. Check how much of your dine-in
               revenue currently passes through third-party apps or discount programmes, then rerun the formula without it.
             </li>
             <li>
@@ -511,7 +511,8 @@ export default function BreakEvenGuidePage() {
             <p className={styles.ctaDesc}>
               KNOMI helps you grow every table. Guests order directly from an illustrated menu, with no app and no
               login, and Knomi Host suggests the right pairing as they choose. Orders go straight to your kitchen
-              display, and we take 0% commission: one flat price per table, per month.
+              display, and we take 0% commission. We share pricing on a short walkthrough call, once we
+              understand your restaurant.
             </p>
             <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
               <a href={bookHref} className="btn btn--primary btn--large">

@@ -3,15 +3,13 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import styles from "./CompareDotpe.module.css";
-import { OG_IMAGE, bookHref, pricing } from "@/content/site";
-
-const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
+import callout from "../Callout.module.css";
+import { OG_IMAGE, bookHref } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "DotPe vs KNOMI: Restaurant QR Ordering & Intelligence Comparison (2026)",
   description:
-    "Compare DotPe and KNOMI for Indian restaurants, cafes and casual dining: login-first vs browse-first QR menus, per-order fees vs flat per-table pricing, menu design and menu intelligence.",
+    "Compare DotPe and KNOMI for Indian restaurants, cafes and casual dining: login-first vs browse-first QR menus, per-order fees vs 0% commission, menu design and menu intelligence.",
   alternates: {
     canonical: "/compare/dotpe-vs-knomi",
   },
@@ -41,7 +39,7 @@ const comparisonMatrix = [
   {
     feature: "Dine-In Commission",
     dotpe: "Pricing reported to include per-transaction fees plus gateway charges",
-    knomi: `0% commission; flat ₹${menuPlan.priceMin} / ₹${signaturePlan.priceMin} / ₹${ecosystemPlan.priceMin} per table, per month`,
+    knomi: "0% commission; pricing shared on a walkthrough call",
   },
   {
     feature: "Menu Aesthetics & Branding",
@@ -51,7 +49,7 @@ const comparisonMatrix = [
   {
     feature: "Browsing & Demand Analytics",
     dotpe: "Order and sales reporting",
-    knomi: "Knomi Compass, powered by Knomi Sense: dwell time, scroll depth and dishes viewed but not ordered (Ecosystem plan)",
+    knomi: "Knomi Compass, powered by Knomi Sense: dwell time, scroll depth and dishes viewed but not ordered",
   },
   {
     feature: "Guest Recognition",
@@ -81,11 +79,11 @@ const faqs = [
   },
   {
     q: "Does KNOMI charge any percentage of our food and beverage sales?",
-    a: `No. KNOMI takes 0% commission; you pay a flat fee instead. Plans are ${PRICE_LADDER}. What your guests order is yours.`,
+    a: "No. KNOMI takes 0% commission, so what your guests order is yours. We share pricing on a short walkthrough call, once we understand your restaurant.",
   },
   {
     q: "What does Knomi Compass show that order reports don't?",
-    a: "Order reports show what sold. Knomi Compass, powered by the full Knomi Sense on the Ecosystem plan, shows what guests looked at: how long they linger on each dish, how far they scroll, and which dishes they view but don't order. It places every dish on a 2x2 menu engineering matrix (attention vs orders), so you can see what to rename, re-describe, re-position or re-price.",
+    a: "Order reports show what sold. Knomi Compass, powered by Knomi Sense, shows what guests looked at: how long they linger on each dish, how far they scroll, and which dishes they view but don't order. It places every dish on a 2x2 menu engineering matrix (attention vs orders), so you can see what to rename, re-describe, re-position or re-price.",
   },
   {
     q: "Can KNOMI work with our existing kitchen printers?",
@@ -149,7 +147,7 @@ const comparisonJsonLd = {
         "@id": "https://www.knomi.in/compare/dotpe-vs-knomi",
       },
       datePublished: "2026-09-05T18:00:00+05:30",
-      dateModified: "2026-10-11T12:00:00+05:30",
+      dateModified: "2026-10-16T12:00:00+05:30",
       author: {
         "@type": "Person",
         name: "Yash Garg",
@@ -211,15 +209,15 @@ export default function DotpeVsKnomiPage() {
             </div>
 
             {/* Answer-First AEO Snippet Box */}
-            <div className={styles.aeoBox}>
-              <span className={styles.aeoLabel}>The Quick Answer</span>
-              <p className={styles.aeoText}>
+            <div className={`${callout.box} ${styles.aeoBox}`}>
+              <span className={callout.label}>The Quick Answer</span>
+              <p className={callout.text}>
                 DotPe is a digital commerce platform suited to takeaway, delivery and counter ordering. Diners have
                 reported a phone number and OTP step before the menu in some DotPe setups, and its pricing has been
                 reported to include per-transaction fees. <strong>KNOMI is built for seated dining rooms:</strong> an
                 illustrated menu guests open without an app or a login, Knomi Host suggesting pairings, orders going
-                straight to your kitchen display, 0% commission on a flat per-table fee, and Knomi Compass menu
-                insights, powered by Knomi Sense, on the Ecosystem plan.
+                straight to your kitchen display, 0% commission on every order, and Knomi Compass menu insights,
+                powered by Knomi Sense.
               </p>
             </div>
 
@@ -234,8 +232,8 @@ export default function DotpeVsKnomiPage() {
                 <div className={styles.statLabel}>Commission on Dine-In Sales</div>
               </div>
               <div className={styles.statCard}>
-                <div className={styles.statValue}>₹{signaturePlan.priceMin}</div>
-                <div className={styles.statLabel}>Signature Plan, per Table / Month</div>
+                <div className={styles.statValue}>Host</div>
+                <div className={styles.statLabel}>Suggesting a Pairing at Every Table</div>
               </div>
               <div className={styles.statCard}>
                 <div className={styles.statValue}>Live</div>
@@ -322,8 +320,8 @@ export default function DotpeVsKnomiPage() {
                 <p className={styles.pillarDesc}>
                   On top of base subscriptions, transactional commerce platforms often charge payment
                   gateway spreads or per-order fees on digital orders. In high-volume months, fees that scale
-                  with orders eat into thin restaurant margins. KNOMI takes 0% commission on orders and charges a flat
-                  fee instead: {PRICE_LADDER}.
+                  with orders eat into thin restaurant margins. KNOMI takes 0% commission on orders, and we share our
+                  pricing on a short walkthrough call, once we understand your restaurant.
                 </p>
               </div>
 
@@ -345,7 +343,7 @@ export default function DotpeVsKnomiPage() {
                   <span className={styles.pillarTag}>Knomi Compass</span>
                 </div>
                 <p className={styles.pillarDesc}>
-                  Order-based reports show what sold. Knomi Compass, powered by Knomi Sense on the Ecosystem plan, shows what guests looked at:
+                  Order-based reports show what sold. Knomi Compass, powered by Knomi Sense, shows what guests looked at:
                   how long they linger on your cocktail list, how far they scroll, and which dishes they view but
                   don&apos;t order. That points you to dishes guests are drawn to but hesitate over, perhaps because of
                   the portion description or the price.
@@ -408,7 +406,7 @@ export default function DotpeVsKnomiPage() {
                   </li>
                   <li className={styles.decisionItem}>
                     <span className={styles.checkMark}>✓</span>
-                    <span>You want 0% commission on dine-in orders, and the option of Knomi Compass browsing insights on the Ecosystem plan.</span>
+                    <span>You want 0% commission on dine-in orders, and the option of Knomi Compass browsing insights.</span>
                   </li>
                 </ul>
               </div>

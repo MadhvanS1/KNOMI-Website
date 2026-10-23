@@ -3,7 +3,7 @@
   overflow: hidden;
   border-radius: var(--r-xl) var(--r-xl) 0 0;
   margin-top: -1px;
-  padding-top: clamp(4.5rem, 3rem + 5vw, 8rem);
+  padding-top: clamp(3.5rem, 2.5rem + 4vw, 6rem);
 }
 
 .inner {
@@ -14,8 +14,8 @@
 .top {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.4fr);
-  gap: clamp(48px, 6vw, 96px);
-  padding-bottom: clamp(48px, 5vw, 72px);
+  gap: clamp(40px, 5vw, 80px);
+  padding-bottom: clamp(40px, 4vw, 64px);
   border-bottom: 1px solid var(--line);
 }
 
@@ -23,7 +23,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 36px;
+  gap: 28px;
 }
 
 .statementText {
@@ -40,11 +40,6 @@
   white-space: nowrap;
 }
 
-.statementAccent {
-  font-style: italic;
-  color: var(--accent);
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -55,14 +50,16 @@
   min-width: 0;
 }
 
+/* Column titles and the cities label share the site's one quiet label style (.eyebrow). */
 .colTitle {
   font-family: var(--font-sans);
   font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.2em;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg-3);
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .list {
@@ -79,15 +76,17 @@
   font-size: var(--fs-small);
   color: var(--fg-2);
   line-height: 1.45;
-  transition: color var(--dur) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  transition: color 200ms ease;
 }
 
-.link:hover {
+/* A tap brightens the link at once (hover does the same for a mouse, below). */
+.link:active {
   color: var(--fg);
 }
 
 .more {
-  color: var(--accent);
+  color: var(--fg);
   margin-top: 4px;
 }
 
@@ -102,10 +101,12 @@
 
 .citiesLabel {
   font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.2em;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg-3);
+  -webkit-tap-highlight-color: transparent;
+  transition: color 200ms ease;
 }
 
 .citiesList {
@@ -119,11 +120,13 @@
   font-family: var(--font-serif);
   font-size: 1.25rem;
   color: var(--fg-2);
-  transition: color var(--dur) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  transition: color 200ms ease;
 }
 
-.cityLink:hover {
-  color: var(--accent);
+.cityLink:active,
+.citiesLabel:active {
+  color: var(--fg);
 }
 
 .bottom {
@@ -152,11 +155,21 @@
   color: var(--fg-3);
 }
 
-.legal .link:hover {
+.legal .link:active {
   color: var(--fg);
 }
 
-/* Giant wordmark, cropped by the bottom edge like a signature on a menu card */
+@media (hover: hover) and (pointer: fine) {
+  .link:hover,
+  .legal .link:hover,
+  .cityLink:hover,
+  .citiesLabel:hover {
+    color: var(--fg);
+  }
+}
+
+/* Giant wordmark, cropped by the bottom edge like a signature on a menu card: a filled
+   shape one tone up from the ground, not an outline. */
 .signature {
   position: relative;
   padding: 0 var(--gutter);
@@ -171,9 +184,7 @@
   max-width: calc(var(--wrap));
   height: auto;
   margin: 0 auto;
-  color: transparent;
-  stroke: rgba(201, 164, 107, 0.32);
-  stroke-width: 0.6;
+  color: var(--walnut);
   background: none;
 }
 
@@ -190,6 +201,19 @@
 
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Taller rows on touch screens, so each link is an easy tap. */
+  .list {
+    gap: 2px;
+  }
+
+  .link {
+    min-height: 36px;
+  }
+
+  .colTitle {
+    margin-bottom: 8px;
   }
 
   .bottom {

@@ -59,9 +59,14 @@ function useHydrated() {
   );
 }
 
+/* Caption swaps are quick and never overlap: the old line leaves in 0.12s, the new one
+   arrives in 0.18s, so a hover or a scrolled row is answered within 0.3s. */
+const CAPTION_OUT = { duration: 0.12, ease: EASE_OUT };
+const CAPTION_IN = { duration: 0.18, ease: EASE_OUT };
+
 function Arcade({ active }: { active: number | null }) {
   return (
-    <Reveal className={styles.arcade} y={20} delay={0.35} amount={0.4}>
+    <Reveal className={styles.arcade} delay={0.2}>
       <svg
         className={styles.arcadeSvg}
         viewBox={`0 0 ${VB_W} ${VB_H}`}
@@ -92,9 +97,8 @@ function Arcade({ active }: { active: number | null }) {
               key="rest"
               className={styles.captionRest}
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: EASE_OUT }}
+              animate={{ opacity: 1, transition: CAPTION_IN }}
+              exit={{ opacity: 0, transition: CAPTION_OUT }}
             >
               <span className="ornament" />
             </motion.span>
@@ -102,10 +106,9 @@ function Arcade({ active }: { active: number | null }) {
             <motion.span
               key={active}
               className={styles.captionText}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.32, ease: EASE_OUT }}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0, transition: CAPTION_IN }}
+              exit={{ opacity: 0, y: -4, transition: CAPTION_OUT }}
             >
               <span className={styles.captionIndex}>{pad(active + 1)}</span>
               {segments[active].title}
@@ -140,7 +143,7 @@ function Vignette() {
           className={styles.sketchReveal}
           initial={SKETCH_HIDDEN}
           animate={inView ? SKETCH_SHOWN : SKETCH_HIDDEN}
-          transition={{ duration: still ? 0 : 1.2, ease: EASE_OUT }}
+          transition={{ duration: still ? 0 : 1, ease: EASE_OUT }}
         >
           {/* Eager but low priority: native lazy-loading never fires inside a fully clipped parent. */}
           <Image
@@ -156,7 +159,7 @@ function Vignette() {
         </motion.div>
       </motion.div>
 
-      <Reveal className={styles.endmark} y={0} delay={0.4} amount={1}>
+      <Reveal className={styles.endmark} y={0} delay={0.3}>
         <span className={styles.endLine} aria-hidden="true" />
         <span className="ornament" aria-hidden="true" />
         <span className={styles.endLine} aria-hidden="true" />
@@ -195,7 +198,7 @@ export default function Audience() {
           </div>
 
           <div ref={listRef} className={styles.listCol} onPointerLeave={() => setHovered(null)}>
-            <Stagger as="ul" className={styles.list} stagger={0.1} amount={0.15}>
+            <Stagger as="ul" className={styles.list} stagger={0.06}>
               {segments.map((segment, i) => (
                 <StaggerItem as="li" key={segment.title} className={styles.item}>
                   <div

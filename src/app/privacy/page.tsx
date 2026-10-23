@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import styles from "../legal/LegalPage.module.css";
+import callout from "../compare/Callout.module.css";
 import { OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -73,20 +74,20 @@ export default function PrivacyPage() {
               Act, 2000.
             </p>
             <p className={styles.effectiveMeta}>
-              Effective Date: September 1, 2026 | Last Updated: September 6, 2026
+              Effective Date: September 1, 2026 | Last Updated: October 16, 2026
             </p>
           </header>
 
           {/* Legal Navigation Tabs */}
           <nav className={styles.legalNav} aria-label="Legal Documents Navigation">
             <span className={styles.navLabel}>Compliance Docs:</span>
-            <Link href="/privacy" className={`${styles.navTab} ${styles.navTabActive}`}>
+            <Link href="/privacy" className={`${styles.navTab} ${styles.navTabActive} pressable`}>
               Privacy Policy
             </Link>
-            <Link href="/terms" className={styles.navTab}>
+            <Link href="/terms" className={`${styles.navTab} pressable`}>
               Terms of Service
             </Link>
-            <Link href="/refund-policy" className={styles.navTab}>
+            <Link href="/refund-policy" className={`${styles.navTab} pressable`}>
               Cancellation &amp; Refund Policy
             </Link>
           </nav>
@@ -144,9 +145,9 @@ export default function PrivacyPage() {
                 </li>
               </ul>
 
-              <div className={styles.callout}>
-                <div className={styles.calloutTitle}>No Ad-Tech Tracking</div>
-                <p className={styles.calloutText}>
+              <div className={`${callout.box} ${styles.callout}`}>
+                <div className={callout.title}>No Ad-Tech Tracking</div>
+                <p className={callout.text}>
                   KNOMI does not embed third-party advertising pixels (such as Meta Pixel or Google Ads Remarketing)
                   on guest ordering screens. We do not use your menu to track your guests across the web.
                 </p>
@@ -185,8 +186,8 @@ export default function PrivacyPage() {
               <h2 className={styles.sectionHeading}>4. Technical Telemetry and Behavioral Analytics (Knomi Sense)</h2>
               <p className={styles.paragraph}>
                 KNOMI processes technical interaction telemetry to power Knomi Sense and the features built on it: Knomi Host
-                recommendations, Knomi Compass menu insights (available on the Ecosystem plan), and Knomi Dash, the live orders
-                view and Kitchen Display System (KDS):
+                recommendations, Knomi Compass menu insights, and Knomi Dash, the live orders view and Kitchen Display System
+                (KDS):
               </p>
               <ul className={styles.list}>
                 <li className={styles.listItem}>

@@ -1,9 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue, type Variants } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef, useSyncExternalStore } from "react";
 import SectionHead from "@/components/ui/SectionHead";
-import { EASE_OUT, Reveal, RevealTitle } from "@/components/ui/Reveal";
+import { RevealTitle, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { problem } from "@/content/site";
 import styles from "./Problem.module.css";
 
@@ -11,25 +11,35 @@ import styles from "./Problem.module.css";
    Problem: the owner's night, before KNOMI (problem → agitate → solve).
    A hairline drawing of a table late in service draws itself in as you
    scroll: the wall clock runs on, and the suggestion nobody made hangs over
-   the table and fades. Four pains follow on a ruled card, then the turn,
+   the table and fades. Four pains follow as a ruled list, then the turn,
    whose plumb line falls into the dark Knomi Sense section below.
    --------------------------------------------------------------------------- */
 
-const NUMERALS = ["i", "ii", "iii", "iv"];
+/* Reduced-motion preference, hydration-safe: false on the server and during
+   hydration (matching the HTML), the real preference straight after. */
+const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
 
-/** The turn, with "at every table." set in the italic accent (falls back to the whole line). */
-const TURN = (() => {
-  const at = problem.turn.lastIndexOf(" at every table");
-  return at > 0
-    ? { lead: problem.turn.slice(0, at), accent: problem.turn.slice(at + 1) }
-    : { lead: problem.turn, accent: undefined };
-})();
+function subscribeReduced(onChange: () => void) {
+  const query = window.matchMedia(REDUCED_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
 
-/** False on the server and during hydration, true afterwards — keeps the first client render identical to the HTML. */
-const subscribeNoop = () => () => {};
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    subscribeReduced,
+    () => window.matchMedia(REDUCED_QUERY).matches,
+    () => false,
+  );
+}
+
+/* False on the server and during hydration, true straight after. The drawing is sent
+   finished (so it shows without JavaScript) and only becomes scroll-linked once live. */
+const subscribeNothing = () => () => {};
+
 function useHydrated() {
   return useSyncExternalStore(
-    subscribeNoop,
+    subscribeNothing,
     () => true,
     () => false,
   );
@@ -212,43 +222,19 @@ function Drawing({ progress, night, still }: { progress: MotionValue<number>; ni
   );
 }
 
-/* ---------- Pains ---------- */
-
-const listVariants: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.95, ease: EASE_OUT } },
-};
-
-const ruleVariants: Variants = {
-  hidden: { scaleX: 0 },
-  show: { scaleX: 1, transition: { duration: 1.3, ease: EASE_OUT } },
-};
-
-const numeralVariants: Variants = {
-  hidden: { opacity: 0, y: "35%" },
-  show: { opacity: 1, y: "0%", transition: { duration: 1.1, ease: EASE_OUT, delay: 0.1 } },
-};
-
 export default function Problem() {
   const sectionRef = useRef<HTMLElement>(null);
   const drawingRef = useRef<HTMLDivElement>(null);
   const turnRef = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const hydrated = useHydrated();
-  const still = hydrated && reduce === true;
+  const still = usePrefersReducedMotion();
+  const live = useHydrated();
 
   // The drawing assembles as it rises through the lower part of the screen.
   const { scrollYProgress: drawProgress } = useScroll({ target: drawingRef, offset: ["start 0.92", "end 0.3"] });
   // The clock runs across the whole time the section is on screen.
   const { scrollYProgress: night } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
   // The plumb line lengthens toward the next section as the turn is read.
-  const { scrollYProgress: turnProgress } = useScroll({ target: turnRef, offset: ["start 0.85", "end 0.55"] });
-  const drop = useTransform(turnProgress, [0, 1], [0, 1]);
+  const { scrollYProgress: drop } = useScroll({ target: turnRef, offset: ["start 0.85", "end 0.55"] });
 
   return (
     <section ref={sectionRef} id="problem" className={`section section--alt ${styles.section}`}>
@@ -258,45 +244,31 @@ export default function Problem() {
             eyebrow={problem.eyebrow}
             titleLead={problem.titleLead}
             titleAccent={problem.titleAccent}
+            accentStyle="plain"
             lead={problem.lead}
             className={styles.head}
           />
-          <div ref={drawingRef} className={styles.drawingWrap}>
-            <Drawing progress={drawProgress} night={night} still={still} />
+          {/* With JavaScript it waits unseen (Problem.module.css) until live, then draws in with the
+              scroll; without it, the finished drawing is simply there. */}
+          <div ref={drawingRef} className={styles.drawingWrap} data-live={live ? "" : undefined}>
+            <Drawing progress={drawProgress} night={night} still={still || !live} />
           </div>
         </div>
 
-        <motion.ul
-          role="list"
-          className={styles.pains}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={listVariants}
-        >
-          {problem.pains.map((pain, i) => (
-            <motion.li key={pain.title} className={styles.pain} variants={itemVariants}>
-              <motion.span className={styles.rule} variants={ruleVariants} aria-hidden="true" />
-              <span className={styles.numeralMask} aria-hidden="true">
-                <motion.span className={styles.numeral} variants={numeralVariants}>
-                  {NUMERALS[i] ?? i + 1}
-                </motion.span>
-              </span>
-              <div className={styles.painCopy}>
+        {/* The pains, in turn: a ruled list, no numbering (the order carries nothing). */}
+        <Stagger className={styles.painsWrap}>
+          <ul role="list" className={styles.pains}>
+            {problem.pains.map((pain) => (
+              <StaggerItem as="li" key={pain.title} className={styles.pain}>
                 <h3 className={styles.painTitle}>{pain.title}</h3>
                 <p className={styles.painBody}>{pain.body}</p>
-              </div>
-            </motion.li>
-          ))}
-        </motion.ul>
+              </StaggerItem>
+            ))}
+          </ul>
+        </Stagger>
 
         <div ref={turnRef} className={styles.turn}>
-          <Reveal className={styles.turnMark} y={10} amount={1}>
-            <span className={styles.turnLine} aria-hidden="true" />
-            <span className="ornament" aria-hidden="true" />
-            <span className={styles.turnLine} aria-hidden="true" />
-          </Reveal>
-          <RevealTitle as="p" lead={TURN.lead} accent={TURN.accent} className={styles.turnText} delay={0.1} />
+          <RevealTitle as="p" lead={problem.turn} className={styles.turnText} />
           <span className={styles.dropTrack} aria-hidden="true">
             <motion.span className={styles.drop} style={{ scaleY: still ? 1 : drop }} />
           </span>

@@ -546,7 +546,7 @@ export default function RestaurantInventoryGuidePage() {
               can sell out automatically when stock runs out, and your counts show the variance. We will walk you through
               it on a menu like yours.
             </p>
-            <Link href={bookHref} className={styles.ctaButton}>
+            <Link href={bookHref} className={`${styles.ctaButton} pressable`}>
               Book a walkthrough &rarr;
             </Link>
           </div>

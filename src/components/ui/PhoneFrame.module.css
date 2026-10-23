@@ -1,9 +1,14 @@
+/* --phone-r: the device's width / height (1:2 unless the screenshot needs a taller screen).
+   --screen-r: the screen's width / height. Both feed the corner radii, so the corners stay
+   round whatever the proportions. */
 .phone {
+  --phone-r: 0.5;
+  --screen-r: 0.4835;
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 2;
+  aspect-ratio: var(--phone-r);
   padding: 3.2%;
-  border-radius: 13% / 6.5%;
+  border-radius: 13% / calc(13% * var(--phone-r));
   background:
     linear-gradient(145deg, #3a2c24 0%, #15100d 38%, #0e0a08 62%, #2b201a 100%);
   box-shadow:
@@ -29,14 +34,68 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 10.5% / 5.2%;
+  border-radius: 10.5% / calc(10.5% * var(--screen-r));
   background: #f3ebdd;
   isolation: isolate;
 }
 
+/* The screen has the screenshot's own shape (or the screenshot sits in a box of its own
+   shape), so filling it neither crops nor stretches anything. */
 .img {
   object-fit: cover;
+  object-position: center;
+}
+
+/* Classic device: a screenshot of another shape fills the screen from the top. */
+.imgTop {
   object-position: top center;
+}
+
+/* Shorter screenshots: status bar above, home-bar strip below, screenshot between. */
+.fill {
+  position: absolute;
+  inset: 0;
+}
+
+.statusBar,
+.homeBar {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.statusBar {
+  top: 0;
+  display: flex;
+}
+
+.homeBar {
+  bottom: 0;
+  display: grid;
+  place-items: center;
+}
+
+.statusSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.homeIndicator {
+  width: 34%;
+  aspect-ratio: 27 / 1;
+  border-radius: 999px;
+  background: rgba(28, 20, 17, 0.82);
+}
+
+/* The shorter screenshots were captured with rounded screen corners (about 6% of their
+   width); the box follows that curve so only the screenshot's own screen shows. */
+.shot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 6% / calc(6% * var(--shot-r, 0.56));
 }
 
 .island {

@@ -2,11 +2,6 @@
 
 import React, { useState } from 'react';
 import styles from './QrMenuSetupIndia.module.css';
-import { pricing } from '@/content/site';
-
-// KNOMI Signature plan price per table, per month (the recommended plan; includes ordering).
-const SIGNATURE_PRICE_PER_TABLE =
-  pricing.plans.find((plan) => plan.id === 'signature')?.priceMin ?? 250;
 
 type HardwareTier = 'stickers' | 'acrylic' | 'wood_nfc';
 type PrinterSetup = 'none' | 'single_thermal' | 'dual_thermal' | 'kds_tablet' | 'hybrid_full';
@@ -84,19 +79,11 @@ export default function QrMenuSetupCostEstimator() {
   const totalCapex = totalTableHardwareCost + kitchenHardwareCost;
   const capexPerTable = Math.round(totalCapex / tableCount);
 
-  // Calculations: per-order commission vs KNOMI's flat per-table fee (estimates from the user's inputs)
+  // Calculations: the per-order commission the user would stop paying with KNOMI's 0% commission
+  // (estimates from the user's inputs, before KNOMI's fee, which is shared on the walkthrough call)
   const monthlyTurnover = monthlyOrders * averageCheck;
   const monthlyAggregatorCommission = Math.round(monthlyTurnover * (aggregatorCommission / 100));
   const annualAggregatorBleed = monthlyAggregatorCommission * 12;
-  const monthlyKnomiFee = tableCount * SIGNATURE_PRICE_PER_TABLE;
-  const annualKnomiFee = monthlyKnomiFee * 12;
-  const monthlyNetDifference = monthlyAggregatorCommission - monthlyKnomiFee;
-  const annualNetDifference = monthlyNetDifference * 12;
-
-  let paybackDays = 0;
-  if (monthlyNetDifference > 0) {
-    paybackDays = Math.max(1, Math.round((totalCapex / monthlyNetDifference) * 30));
-  }
 
   return (
     <div className={styles.calculatorSection}>
@@ -104,24 +91,24 @@ export default function QrMenuSetupCostEstimator() {
         <span className={styles.calcBadge}>Interactive Rollout Simulator</span>
         <h3 className={styles.calcTitle}>Indian Restaurant QR Menu Setup Cost Estimator</h3>
         <p className={styles.calcSubtitle}>
-          Estimate upfront hardware costs for your tables and kitchen, then compare a per-order commission with KNOMI&apos;s flat per-table fee.
+          Estimate upfront hardware costs for your tables and kitchen, then see the per-order commission you would stop paying with KNOMI&apos;s 0% commission.
         </p>
       </div>
 
       <div className={styles.tabButtons}>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'capex' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'capex' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('capex')}
         >
           1. Upfront Setup &amp; Hardware Capex
         </button>
         <button
           type="button"
-          className={`${styles.tabBtn} ${activeTab === 'tco' ? styles.activeTabBtn : ''}`}
+          className={`${styles.tabBtn} pressable ${activeTab === 'tco' ? styles.activeTabBtn : ''}`}
           onClick={() => setActiveTab('tco')}
         >
-          2. Per-Order Commission vs Flat Per-Table Fee
+          2. Per-Order Commission vs 0% Commission
         </button>
       </div>
 
@@ -220,7 +207,7 @@ export default function QrMenuSetupCostEstimator() {
               </div>
               <div className={styles.statRow}>
                 <span className={styles.statLabel}>QR Menu Software:</span>
-                <span className={styles.statBenefit}>Monthly plan, not capex (see tab 2)</span>
+                <span className={styles.statBenefit}>Not capex (pricing shared on a walkthrough call)</span>
               </div>
             </div>
 
@@ -307,7 +294,7 @@ export default function QrMenuSetupCostEstimator() {
               </label>
               <div style={{ padding: '12px 14px', borderRadius: '8px', backgroundColor: 'var(--color-bg-surface-elevated, #1c1411)', border: '1px solid var(--color-border-default)' }}>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
-                  KNOMI charges a flat fee per table, per month and takes 0% commission: Menu ₹149, Signature ₹{SIGNATURE_PRICE_PER_TABLE} (recommended, includes ordering) or Ecosystem ₹500. This comparison uses Signature for your {tableCount} tables. What your guests order is yours.
+                  KNOMI takes 0% commission, so what your guests order is yours. We share KNOMI&apos;s pricing on a short walkthrough call, once we understand your restaurant.
                 </p>
               </div>
             </div>
@@ -315,7 +302,7 @@ export default function QrMenuSetupCostEstimator() {
 
           <div className={styles.resultBox}>
             <div>
-              <div className={styles.resultTitle}>Annual Cost Comparison (Estimate)</div>
+              <div className={styles.resultTitle}>Commission Comparison (Estimate)</div>
               <div className={styles.statRow}>
                 <span className={styles.statLabel}>Monthly Dine-In Volume:</span>
                 <span className={styles.statValue}>₹{monthlyTurnover.toLocaleString('en-IN')}</span>
@@ -325,32 +312,25 @@ export default function QrMenuSetupCostEstimator() {
                 <span className={styles.statRisk}>- ₹{monthlyAggregatorCommission.toLocaleString('en-IN')}/mo</span>
               </div>
               <div className={styles.statRow}>
-                <span className={styles.statLabel}>Commission Over 12 Months:</span>
-                <span className={styles.statRisk}>- ₹{annualAggregatorBleed.toLocaleString('en-IN')}/yr</span>
-              </div>
-              <div className={styles.statRow}>
-                <span className={styles.statLabel}>KNOMI Signature ({tableCount} tables × ₹{SIGNATURE_PRICE_PER_TABLE} × 12):</span>
-                <span className={styles.statValue}>- ₹{annualKnomiFee.toLocaleString('en-IN')}/yr</span>
+                <span className={styles.statLabel}>KNOMI Commission on Table Orders:</span>
+                <span className={styles.statBenefit}>0%</span>
               </div>
             </div>
 
             <div style={{ borderTop: '1px solid var(--color-border-default)', paddingTop: '16px', marginTop: '16px' }}>
               <div className={styles.statRow}>
                 <span className={styles.statLabel} style={{ fontWeight: 700, color: 'var(--color-text-primary)' }}>
-                  Estimated Annual Difference:
+                  Commission You Would Stop Paying:
                 </span>
-                <span className={annualNetDifference >= 0 ? styles.statBenefit : styles.statRisk}>
-                  {annualNetDifference >= 0 ? '+' : '-'} ₹{Math.abs(annualNetDifference).toLocaleString('en-IN')}/year
+                <span className={styles.statBenefit}>
+                  + ₹{annualAggregatorBleed.toLocaleString('en-IN')}/year
                 </span>
               </div>
-              {paybackDays > 0 && (
-                <div className={styles.statRow}>
-                  <span className={styles.statLabel}>Estimated Capex Payback:</span>
-                  <span className={styles.statHighlight}>{paybackDays} Days</span>
-                </div>
-              )}
               <p className={styles.resultFooterNote}>
-                * Estimate from your inputs: the commission you enter minus KNOMI&apos;s Signature fee. It is arithmetic, not a forecast of results.
+                Figures are before KNOMI&apos;s fee, which we share on a walkthrough call.
+              </p>
+              <p className={styles.resultFooterNote} style={{ marginTop: '8px' }}>
+                * Estimate from your inputs: the commission you enter, over 12 months. It is arithmetic, not a forecast of results.
               </p>
             </div>
           </div>

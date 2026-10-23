@@ -322,7 +322,7 @@ export default function BestOrderingSystemCafesPage() {
                     <td>Terminal hardware for each station</td>
                     <td>Significant hardware cost per kiosk</td>
                     <td>Free or low cost (PDF generator)</td>
-                    <td>₹250 per table / month on Signature, 0% commission</td>
+                    <td>Pricing shared on a walkthrough call · 0% commission</td>
                   </tr>
                   <tr>
                     <td><strong>Aesthetic &amp; Vibe Fit</strong></td>
@@ -459,7 +459,8 @@ export default function BestOrderingSystemCafesPage() {
               <strong>Total Monthly Incremental Revenue (in this example):</strong> ₹4,02,000 per month.<br />
               <strong>At an Assumed 74% Gross Margin on Coffee &amp; Bakery:</strong> <strong>about ₹2,97,480 a month in extra
               gross profit</strong> (roughly ₹35.7 lakh a year) from the same physical cafe footprint, before the cost of
-              the system: for 20 tables on KNOMI&apos;s Signature plan, that is ₹5,000 a month.
+              the system. We share KNOMI&apos;s pricing on a short <Link href="/#book">walkthrough call</Link>, once we
+              understand your cafe.
             </p>
 
             <div className={styles.calloutBox}>
@@ -495,7 +496,7 @@ export default function BestOrderingSystemCafesPage() {
                 straight to the barista&apos;s kitchen display, Knomi Host suggests the pastry with the flat white, and
                 you pay 0% commission.
               </p>
-              <Link href="/#book" className={styles.ctaButton}>
+              <Link href="/#book" className={`${styles.ctaButton} pressable`}>
                 Book a walkthrough
               </Link>
             </div>

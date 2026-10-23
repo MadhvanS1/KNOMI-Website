@@ -127,7 +127,7 @@
   line-height: 1.3;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--fg);
 }
 
 /* ---------- Host on the card's edge, and his speech bubble ---------- */
@@ -283,7 +283,7 @@
 
 .addedIcon {
   flex-shrink: 0;
-  color: var(--accent);
+  color: var(--fg-2);
 }
 
 .addedPrice {
@@ -292,6 +292,55 @@
   font-weight: 400;
   line-height: 1;
   font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* The dish he offered and the guest turned down: faded and crossed out, with a note. */
+.declined {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-strong);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--fg-3);
+}
+
+.declined :global(.leader) {
+  margin-inline: 4px;
+  opacity: 0.45;
+}
+
+.declinedNote,
+.tNote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  white-space: nowrap;
+  color: var(--fg-3);
+}
+
+.declinedNote {
+  font-size: 1rem;
+}
+
+/* A hand-ruled line through the text (drawn, so the ticket can strike it as you watch).
+   54% sits on the strikeout line of both Instrument faces at the line-heights used here. */
+.struck {
+  position: relative;
+}
+
+.struck::after {
+  content: "";
+  position: absolute;
+  left: -0.12em;
+  right: -0.12em;
+  top: 54%;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left center;
+  pointer-events: none;
 }
 
 /* =====================================================================
@@ -316,10 +365,6 @@
   flex-direction: column;
   align-items: center;
   gap: 30px;
-}
-
-.caption {
-  display: none;
 }
 
 /* ---------- The order ticket ---------- */
@@ -433,6 +478,36 @@
 
 .tPrice {
   font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Dessert: the tiramisu he offered, declined. It prints faded, then is struck through,
+   name first, then price; the total does not move. */
+.tLine[data-declined="true"] .tName,
+.tLine[data-declined="true"] .tPrice {
+  color: var(--fg-3);
+}
+
+.tNote {
+  margin-left: 0.55em;
+  font-size: 0.8125rem;
+}
+
+.tLine[data-declined="true"] :global(.leader) {
+  opacity: 0.4;
+}
+
+.tLine[data-declined="true"] .struck::after {
+  transform: scaleX(0);
+  transition: transform 150ms var(--ease-out);
+}
+
+.tLine[data-declined="true"][data-on="true"] .struck::after {
+  transform: none;
+  transition: transform 260ms var(--ease-out) 380ms;
+}
+
+.tLine[data-declined="true"][data-on="true"] .tPrice.struck::after {
+  transition-delay: 520ms;
 }
 
 .tTotal {
@@ -549,9 +624,6 @@
 }
 
 .goalNote {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   margin-top: 12px;
   font-size: var(--fs-micro);
   line-height: 1.5;
@@ -626,7 +698,7 @@
   left: 0;
   right: 0;
   z-index: 1;
-  transition: opacity 700ms var(--ease-out);
+  transition: opacity 250ms var(--ease-out);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -698,7 +770,6 @@
 .plate {
   position: absolute;
   inset: 0;
-  will-change: transform, opacity;
 }
 
 .dishSvg {
@@ -801,10 +872,10 @@
   color: var(--terracotta);
   box-shadow: 0 8px 16px -10px color-mix(in srgb, var(--terracotta) 80%, transparent);
   transition:
-    background-color 600ms var(--ease-out) 450ms,
-    color 600ms var(--ease-out) 450ms,
-    opacity 700ms var(--ease-out),
-    transform 900ms var(--ease-out);
+    background-color 250ms var(--ease-out) 200ms,
+    color 250ms var(--ease-out) 200ms,
+    opacity 200ms var(--ease-out),
+    transform 250ms var(--ease-out);
 }
 
 .addBtn[data-added="true"] {
@@ -833,7 +904,7 @@
 /* While Host hugs the add button (it is his button at that moment), the card's own button steps aside. */
 .strip[data-hug="true"] .addBtn {
   opacity: 0;
-  transform: scale(0.7);
+  transform: scale(0.9);
 }
 
 /* ---------- Host on the card ----------
@@ -850,10 +921,9 @@
   position: absolute;
   z-index: 4;
   transform-origin: 50% 100%;
-  will-change: transform, opacity;
   pointer-events: none;
   /* His breath starts once he has settled into the moment */
-  --host-breath-delay: 1.7s;
+  --host-breath-delay: 0.8s;
 }
 
 .host[data-pose="lean"] {
@@ -960,7 +1030,6 @@
     0 1px 2px rgba(28, 20, 17, 0.05),
     0 18px 32px -20px rgba(28, 20, 17, 0.5);
   font-size: calc(var(--cw) / 20);
-  will-change: transform, opacity;
 }
 
 .sbTail {
@@ -971,12 +1040,25 @@
 }
 
 .sbLine {
+  position: relative;
   font-family: var(--font-hand);
   font-weight: 600;
   font-size: 1.5em;
   line-height: 1.02;
   letter-spacing: 0.003em;
   color: var(--ink);
+}
+
+/* A sheet of the bubble's own paper over his words. It shrinks away to the right, so
+   the line appears to be written left to right; its soft leading edge is the pen.
+   Negative insets cover italic overhangs and descenders; the soft edge starts in the
+   bubble's padding, so no letter shows before it is written. */
+.sbInk {
+  position: absolute;
+  inset: -0.12em -0.1em -0.2em -0.45em;
+  background: linear-gradient(to right, transparent, var(--paper) 0.35em);
+  transform-origin: right center;
+  pointer-events: none;
 }
 
 .sbChips {
@@ -1209,32 +1291,6 @@
     min-width: 0;
   }
 
-  .caption {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6em;
-    font-size: var(--fs-eyebrow);
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    font-variant-numeric: tabular-nums;
-    color: var(--fg-3);
-    white-space: nowrap;
-  }
-
-  .capNum {
-    color: var(--fg);
-  }
-
-  .capTotal {
-    letter-spacing: 0.14em;
-  }
-
-  .capDash {
-    color: var(--line-strong);
-    letter-spacing: 0;
-  }
-
   .ticketWrap {
     width: min(100%, 300px);
   }
@@ -1266,20 +1322,20 @@
     font-size: clamp(1.4rem, calc(var(--cw) * 0.09), 1.75rem);
   }
 
-  /* The goal arrives with the seal, and the space for it is held from the start. */
+  /* The goal follows the seal's stamp, and the space for it is held from the start. */
   .goal {
     max-width: 30rem;
     transition:
-      opacity 900ms var(--ease-out) 900ms,
-      transform 1100ms var(--ease-out) 900ms;
+      opacity 500ms var(--ease-out) 1s,
+      transform 600ms var(--ease-out) 1s;
   }
 
   .goal[data-on="false"] {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
     transition:
-      opacity 500ms var(--ease-out),
-      transform 600ms var(--ease-out);
+      opacity 200ms var(--ease-out),
+      transform 200ms var(--ease-out);
   }
 
   .goalText {
@@ -1360,17 +1416,21 @@
     background: var(--bg);
     box-shadow: 0 0 0 6px var(--bg);
     transform: translate(-50%, -50%);
-    transition: border-color 400ms var(--ease-out);
+    transition: border-color 250ms var(--ease-out);
   }
 
+  /* The bead fills as its moment is reached: a fade from 90%, never a pop from nothing. */
   .dot::after {
     content: "";
     position: absolute;
     inset: 2px;
     border-radius: 50%;
     background: var(--accent);
-    transform: scale(0);
-    transition: transform 450ms var(--ease-spring);
+    opacity: 0;
+    transform: scale(0.9);
+    transition:
+      opacity 200ms var(--ease-out),
+      transform 250ms var(--ease-out);
   }
 
   .isLit .dot {
@@ -1378,7 +1438,8 @@
   }
 
   .isLit .dot::after {
-    transform: scale(1);
+    opacity: 1;
+    transform: none;
   }
 
   /* Host and his bubble live on the stage here; the timeline keeps his words. */
@@ -1418,7 +1479,8 @@
     font-size: var(--fs-body);
   }
 
-  .added {
+  .added,
+  .declined {
     max-width: 290px;
   }
 
@@ -1428,16 +1490,17 @@
   .line,
   .body,
   .added {
-    transition: color 600ms var(--ease-out);
+    transition: color 300ms var(--ease-out);
   }
 
   .momentNum,
-  .addedIcon {
-    transition: opacity 600ms var(--ease-out);
+  .addedIcon,
+  .declined {
+    transition: opacity 300ms var(--ease-out);
   }
 
   .momentRule {
-    transition: transform 900ms var(--ease-out);
+    transition: transform 300ms var(--ease-out);
   }
 
   .root[data-mode="story"] .moment:not(.isActive) .momentLabel,
@@ -1448,7 +1511,8 @@
   }
 
   .root[data-mode="story"] .moment:not(.isActive) .momentNum,
-  .root[data-mode="story"] .moment:not(.isActive) .addedIcon {
+  .root[data-mode="story"] .moment:not(.isActive) .addedIcon,
+  .root[data-mode="story"] .moment:not(.isActive) .declined {
     opacity: 0.4;
   }
 
@@ -1460,5 +1524,23 @@
 @media (min-width: 1200px) {
   .story {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+}
+
+/* Desktop: Host says each line once, in his bubble on the stage. The timeline keeps the
+   label, the owner's note and the ticket line; his words stay here for screen readers
+   (the stage is decorative). With reduced motion the stage shows only the final bill,
+   so the timeline keeps his words in view. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .say {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 }

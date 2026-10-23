@@ -1,6 +1,8 @@
 /* ========================================================
-   KNOMI Guide: Self-Ordering ROI Calculator Styles
-   Theme: Warm Luxury (#f4eee5 base, #fbf8f3 cards, #1c1411 text)
+   KNOMI Guide: Self-Ordering ROI Calculator
+   The calculator speaks the homepage calculator's language: the
+   owner's numbers as ruled rows, the sum as an itemised bill on
+   paper, stamped "Example only", in ink rather than success green.
    ======================================================== */
 
 .pageContainer {
@@ -29,13 +31,15 @@
   transition: color var(--duration-fast) var(--ease-default);
 }
 
-.breadcrumb a:hover {
-  color: var(--color-whiskey-sour);
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb a:hover {
+    color: var(--color-whiskey-sour);
+  }
 }
 
 .title {
-  font-size: 2.75rem;
-  line-height: 1.2;
+  font-size: clamp(2.25rem, 1.7rem + 2vw, 3.25rem);
+  line-height: 1.08;
   margin-bottom: 20px;
   color: var(--color-text-primary);
 }
@@ -55,34 +59,21 @@
   gap: 16px;
   font-size: 0.875rem;
   color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-weight: 500;
   margin-top: 16px;
   margin-bottom: 24px;
 }
 
 /* Answer-First AEO Snippet Box */
 .aeoBox {
-  background-color: var(--color-surface-card);
-  border: 1px solid var(--color-whiskey-sour);
-  border-left: 4px solid var(--color-whiskey-sour);
-  border-radius: var(--radius-sm);
-  padding: 24px 28px;
+  composes: callout from "../GuideKit.module.css";
   margin: 40px auto 0;
   max-width: 860px;
-  text-align: left;
-  box-shadow: var(--shadow-card);
 }
 
 .aeoLabel {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-whiskey-sour);
-  margin-bottom: 8px;
+  composes: calloutLabel from "../GuideKit.module.css";
 }
 
 .aeoText {
@@ -92,202 +83,463 @@
   font-weight: 500;
 }
 
-/* Calculator Section */
-.calcContainer {
-  background-color: var(--color-surface-card);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius);
-  padding: 40px;
-  margin: 48px auto;
-  max-width: 1040px;
-  box-shadow: var(--shadow-card);
-}
+/* =====================================================================
+   The calculator
+   ===================================================================== */
 
-.calcGrid {
+.calc {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 40px;
-  align-items: stretch;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 1120px;
+  margin: 24px auto 0;
 }
 
-.controlsCol {
+/* ---------- The owner's numbers ---------- */
+
+.inputs {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  max-width: 680px;
+}
+
+.calcHead {
+  margin-bottom: clamp(20px, 1rem + 1vw, 28px);
 }
 
 .calcHeading {
-  font-family: var(--font-heading);
-  font-size: 1.4rem;
-  color: var(--color-text-primary);
-  margin-bottom: 6px;
+  font-size: var(--fs-h3);
+  line-height: 1.05;
+  color: var(--fg);
 }
 
 .calcSub {
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
+  margin-top: 10px;
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--fg-2);
 }
 
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.rows {
+  border-bottom: 1px solid var(--line-strong);
 }
 
-.inputHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.row {
+  padding-block: clamp(18px, 0.95rem + 0.5vw, 24px) clamp(10px, 0.55rem + 0.3vw, 14px);
+  border-top: 1px solid var(--line-strong);
 }
 
-.inputLabel {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
+.rowHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: clamp(16px, 3vw, 32px);
 }
 
-.inputValueBadge {
-  font-family: var(--font-heading);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--color-whiskey-sour);
-  background-color: rgba(133, 97, 58, 0.12);
-  padding: 4px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(133, 97, 58, 0.25);
+.label {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 1.04rem + 0.4vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  text-wrap: balance;
+  cursor: pointer;
 }
 
-.slider {
+/* The figure the slider sets: printed, not typed into. */
+.figure {
+  font-family: var(--font-serif);
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ---------- Slider: a hairline track, a russet fill, a brass button ---------- */
+
+.range {
+  --thumb: 22px;
   -webkit-appearance: none;
   appearance: none;
+  display: block;
   width: 100%;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--color-surface-pressed);
+  height: 34px;
+  margin: 10px 0 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.range:focus-visible {
   outline: none;
-  cursor: pointer;
 }
 
-.slider::-webkit-slider-thumb {
+.range::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 2px;
+  /* The fill ends under the centre of the thumb, wherever it is. */
+  background:
+    linear-gradient(var(--accent), var(--accent)) 0 50% / calc(var(--thumb) / 2 + var(--fill, 0) * (100% - var(--thumb))) 2px no-repeat,
+    linear-gradient(var(--line-strong), var(--line-strong)) 0 50% / 100% 1px no-repeat;
+}
+
+.range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 24px;
-  height: 24px;
+  box-sizing: border-box;
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc(1px - var(--thumb) / 2);
+  border: 4px solid var(--paper);
   border-radius: 50%;
-  background: var(--color-whiskey-sour);
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: transform var(--duration-fast) var(--ease-default);
+  background: var(--brass);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--brass) 75%, transparent),
+    0 6px 14px -6px rgba(28, 20, 17, 0.5);
+  transition:
+    transform 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
 }
 
-.slider::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
+.range::-moz-range-track {
+  height: 1px;
+  border: 0;
+  background: var(--line-strong);
 }
 
-.sliderHints {
-  display: flex;
-  justify-content: space-between;
+.range::-moz-range-progress {
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.range::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--thumb);
+  height: var(--thumb);
+  border: 4px solid var(--paper);
+  border-radius: 50%;
+  background: var(--brass);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--brass) 75%, transparent),
+    0 6px 14px -6px rgba(28, 20, 17, 0.5);
+  transition:
+    transform 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .range:hover::-webkit-slider-thumb {
+    transform: scale(1.08);
+  }
+
+  .range:hover::-moz-range-thumb {
+    transform: scale(1.08);
+  }
+}
+
+/* Held: the button grows a little under the thumb (press feedback for a slider). */
+.range:active::-webkit-slider-thumb {
+  transform: scale(1.16);
+}
+
+.range:active::-moz-range-thumb {
+  transform: scale(1.16);
+}
+
+.range:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 1px var(--brass),
+    0 0 0 3px var(--bg),
+    0 0 0 5px var(--focus);
+}
+
+.range:focus-visible::-moz-range-thumb {
+  box-shadow:
+    0 0 0 1px var(--brass),
+    0 0 0 3px var(--bg),
+    0 0 0 5px var(--focus);
+}
+
+/* Low end, a note, high end: each keeps to its third, so phones wrap instead of colliding. */
+.scale {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 2px;
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Results Column */
-.resultsCol {
-  background-color: var(--color-surface-hover);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-sm);
-  padding: 32px 28px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 24px;
-}
-
-.resultsHeader {
-  border-bottom: 1px solid var(--color-border-default);
-  padding-bottom: 16px;
-}
-
-.resultsTitle {
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  color: var(--color-text-primary);
-  margin-bottom: 4px;
-}
-
-.resultsSub {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary);
-}
-
-.mainSavingsBlock {
+.scale > :nth-child(2) {
   text-align: center;
-  padding: 20px 16px;
-  background: var(--color-surface-card);
-  border: 1px solid rgba(60, 141, 90, 0.3);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-card);
 }
 
-.mainSavingsLabel {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 700;
-  color: var(--color-success);
-  margin-bottom: 6px;
+.scale > :last-child {
+  text-align: right;
 }
 
-.mainSavingsValue {
-  font-family: var(--font-heading);
-  font-size: 2.75rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  line-height: 1.1;
-  margin-bottom: 4px;
-}
+/* ---------- Running total (phones and tablets) ----------
+   Sticks to the bottom of the screen while the inputs scroll past, then
+   leaves with them, just before the bill. Room is kept on the right for
+   the WhatsApp button. */
 
-.mainSavingsSubtext {
-  font-size: 0.825rem;
-  color: var(--color-text-secondary);
-}
-
-.metricsList {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.metricRow {
-  display: flex;
-  justify-content: space-between;
+.readout {
+  position: sticky;
+  bottom: clamp(16px, 2.5vw, 28px);
+  z-index: 5;
+  align-self: flex-start;
+  display: inline-flex;
   align-items: center;
-  font-size: 0.9rem;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed var(--color-border-default);
+  gap: 16px;
+  max-width: calc(100% - 72px);
+  min-height: 52px;
+  margin-top: 20px;
+  padding: 0 20px 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow-lift);
 }
 
-.metricName {
-  color: var(--color-text-secondary);
+.readoutLabel {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--taupe);
 }
 
-.metricValue {
-  font-weight: 700;
-  color: var(--color-text-primary);
+.readoutStamp {
+  color: var(--russet);
 }
 
-.metricHighlight {
-  color: var(--color-success);
-  font-weight: 700;
+.readoutFig {
+  font-family: var(--font-serif);
+  font-size: 1.625rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--ink);
 }
 
-.calcCtaBtn {
+/* ---------- The bill ---------- */
+
+.billCol {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   width: 100%;
-  text-align: center;
+  max-width: 460px;
+  margin-top: clamp(2.5rem, 2rem + 2.5vw, 3.5rem);
 }
 
-/* Math Breakdown Section */
+/* Zig-zag edges, printed in ink. */
+.paper {
+  position: relative;
+  filter: drop-shadow(0 22px 26px rgba(28, 20, 17, 0.14)) drop-shadow(0 2px 3px rgba(28, 20, 17, 0.08));
+}
+
+.receipt {
+  --zz: 7px;
+  --op: 1.5rem; /* the operator column: +, = */
+  --pad-x: clamp(18px, 1rem + 1.6vw, 30px);
+
+  position: relative;
+  padding: calc(var(--zz) + clamp(22px, 1.2rem + 1vw, 30px)) var(--pad-x) calc(var(--zz) + clamp(20px, 1.1rem + 0.8vw, 28px));
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-mask:
+    conic-gradient(from 135deg at top, transparent, black 1deg 89deg, transparent 90deg) top / calc(var(--zz) * 2) 51% repeat-x,
+    conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) bottom / calc(var(--zz) * 2) 51% repeat-x;
+  mask:
+    conic-gradient(from 135deg at top, transparent, black 1deg 89deg, transparent 90deg) top / calc(var(--zz) * 2) 51% repeat-x,
+    conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) bottom / calc(var(--zz) * 2) 51% repeat-x;
+}
+
+.rHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--taupe);
+}
+
+/* "Example only", stamped on the bill in russet, as on the homepage. */
+.stamp {
+  padding: 4px 8px 3px;
+  border: 1px solid color-mix(in srgb, var(--russet) 70%, transparent);
+  border-radius: 3px;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  color: var(--russet);
+  transform: rotate(-3deg);
+}
+
+.rDash {
+  display: block;
+  margin-top: 14px;
+  border-top: 1px dashed rgba(28, 20, 17, 0.2);
+}
+
+.rLines {
+  list-style: none;
+  margin-top: 8px;
+  padding: 0;
+}
+
+.rItem {
+  padding-block: 8px;
+}
+
+.rLine {
+  display: flex;
+  align-items: baseline;
+}
+
+.op {
+  flex: 0 0 var(--op);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--cocoa);
+}
+
+.rName {
+  min-width: 0;
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.rVal {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* How each line is made, in small type under it. */
+.rWorking {
+  display: block;
+  margin: 2px 0 0 var(--op);
+  font-size: var(--fs-micro);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--taupe);
+  font-variant-numeric: tabular-nums;
+}
+
+.rTotal {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(28, 20, 17, 0.2);
+}
+
+.rTotalLabel {
+  display: flex;
+  align-items: baseline;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cocoa);
+}
+
+/* Sized to the bill, not the number, so it never jumps as the figure changes. Ink, not green. */
+.rHero {
+  margin: 8px 0 0 var(--op);
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 2rem + 1.6vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.rNote {
+  margin-top: 12px;
+  font-size: var(--fs-micro);
+  line-height: 1.5;
+  color: var(--cocoa);
+}
+
+.rNote + .rNote {
+  margin-top: 6px;
+}
+
+.disclaimer {
+  margin-top: 22px;
+  font-size: var(--fs-micro);
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+.calcCta {
+  align-self: flex-start;
+  margin-top: 22px;
+}
+
+/* ---------- Desktop: the numbers beside the bill ---------- */
+
+@media (min-width: 1024px) {
+  .calc {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: clamp(48px, 5vw, 96px);
+    align-items: start;
+  }
+
+  .inputs {
+    max-width: none;
+  }
+
+  .readout {
+    display: none;
+  }
+
+  .billCol {
+    margin-top: 0;
+    justify-self: end;
+  }
+}
+
+/* Tall enough screens: the bill keeps pace while the seven numbers are changed. */
+@media (min-width: 1024px) and (min-height: 820px) {
+  .billCol {
+    position: sticky;
+    top: calc(var(--nav-h) + 28px);
+  }
+}
+
+/* =====================================================================
+   The rest of the guide
+   ===================================================================== */
+
+/* Section heads: the homepage's SectionHead, a size down for a guide. */
+.sectionHead h2 {
+  max-width: 22ch;
+  font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+}
+
+/* Math Breakdown Section: three ruled notes, not three boxed cards. */
 .mathSection {
   margin: 60px 0;
 }
@@ -295,33 +547,31 @@
 .mathGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: clamp(28px, 3vw, 48px);
   margin-top: 36px;
 }
 
 .mathCard {
-  background-color: var(--color-surface-card);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius);
-  padding: 32px 24px;
-  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-strong);
 }
 
 .mathCardTitle {
-  font-size: 1.2rem;
+  font-size: var(--fs-h4);
+  line-height: 1.15;
   color: var(--color-text-primary);
 }
 
 .mathCardDesc {
-  font-size: 0.925rem;
+  font-size: 0.975rem;
   line-height: 1.6;
   color: var(--color-text-secondary);
 }
 
-/* FAQ Section */
+/* FAQ Section: a ruled list. */
 .faqSection {
   padding: 60px 0;
 }
@@ -329,28 +579,26 @@
 .faqGrid {
   display: flex;
   flex-direction: column;
-  gap: 18px;
   max-width: 860px;
-  margin: 36px auto 0;
+  margin: 36px 0 0;
+  border-bottom: 1px solid var(--line-strong);
 }
 
 .faqItem {
-  background-color: var(--color-surface-card);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-sm);
-  padding: 24px;
-  box-shadow: var(--shadow-card);
+  padding: 24px 0;
+  border-top: 1px solid var(--line-strong);
 }
 
 .faqQuestion {
   font-family: var(--font-heading);
-  font-size: 1.15rem;
+  font-size: var(--fs-h4);
+  line-height: 1.2;
   color: var(--color-text-primary);
   margin-bottom: 10px;
 }
 
 .faqAnswer {
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.65;
   color: var(--color-text-secondary);
 }
@@ -364,7 +612,6 @@
   text-align: center;
   max-width: 800px;
   margin: 60px auto 40px;
-  box-shadow: var(--shadow-card);
 }
 
 .ctaHeading {
@@ -391,25 +638,12 @@
 }
 
 @media (max-width: 900px) {
-  .calcGrid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
   .mathGrid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 600px) {
-  .title {
-    font-size: 2rem;
-  }
-
-  .calcContainer {
-    padding: 24px 16px;
-  }
-
   .ctaBox {
     padding: 32px 20px;
   }

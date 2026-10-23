@@ -1,3 +1,6 @@
+/* Word-by-word headlines (RevealTitle `words`). The rest of the reveal system is
+   attribute-driven and lives in globals.css, beside the motion tokens. */
+
 .line {
   display: block;
 }
@@ -14,40 +17,50 @@
 
 .word {
   display: inline-block;
-  will-change: transform;
 }
 
-/* CSS entrances for above-the-fold content (see `immediate`). */
-.enter {
-  animation: enter 0.95s var(--ease-out) both;
-  animation-delay: var(--d, 0s);
+/* On scroll: words wait below their line only once the reveal script runs, and
+   rise one after another when the headline is marked in view. */
+:global(html.js[data-reveal-live]) [data-reveal="words"]:not([data-in]) .word {
+  transform: translate3d(0, 110%, 0);
 }
 
-@keyframes enter {
-  from {
-    opacity: 0;
-    transform: translateY(var(--y, 28px));
-  }
+/* Failsafe: before the observer has reported, words wait for 2.5s at most. */
+:global(html.js:not([data-reveal-live])) [data-reveal="words"]:not([data-in]) .word {
+  animation: wordWait 2.8s var(--ease-out);
 }
 
-.lift {
-  animation: lift 0.95s var(--ease-out) both;
-  animation-delay: var(--d, 0s);
-}
-
-@keyframes lift {
-  from {
-    transform: translateY(var(--y, 28px));
-  }
-}
-
-.wordEnter {
-  animation: wordRise 1.05s var(--ease-out) both;
-  animation-delay: var(--d, 0s);
+:global(html.js) [data-reveal="words"][data-in] .word,
+[data-reveal-now="words"] .word {
+  animation: wordRise 0.8s var(--ease-out) backwards;
+  animation-delay: calc(var(--title-delay, 0s) + var(--i, 0) * 50ms);
 }
 
 @keyframes wordRise {
   from {
-    transform: translateY(112%);
+    transform: translate3d(0, 110%, 0);
+  }
+}
+
+/* Held below the line for 2.5s, then risen. */
+@keyframes wordWait {
+  0%,
+  89% {
+    transform: translate3d(0, 110%, 0);
+  }
+}
+
+/* Reduced motion: no rising words. The headline fades as one (see globals.css). */
+@media (prefers-reduced-motion: reduce) {
+  .word {
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+@media print {
+  .word {
+    transform: none !important;
+    animation: none !important;
   }
 }

@@ -498,9 +498,10 @@ export default function RestaurantNoShowDepositPolicyPage() {
               <h2 className={styles.ctaTitle}>Protect Your Table Yield with KNOMI</h2>
               <p className={styles.ctaText}>
                 Pair a smart reservation policy with tabletop ordering: guests order from their phone, orders reach your
-                kitchen display straight away, and you pay 0% commission, with one flat price per table, per month.
+                kitchen display straight away, and you pay 0% commission. We share pricing on the walkthrough, once we
+                understand your restaurant.
               </p>
-              <Link href={bookHref} className={styles.ctaButton}>
+              <Link href={bookHref} className={`${styles.ctaButton} pressable`}>
                 Book a walkthrough
               </Link>
             </div>

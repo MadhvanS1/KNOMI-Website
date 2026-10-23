@@ -4,10 +4,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PetpoojaFitmentAuditor from "./PetpoojaFitmentAuditor";
 import styles from "./PetpoojaReview.module.css";
-import { GOAL, OG_IMAGE, pricing } from "@/content/site";
-
-const [menuPlan, signaturePlan, ecosystemPlan] = pricing.plans;
-const PRICE_LADDER = `Menu at ₹${menuPlan.priceMin}, Signature at ₹${signaturePlan.priceMin} (our recommended plan) and Ecosystem at ₹${ecosystemPlan.priceMin}, per table, per month`;
+import callout from "../Callout.module.css";
+import { GOAL, OG_IMAGE } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Petpooja POS Review: Honest Pros, Cons & Peak-Hour Operational Audit (2026) | KNOMI",
@@ -86,7 +84,7 @@ const articleJsonLd = {
         },
       },
       "datePublished": "2026-09-06T04:30:00+05:30",
-      "dateModified": "2026-10-11T12:00:00+05:30",
+      "dateModified": "2026-10-16T12:00:00+05:30",
     },
     {
       "@type": "FAQPage",
@@ -159,9 +157,9 @@ export default function PetpoojaReviewPage() {
             </p>
 
             {/* Answer-First AEO Snippet Box */}
-            <div className={styles.aeoBox}>
-              <span className={styles.aeoLabel}>Direct Operational Verdict (AEO Summary)</span>
-              <p className={styles.aeoText}>
+            <div className={`${callout.box} ${styles.aeoBox}`}>
+              <span className={callout.label}>Direct Operational Verdict (AEO Summary)</span>
+              <p className={callout.text}>
                 Petpooja is an accomplished, economical cashier billing POS for Indian food businesses, rated 4.6/5 on Capterra. Reviewers praise its phone support, intuitive counter billing and Zomato/Swiggy delivery consolidation. For busy dine-in cafes and casual dining venues, the bottleneck at peak is usually order-taking itself (orders wait for a free server), whatever the POS. A guest-facing ordering layer such as KNOMI is built to address that, alongside Petpooja.
               </p>
             </div>
@@ -319,10 +317,10 @@ export default function PetpoojaReviewPage() {
               <strong>Keep Petpooja at the Counter:</strong> Let Petpooja handle what it does well: end-of-day cash reconciliation, Tally accounting export and GST tax invoices.
             </li>
             <li>
-              <strong>Deploy KNOMI on Dining Tables:</strong> Guests open an illustrated menu themed to your restaurant, with no app and no login to browse. They order drinks and starters themselves, confirm with their phone number, and the order goes to your kitchen display or a network KOT printer. On the Signature plan, KNOMI orders flow into Petpooja.
+              <strong>Deploy KNOMI on Dining Tables:</strong> Guests open an illustrated menu themed to your restaurant, with no app and no login to browse. They order drinks and starters themselves, confirm with their phone number, and the order goes to your kitchen display or a network KOT printer. KNOMI orders flow into Petpooja too.
             </li>
             <li>
-              <strong>Unlock Invisible Demand:</strong> Petpooja records completed transactions. On the Ecosystem plan, Knomi Compass, powered by Knomi Sense, measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix.
+              <strong>Unlock Invisible Demand:</strong> Petpooja records completed transactions. Knomi Compass, powered by Knomi Sense, measures how long guests linger on each dish and how often viewing turns into ordering, and places every dish on a 2x2 menu engineering matrix.
             </li>
           </ul>
           <p>
@@ -356,9 +354,9 @@ export default function PetpoojaReviewPage() {
           <div className={styles.ctaCard}>
             <h3>Ready to Ease Peak-Hour Table Bottlenecks?</h3>
             <p>
-              Keep your existing Petpooja POS for accounting and put KNOMI on your dining tables: guest self-ordering, Knomi Host suggesting pairings, and 0% commission. Plans are {PRICE_LADDER}.
+              Keep your existing Petpooja POS for accounting and put KNOMI on your dining tables: guest self-ordering, Knomi Host suggesting pairings, and 0% commission. We share pricing on a short walkthrough call, once we understand your restaurant.
             </p>
-            <Link href="/compare/petpooja-alternatives" className={styles.ctaButton}>
+            <Link href="/compare/petpooja-alternatives" className={`${styles.ctaButton} pressable`}>
               Explore the Co-Existence Model
             </Link>
           </div>

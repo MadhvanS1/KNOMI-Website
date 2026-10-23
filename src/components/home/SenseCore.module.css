@@ -72,7 +72,7 @@
   align-items: center;
 }
 
-/* Soft warm light behind the instrument */
+/* Soft warm light behind the instrument (kept low, so the brass leads, not the haze) */
 .glow {
   position: absolute;
   z-index: -1;
@@ -84,8 +84,8 @@
   border-radius: 50%;
   background: radial-gradient(
     closest-side,
-    color-mix(in srgb, var(--terracotta) 17%, transparent) 0%,
-    color-mix(in srgb, var(--brass) 7%, transparent) 42%,
+    color-mix(in srgb, var(--terracotta) 13%, transparent) 0%,
+    color-mix(in srgb, var(--brass) 6%, transparent) 42%,
     color-mix(in srgb, var(--brass) 2%, transparent) 70%,
     transparent 100%
   );
@@ -152,14 +152,14 @@
   stroke-width: 0.9;
   opacity: 0.5;
   transition:
-    stroke 0.8s var(--ease-out),
-    stroke-width 0.8s var(--ease-out),
-    opacity 0.8s var(--ease-out);
+    stroke 0.3s var(--ease-out),
+    stroke-width 0.3s var(--ease-out),
+    opacity 0.3s var(--ease-out);
 }
 
 .fbBead {
   fill: var(--brass);
-  transition: fill 0.8s var(--ease-out);
+  transition: fill 0.3s var(--ease-out);
 }
 
 .fbRing.fbOn ellipse {
@@ -176,7 +176,7 @@
   stroke: var(--brass-light);
   stroke-width: 0.35;
   opacity: 0.22;
-  transition: opacity 0.8s var(--ease-out);
+  transition: opacity 0.3s var(--ease-out);
 }
 
 .fbFilament.fbOn {
@@ -233,8 +233,7 @@
   bottom: 23px;
   display: inline-flex;
   align-items: baseline;
-  gap: 8px;
-  padding: 6px 13px 7px 12px;
+  padding: 6px 13px 7px;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-pill);
   background: color-mix(in srgb, var(--espresso) 88%, transparent);
@@ -246,14 +245,6 @@
   line-height: 1.3;
   white-space: nowrap;
   transform: translateX(calc(-50% + var(--shift, 0px)));
-}
-
-.beadNum {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1.08em;
-  color: var(--accent);
 }
 
 .beadLabel[data-flip="true"] .beadTag {
@@ -275,22 +266,6 @@
   gap: 8px;
   margin-top: -0.25rem;
   text-align: center;
-}
-
-.plaqueName {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--fg-2);
-}
-
-.plaqueName :global(.ornament) {
-  width: 8px;
-  height: 8px;
 }
 
 .plaqueLine {
@@ -317,18 +292,16 @@
   background: color-mix(in srgb, var(--espresso) 70%, transparent);
   color: var(--fg-2);
   transition:
-    color var(--dur) var(--ease-out),
-    border-color var(--dur) var(--ease-out),
-    transform var(--dur) var(--ease-out);
+    color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out),
+    var(--press-transition);
 }
 
-.pause:hover {
-  color: var(--fg);
-  border-color: var(--line-control);
-}
-
-.pause:active {
-  transform: scale(0.94);
+@media (hover: hover) and (pointer: fine) {
+  .pause:hover {
+    color: var(--fg);
+    border-color: var(--line-control);
+  }
 }
 
 .pause[aria-pressed="true"] {
@@ -391,10 +364,17 @@
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   background: color-mix(in srgb, var(--walnut) 55%, transparent);
+  -webkit-tap-highlight-color: transparent;
   transition:
-    border-color 0.8s var(--ease-out),
-    background-color 0.8s var(--ease-out),
-    box-shadow 0.8s var(--ease-out);
+    border-color 0.25s var(--ease-out),
+    background-color 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out),
+    var(--press-transition);
+}
+
+/* The whole card is the target on touch screens, so the whole card answers the press. */
+.card:has(.itemBtn:active) {
+  scale: 0.98;
 }
 
 .card.on {
@@ -408,36 +388,24 @@
   outline-offset: 3px;
 }
 
-/* Rows rise in, one after another, the first time the list is seen. */
 .itemHead {
   font-family: var(--font-sans);
   font-size: inherit;
   line-height: inherit;
   letter-spacing: normal;
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 0.8s var(--ease-out),
-    transform 1s var(--ease-out);
-  transition-delay: calc(var(--n, 0) * 80ms + 100ms);
 }
 
-.shown .itemHead {
-  opacity: 1;
-  transform: none;
-}
-
+/* Name, then its role, on one line like a menu entry (the role drops below if it must). */
 .itemBtn {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas:
-    "num role"
-    "name name";
+  display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  row-gap: 0.55rem;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
   width: 100%;
   text-align: left;
   color: var(--fg);
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* The whole card is the button's target on touch screens. */
@@ -452,21 +420,7 @@
   outline: none;
 }
 
-.num {
-  grid-area: num;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.15rem;
-  line-height: 1;
-  color: var(--accent-soft);
-}
-
-.on .num {
-  color: var(--accent);
-}
-
 .name {
-  grid-area: name;
   font-family: var(--font-serif);
   font-size: 1.65rem;
   line-height: 1.05;
@@ -479,12 +433,8 @@
 }
 
 .role {
-  grid-area: role;
-  justify-self: end;
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: var(--fs-small);
+  font-weight: 500;
   white-space: nowrap;
   color: var(--fg-3);
 }
@@ -533,21 +483,24 @@
   background-repeat: no-repeat;
   transition:
     background-size var(--dur) var(--ease-out),
-    color var(--dur) var(--ease-out);
-}
-
-.see:hover {
-  color: var(--accent);
-  background-size: 0% 1px;
-  background-position: 100% 100%;
+    color 0.2s var(--ease-out),
+    var(--press-transition);
 }
 
 .seeArrow {
-  transition: transform var(--dur) var(--ease-out);
+  transition: transform 0.2s var(--ease-out);
 }
 
-.see:hover .seeArrow {
-  transform: translateX(3px);
+@media (hover: hover) and (pointer: fine) {
+  .see:hover {
+    color: var(--accent);
+    background-size: 0% 1px;
+    background-position: 100% 100%;
+  }
+
+  .see:hover .seeArrow {
+    transform: translateX(3px);
+  }
 }
 
 /* Cards: the text runs full width; Host peeks over the ledge beside the link. */
@@ -576,11 +529,11 @@
   pointer-events: none;
 }
 
-/* He rises over the ledge when his module comes into focus. */
+/* He rises over the ledge when his module comes into focus, just after his words. */
 .hostArt {
   display: block;
   transform: translateY(30%);
-  transition: transform 1.2s var(--ease-out) 0.25s;
+  transition: transform 0.3s var(--ease-out) 0.06s;
 }
 
 .on .hostArt,
@@ -608,8 +561,8 @@
   border-radius: 2px;
   background: var(--line-strong);
   transition:
-    background-color 0.6s var(--ease-out),
-    transform 0.8s var(--ease-out);
+    background-color 0.2s var(--ease-out),
+    transform 0.25s var(--ease-out);
 }
 
 .tickOn {
@@ -621,22 +574,11 @@
   margin-top: 1.5rem;
 }
 
-.planNote {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  line-height: 1.7;
-  text-transform: uppercase;
+/* One plain sentence under the list. */
+.note {
+  font-size: var(--fs-small);
+  line-height: 1.6;
   color: var(--fg-3);
-}
-
-.planNote :global(.ornament) {
-  width: 8px;
-  height: 8px;
-  transform: translateY(-1px);
 }
 
 /* ---------- Tablet ---------- */
@@ -766,8 +708,8 @@
       color-mix(in srgb, var(--brass) 4%, transparent) 70%,
       transparent
     );
-    transform: translateY(calc(var(--i, 0) * var(--row-h)));
-    transition: transform 0.95s var(--ease-out);
+    transform: translateY(calc(var(--at, 0) * var(--row-h)));
+    transition: transform 0.3s var(--ease-out);
     pointer-events: none;
   }
 
@@ -818,18 +760,32 @@
     box-shadow: none;
   }
 
+  /* Rows answer the press themselves (below); the card is only their wrapper here. */
+  .card:has(.itemBtn:active) {
+    scale: none;
+  }
+
   .card:has(.itemBtn:focus-visible) {
     outline: none;
   }
 
   .itemBtn {
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
+    justify-content: flex-start;
+    gap: 0;
     height: var(--row-h);
     padding-inline: 0.9rem;
     border-top: 1px solid var(--line);
     color: var(--fg-3);
-    transition: color 0.7s var(--ease-out);
+    transition:
+      color 0.2s var(--ease-out),
+      var(--press-transition);
+  }
+
+  .itemBtn:active {
+    scale: 0.985;
   }
 
   .item:last-child .itemBtn {
@@ -846,32 +802,20 @@
     border-radius: var(--r-sm);
   }
 
-  .itemBtn:hover {
-    color: var(--fg-2);
+  @media (hover: hover) and (pointer: fine) {
+    .itemBtn:hover {
+      color: var(--fg-2);
+    }
   }
 
   .on .itemBtn {
     color: var(--fg);
   }
 
-  .num {
-    flex: none;
-    width: 2.5rem;
-    font-size: 1.05rem;
-    color: var(--accent-soft);
-    opacity: 0.7;
-    transition: opacity 0.7s var(--ease-out), color 0.7s var(--ease-out);
-  }
-
-  .on .num {
-    opacity: 1;
-  }
-
   .name {
     font-size: clamp(1.4rem, 0.95rem + 0.75vw, 1.8rem);
     line-height: 1;
-    transform-origin: left center;
-    transition: transform 0.9s var(--ease-out);
+    transition: transform 0.25s var(--ease-out);
   }
 
   .on .name {
@@ -882,7 +826,7 @@
     display: block;
     margin-inline: 16px;
     opacity: 0.45;
-    transition: opacity 0.7s var(--ease-out);
+    transition: opacity 0.2s var(--ease-out);
   }
 
   .on .leader {
@@ -891,7 +835,7 @@
 
   .role {
     color: inherit;
-    transition: color 0.7s var(--ease-out);
+    transition: color 0.2s var(--ease-out);
   }
 
   .on .role {
@@ -906,6 +850,17 @@
     display: grid;
   }
 
+  /* Without JavaScript no row can be chosen, so each row keeps its own description. */
+  :global(html:not(.js)) .cardDetail {
+    display: grid;
+  }
+
+  :global(html:not(.js)) .detailStack,
+  :global(html:not(.js)) .rail,
+  :global(html:not(.js)) .indicator {
+    display: none;
+  }
+
   .detailStack > .detail {
     grid-area: 1 / 1;
     margin: 0;
@@ -913,18 +868,21 @@
     grid-template-rows: auto 1fr;
     align-content: start;
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(6px);
     pointer-events: none;
+    /* Leaving: a quick fade, so the old words are gone before the new ones arrive. */
     transition:
-      opacity 0.45s var(--ease-out),
-      transform 0.9s var(--ease-out);
+      opacity 0.1s var(--ease-out),
+      transform 0.1s var(--ease-out);
   }
 
   .detailStack > .detailOn {
     opacity: 1;
     transform: none;
     pointer-events: auto;
-    transition-delay: 0.2s, 0.2s;
+    transition:
+      opacity 0.2s var(--ease-out) 0.08s,
+      transform 0.22s var(--ease-out) 0.08s;
   }
 
   .body {
@@ -959,7 +917,7 @@
     padding-left: var(--rail-pad);
   }
 
-  .planNote {
+  .note {
     max-width: 34em;
   }
 }
@@ -968,5 +926,17 @@
   .story {
     --pin-h: 29rem;
     --row-h: 3.2rem;
+  }
+}
+
+/* Reduced motion: a press dims instead of shrinking. */
+@media (prefers-reduced-motion: reduce) {
+  .card:has(.itemBtn:active),
+  .itemBtn:active {
+    scale: none;
+  }
+
+  .itemBtn:active {
+    opacity: 0.82;
   }
 }

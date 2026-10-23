@@ -74,7 +74,7 @@ export default function BestRestaurantBillingSoftwarePage() {
         name: 'What is the best restaurant billing software in India for standalone dining?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'For many standalone cafes and casual dining restaurants, Petpooja is a dependable default choice thanks to its offline-capable desktop billing, large integrations marketplace, and straightforward annual pricing. If you also want the dining room itself to help guests order, you can pair your POS with a table-ordering layer like KNOMI, which works alongside the POS you already use (and integrates with it on the Signature plan).',
+          text: 'For many standalone cafes and casual dining restaurants, Petpooja is a dependable default choice thanks to its offline-capable desktop billing, large integrations marketplace, and straightforward annual pricing. If you also want the dining room itself to help guests order, you can pair your POS with a table-ordering layer like KNOMI, which works alongside the POS you already use and can send table orders straight into it (Petpooja today).',
         },
       },
       {
@@ -409,14 +409,14 @@ export default function BestRestaurantBillingSoftwarePage() {
                   </span>
                 </div>
                 <div className={styles.posCostLine}>
-                  Pricing: Menu Rs 149, Signature Rs 250 (our recommended plan), Ecosystem Rs 500 per table, per month · 0% commission
+                  Pricing: Shared on a walkthrough call · 0% commission
                 </div>
                 <p>
                   KNOMI doesn&apos;t ask you to replace your cashier POS or your GST accounting workflow. It is guest experience
                   infrastructure that helps restaurants grow and upsell: Knomi Host, a warm host inside an illustrated menu themed to
                   your restaurant, suggests the right dish at the right moment, guests order from the table, and those orders go to
-                  your kitchen display. It works alongside the POS you already use, and on the Signature plan it integrates with it.
-                  Restaurants that want one system can choose Knomi&apos;s own POS on the Ecosystem plan.
+                  your kitchen display. It works alongside the POS you already use and can send table orders straight into it (Petpooja today).
+                  Restaurants that want one system can use Knomi&apos;s own POS.
                 </p>
                 <div className={styles.posStrengths}>
                   <strong>Key Strengths:</strong>
@@ -431,8 +431,7 @@ export default function BestRestaurantBillingSoftwarePage() {
                 <div className={styles.posWeaknesses}>
                   <strong>Operational Trade-Offs:</strong>
                   <ul>
-                    <li>Not a cashier till on Signature: KNOMI is purpose-built for dining room ordering and the guest experience, so you keep your primary POS for physical cash drawers and end-of-day statutory filing. Knomi&apos;s own POS comes with the Ecosystem plan.</li>
-                    <li>The full Knomi Sense and Knomi Compass insights are part of the Ecosystem plan only.</li>
+                    <li>Not a cashier till by default: KNOMI is purpose-built for dining room ordering and the guest experience, so you keep your primary POS for physical cash drawers and end-of-day statutory filing, unless you choose Knomi&apos;s own POS.</li>
                   </ul>
                 </div>
               </div>
@@ -495,7 +494,7 @@ export default function BestRestaurantBillingSoftwarePage() {
                   <tr style={{ background: 'rgba(169, 71, 47,0.08)' }}>
                     <td><strong>KNOMI (Co-existence)</strong></td>
                     <td>Guest Experience & Table Ordering</td>
-                    <td>Rs 149–500 per table / month (0% commission)</td>
+                    <td>Shared on a walkthrough call · 0% commission</td>
                     <td>Guests use their own phones</td>
                     <td>Works alongside your till</td>
                     <td>Knomi Host pairing suggestions</td>
@@ -584,7 +583,7 @@ export default function BestRestaurantBillingSoftwarePage() {
                 Keep your existing billing system for GST and accounting. Add KNOMI to your dining tables: an illustrated menu
                 with a host inside it, ordering with no app download or login, and 0% commission on every order.
               </p>
-              <Link href="/compare/petpooja-alternatives" className={styles.ctaButton}>
+              <Link href="/compare/petpooja-alternatives" className={`${styles.ctaButton} pressable`}>
                 Explore Co-Existence Architecture &rarr;
               </Link>
             </div>

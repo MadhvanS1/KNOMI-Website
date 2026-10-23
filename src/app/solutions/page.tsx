@@ -79,11 +79,10 @@ export default function SolutionsHub() {
             </Reveal>
           </header>
 
-          <Stagger as="ul" className={styles.list} stagger={0.07}>
-            {CITIES.map((city, i) => (
+          <Stagger as="ul" className={styles.list}>
+            {CITIES.map((city) => (
               <StaggerItem as="li" key={city.href}>
-                <Link href={city.href} className={styles.row}>
-                  <span className={styles.index}>{String(i + 1).padStart(2, "0")}</span>
+                <Link href={city.href} className={`pressable ${styles.row}`}>
                   <span className={styles.name}>{city.name}</span>
                   <span className={styles.line}>{city.line}</span>
                   <ArrowRight className={styles.arrow} />
